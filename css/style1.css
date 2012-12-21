@@ -1,0 +1,9 @@
+.headerMain {
+	background: url('../img/bg-home.png') center 0px no-repeat;
+	margin-top: -20px;
+	padding-top: 150px;
+	padding-bottom: 150px;
+}
+body {
+	background: url('../img/bg-page.jpg') center 0px no-repeat;
+}
