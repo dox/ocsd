@@ -39,6 +39,28 @@ function ox_term_date($compareDate = NULL) {
 				$calculatedEndTerm = $uTerm['endDate'];
 				$calculatedTermName = $uTerm['name'];
 				
+				$daysDiff = floor(strtotime($compareDate)/(60*60*24)) - floor(strtotime(date('Y-m-d'))/(60*60*24));
+				
+				if ($daysDiff < 7) {
+					$calculatedWeekName = "0th Week";
+				} elseif ($daysDiff < 14) {
+					$calculatedWeekName = "1st Week";
+				} elseif ($daysDiff < 21) {
+					$calculatedWeekName = "2nd Week";
+				} elseif ($daysDiff < 28) {
+					$calculatedWeekName = "3rd Week";
+				} elseif ($daysDiff < 35) {
+					$calculatedWeekName = "4th Week";
+				} elseif ($daysDiff < 42) {
+					$calculatedWeekName = "5th Week";
+				} elseif ($daysDiff < 49) {
+					$calculatedWeekName = "6th Week";
+				} elseif ($daysDiff < 56) {
+					$calculatedWeekName = "7th Week";
+				} elseif ($daysDiff < 63) {
+					$calculatedWeekName = "8th Week";
+				}
+				
 				goto foundTermName;
 			}
 		}
@@ -47,11 +69,11 @@ function ox_term_date($compareDate = NULL) {
 	$calculatedStartTerm = "";
 	$calculatedEndTerm = "";
 	$calculatedTermName = "Unknown";
-
+	$calculatedWeekName = "Unknown";
 
 	foundTermName:
 	
-	$returnArray = array("lookupDate" => $compareDate, "termStartDate" => $calculatedStartTerm, "termEndDate" => $calculatedEndTerm, "termName" => $calculatedTermName);
+	$returnArray = array("lookupDate" => $compareDate, "termStartDate" => $calculatedStartTerm, "termEndDate" => $calculatedEndTerm, "termName" => $calculatedTermName, "weekName" => $calculatedWeekName);
 	
 	return $returnArray;
 }
