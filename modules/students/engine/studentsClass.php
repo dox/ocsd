@@ -4,7 +4,7 @@ class Students {
 	
 	public $studentid;
 	public $st_type;		// 'UG','PG','VX'
-	public $title;
+	public $titlekey;
 	public $initials;
 	public $forenames;
 	public $prefname;
@@ -106,7 +106,7 @@ class Students {
 	}
 	
 	public function fullDisplayName() {
-		$title = $this->title;
+		$title = Titles::find_by_titleid($this->titlekey);
 		$firstname = $this->forenames;
 		
 		if ($this->initials) {
@@ -118,7 +118,7 @@ class Students {
 		
 		$familyname = $this->surname;
 		
-		return $title . " " . $firstname . " " . $initials . $familyname;
+		return $title->title . " " . $firstname . " " . $initials . $familyname;
 	}
 	
 	public function bodcard($link = true) {

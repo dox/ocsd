@@ -6,6 +6,8 @@ $birthCountry = Countries::find_by_uid($user->birth_cykey);
 $residenceCountry = Countries::find_by_uid($user->resid_cykey);
 $citizenshipCountry = Countries::find_by_uid($user->citiz_cykey);
 $ethnicCountry = Countries::find_by_uid($user->ethkey);
+
+$degree = Grads::find_by_studentkey($user->studentid);
 ?>
 <div class="row">
 	<div class="span12">
@@ -42,6 +44,7 @@ $ethnicCountry = Countries::find_by_uid($user->ethkey);
 			<li class="active"><a href="#information" data-toggle="tab">Information</a></li>
 			<li><a href="#addresses" data-toggle="tab">Addresses</a></li>
 			<li><a href="#education" data-toggle="tab">Education</a></li>
+			<li><a href="#reports" data-toggle="tab">Reports</a></li>
 		</ul>
 		
 		<div class="tab-content">
@@ -58,7 +61,7 @@ $ethnicCountry = Countries::find_by_uid($user->ethkey);
 				<p>Disability: <?php echo $user->disability; ?></p>
 				<div class="clearfix"></div>
 				<hr />
-				<p>Full Name: <?php echo $user->title . " " . $user->forenames . " " . $user->initials . " " . $user->surname; ?></p>
+				<p>Full Name: <?php echo $user->fullDisplayName(); ?></p>
 				<p>Preferred First Name: <?php echo $user->prefname; ?></p>
 				<p>Previous Family Name: <?php echo $user->prev_surname; ?></p>
 				<p><?php echo $user->suffix; ?></p>
@@ -117,7 +120,28 @@ $ethnicCountry = Countries::find_by_uid($user->ethkey);
 				//echo $residence->displayAddress();
 				 ?>
 			</div>
-			<div class="tab-pane" id="education">Coming soon...</div>
+			<div class="tab-pane" id="education">
+				<?php
+				printArray($degree);
+				?>
+			</div>
+			<div class="tab-pane" id="reports">
+				
+				<div class="btn-group">
+					<button class="btn">Generate Transcript</button>
+					<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li><a href="report.php?n=transcript.php&header=true&studentid=<?php echo $user->studentid; ?>">With letter head</a></li>
+						<li><a href="report.php?n=transcript.php&studentid=<?php echo $user->studentid; ?>">Without letter head</a></li>
+					</ul>
+				</div>
+				<p>test test</p>
+				<p>test test</p>
+				<p>test test</p>
+				<p>test test</p>
+				<p>test test</p>
+				<p>test test</p>
+			</div>
 		</div>
 		
 		

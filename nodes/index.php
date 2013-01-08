@@ -4,7 +4,12 @@
 			<?php
 			require_once("engine/datesofterm.php");
 			$termArray = ox_term_date();
-			echo "nth Week of " . $termArray['termName'] . " Term";
+			
+			if ($termArray['termName'] != "Unknown") {
+				echo $termArray['weekName'] . " of " . $termArray['termName'] . " Term";
+			} else {
+				echo "Holiday";
+			}
 			?>
 		</div>
 	</div>
