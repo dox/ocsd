@@ -44,6 +44,7 @@ $degree = Grads::find_by_studentkey($user->studentid);
 			<li class="active"><a href="#information" data-toggle="tab">Information</a></li>
 			<li><a href="#addresses" data-toggle="tab">Addresses</a></li>
 			<li><a href="#education" data-toggle="tab">Education</a></li>
+			<li><a href="#college" data-toggle="tab">College</a></li>
 			<li><a href="#reports" data-toggle="tab">Reports</a></li>
 		</ul>
 		
@@ -121,6 +122,36 @@ $degree = Grads::find_by_studentkey($user->studentid);
 				 ?>
 			</div>
 			<div class="tab-pane" id="education">
+				<p>Coming soon</p>
+			</div>
+			<div class="tab-pane" id="college">
+				<p>Degree: <?php echo $degree->abbrv; ?></p>
+				<p>Course: <?php echo $degree->course_key; ?></p>
+				<p>Res. Status: </p>
+				<p>Subject: <?php echo $subject->name; ?></p>
+				<p>Year: ?? of ??</p>
+				<p>Options: <?php echo $degree->options; ?></p>
+				<p>Class: <?php echo $degree->qualname; ?></p>
+				<hr />
+				<p>Matric: </p>
+				<p>Cohort: </p>
+				<p>Res. Category: </p>
+				<p>Start: <?php echo date('Y-m-d', strtotime($user->dt_start)); ?></p>
+				<p>Finish: </p>
+				<p>Conferment: <?php echo date('Y-m-d', strtotime($user->dt_confer)); ?></p>
+				<p>M.A.: </p>
+				<p>Fee Status: </p>
+				<p>SSN Ref: </p>
+				<hr />
+				<p>1st College Choice: <?php echo $degree->collkey; ?></p>
+				<p>Def. Entry: <?php echo $degree->def_entry; ?></p>
+				<p>Ox. App. No: <?php echo $degree->oxford_appno; ?></p>
+				<p>Dropped Cond. Offer: <?php echo $degree->drop_cond_offer; ?></p>
+				<p>App. Year: </p>
+				<p>UCAS App. No.: <?php echo $degree->ucas_appno; ?></p>
+				<p>IC Pool: <?php echo $degree->ic_pool; ?></p>
+				<p>Entry Year: </p>
+				<p>App. Type: <?php echo $degree->app_type; ?></p>
 				<?php
 				printArray($degree);
 				?>
@@ -128,10 +159,9 @@ $degree = Grads::find_by_studentkey($user->studentid);
 			<div class="tab-pane" id="reports">
 				
 				<div class="btn-group">
-					<button class="btn">Generate Transcript</button>
+					<a href="report.php?n=transcript.php&header=true&studentid=<?php echo $user->studentid; ?>" class="btn">Generate Transcript</a>
 					<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 					<ul class="dropdown-menu">
-						<li><a href="report.php?n=transcript.php&header=true&studentid=<?php echo $user->studentid; ?>">With letter head</a></li>
 						<li><a href="report.php?n=transcript.php&studentid=<?php echo $user->studentid; ?>">Without letter head</a></li>
 					</ul>
 				</div>

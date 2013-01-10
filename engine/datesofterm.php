@@ -32,8 +32,15 @@ function ox_term_date($compareDate = NULL) {
 	$term[] = array("name" => "Trinity", "startDate" => "2013-04-21", "endDate" => "2013-06-15");
 	$term[] = array("name" => "Trinity", "startDate" => "2014-04-27", "endDate" => "2014-06-21");
 	
+	//echo "<pre>";
+	//print_r($term);
+	//echo "</pre>";
+	
 	foreach($term AS $uTerm) {
-		if ($uTerm['startDate'] <= $compareDate) {
+		$termDateMinus7 = date('Y-m-d', strtotime ('-1 week', strtotime ($uTerm['startDate']))) . "<br />";
+		echo $compareDateMinus7;
+		
+		if ($termDateMinus7 <= $compareDate) {
 			if ($uTerm['endDate'] >= $compareDate) {
 				$calculatedStartTerm = $uTerm['startDate'];
 				$calculatedEndTerm = $uTerm['endDate'];
@@ -41,7 +48,7 @@ function ox_term_date($compareDate = NULL) {
 				
 				$daysDiff = floor(strtotime($compareDate)/(60*60*24)) - floor(strtotime(date('Y-m-d'))/(60*60*24));
 				
-				if ($daysDiff < 7) {
+				if ($daysDiff <= 7) {
 					$calculatedWeekName = "0th Week";
 				} elseif ($daysDiff < 14) {
 					$calculatedWeekName = "1st Week";

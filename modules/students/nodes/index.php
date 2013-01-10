@@ -13,7 +13,7 @@ $allTutors = Tutors::find_all();
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#students" data-toggle="tab">Students On Roll</a></li>
 				<li><a href="#staff" data-toggle="tab">Tutors</a></li>
-				<li><a href="#leavers" data-toggle="tab">Leavers</a></li>
+				<li><a href="#archive" data-toggle="tab">Archive</a></li>
 			</ul>
 			
 			<div class="tab-content">
@@ -62,7 +62,7 @@ $allTutors = Tutors::find_all();
 					</table>
 				</div>
 				
-				<div class="tab-pane" id="leavers">
+				<div class="tab-pane" id="archive">
 					<p><?php //printArray($allStudents); ?>
 				</div>
 			</div>

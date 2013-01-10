@@ -2,44 +2,73 @@
 $user = Students::find_by_uid($_GET['studentid']);
 $degree = Grads::find_by_studentkey($user->studentid);
 $subject = QualSubjects::find_by_qsid($degree->qskey);
-?>
+$exams = Exams::find_by_studentkey($user->studentid);
 
-<p><u>To Whom It May Concern</u></p>
+$pdf->SetFont("Times", '', 12);
+$pdf->Cell(0, 10, date('d F Y'), 0, 1);
 
-<p>Oxford University does not issue official transcript, but this is to certify that</p>
+$pdf->SetFont("Times", 'U', 12);
+$pdf->Cell(0, 10, "To Whom It May Concern", 0, 1);
 
-<p class="lead pagination-centered"><strong><?php echo $user->fullDisplayName(); ?></strong></p>
+$pdf->SetFont("Times", '', 12);
+$pdf->Cell(0, 10, "Oxford University does not issue official transcripts, but this is to certify that", 0, 1);
 
-is a full-time member of this College, in the Univsersity of Oxford, studying for the Degree Course detailed below:
+$pdf->SetFont("Times", 'B', 14);
+$pdf->Cell(0, 10, $user->fullDisplayName(), 0, 1, 'C');
+
+$pdf->SetFont("Times", '', 12);
+$pdf->Write(5, "is a full-time member of this College, in the University of Oxford, studying for the Degree Course detailed below:");
+$pdf->Ln();
+
+$pdf->Cell(20, 10, "Degree: ", 0, 0);
+$pdf->SetFont("Times", 'B', 12);
+$pdf->Cell(70, 10, $degree->abbrv, 0, 0);
+$pdf->SetFont("Times", '', 12);
+$pdf->Cell(90, 10, "Start: " . date('Y M', strtotime($user->dt_start)) . "           End: " . date('Y M', strtotime($user->dt_end)), 0, 1, 'R');
+$pdf->Cell(20, 10, "Subject: ", 0, 0);
+$pdf->SetFont("Times", 'B', 12);
+$pdf->Cell(40, 10, $subject->name, 0, 0);
+$pdf->Ln();
+
+$pdf->SetFont("Times", 'B', 14);
+$pdf->Cell(40, 10, "Course Exams", 0, 1);
+
+$pdf->SetFont("Times", 'B', 10);
+$pdf->Cell(30, 7, "Date", 0, 0, 'C');
+$pdf->Cell(130, 7, "Name", 0, 0, 'L');
+$pdf->Cell(20, 7, "Result", 0, 0, 'C');
+$pdf->Ln();
 
 
-
-<br />
-<p class="lead pull-right">Start: <?php echo date('Y M', strtotime($user->dt_start)); ?> End: <?php echo date('Y M', strtotime($user->dt_end)); ?></p>
-
-<p class="lead">Degree: <strong><?php echo $degree->abbrv; ?></strong></p>
-<p class="lead">Subject: <strong><?php echo $subject->name; ?></strong></p>
-
-<h3>Course Exams</h3>
-<table class="table">
-	<thead>
-	<tr>
-		<th>Date</th>
-		<th>Name</th>
-		<th>Result</th>
-	</tr>
-	</thead>
+foreach ($exams AS $exam) {
+	$papers = $exam->find_papers_by_examkey($exam->examid);
+	$pdf->SetFont("Times", '', 10);
+	$pdf->Cell(30, 7, date("Y M", strtotime($exam->dt_exam)), 'T', 0, 'C');
+	$pdf->Cell(130, 7, $exam->name, 'T', 0, 'L');
+	$pdf->Cell(20, 7, $exam->qualname, 'T', 0, 'C');
+	$pdf->Ln();
 	
-	<tbody>
-	<tr>
-		<td>...</td>
-		<td>...</td>
-		<td>...</td>
-	</tr>
-	</tbody>
-</table>
+	$pdf->SetFont("Times", 'B', 10);
+	$pdf->Cell(30, 7, "", 0, 0, 'C');
+	$pdf->Cell(20, 7, "Paper No", 'B', 0, 'C');
+	$pdf->Cell(90, 7, "Title", 'B', 0, 'L');
+	$pdf->Cell(20, 7, "Grade", 'B', 0, 'C');
+	$pdf->Cell(20, 7, "", 0, 0, 'C');
+	$pdf->Ln();
+	
+	$pdf->SetFont("Times", '', 10);
+	foreach ($papers AS $paper) {
+		$pdf->Cell(30, 7, "", 0, 0, 'C');
+		$pdf->Cell(20, 7, $paper->paperno, 0, 0, 'C');
+		$pdf->Cell(90, 7, $paper->title, 0, 0, 'L');
+		$pdf->Cell(20, 7, $paper->grade, 0, 0, 'C');
+		$pdf->Cell(20, 7, "", 0, 0, 'C');
+		$pdf->Ln();
+	}
+}
 
-Signed:
-<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-
-REGISTRAR
+$pdf->Ln(20);
+$pdf->Cell(0, 10, "Signed:", 0, 1);
+$pdf->Ln(10);
+$pdf->Cell(0, 10, "REGISTRAR", 0, 1);
+?>

@@ -1,17 +1,9 @@
 <?php
 include_once("engine/initialise.php");
-?>
+require_once('engine/fpdf/fpdf.php');
 
-<!DOCTYPE html>
-<html lang="en">
-<?php include_once("views/html_head.php"); ?>
-
-<body>
-<div class="container">
-	<div class="row">
-		<div class="span12">
-
-<?php
+$pdf = new FPDF();
+$pdf->AddPage();
 
 if (isset($_GET['header'])) {
 	if ($_GET['header'] == 'true') {
@@ -19,17 +11,14 @@ if (isset($_GET['header'])) {
 	}
 }
 
-echo "<p>" . date('d F Y') . "</p>";
-
 if (isset($_GET['n'])) {
 	$fileInclude = "modules/reports/nodes/" . $_GET['n'];
+	
+	include_once($fileInclude);
 }
 
-include_once($fileInclude);
 
+
+// Output the PDF
+$pdf->Output();
 ?>
-		</div>
-	</div>
-</div>
-</body>
-</html>
