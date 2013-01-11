@@ -5,20 +5,19 @@ function printArray($array) {
 	echo ("</pre>");
 }
 
-function convertToDateString($dateString) {
-	$dateFormat = "Y-m-d";
-	$date = strtotime($dateString);
+function convertToDateString($dateString, $time = false) {
+	if ($time == "true") {
+		$dateFormat = "Y-m-d H:i:s";
+	} else {
+		$dateFormat = "Y-m-d";
+	}
 	
-	$returnDate = date($dateFormat, $date);
-	
-	return $returnDate;
-}
-
-function convertToDateTimeString($dateTimeString) {
-	$dateFormat = "Y-m-d H:i:s";
-	$date = strtotime($dateTimeString);
-	
-	$returnDate = date($dateFormat, strtotime($date));
+	if ($dateString == "") {
+		$returnDate = "Unknown";
+	} else {
+		$date = strtotime($dateString);
+		$returnDate = date($dateFormat, $date);
+	}
 	
 	return $returnDate;
 }

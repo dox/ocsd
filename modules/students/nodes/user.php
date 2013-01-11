@@ -36,7 +36,7 @@ $degree = Grads::find_by_studentkey($user->studentid);
 		
 		<p><i class="icon-globe"></i> <?php echo $user->nationality; ?></p>
 		
-		<p><a class="btn" href="#">Edit Details &raquo;</a></p>
+		<p><a class="btn" href="index.php?n=noedit.php">Edit Details &raquo;</a></p>
 		<div class="clearfix"></div>
 	</div>
 	<div class="span9">
@@ -136,9 +136,9 @@ $degree = Grads::find_by_studentkey($user->studentid);
 				<p>Matric: </p>
 				<p>Cohort: </p>
 				<p>Res. Category: </p>
-				<p>Start: <?php echo date('Y-m-d', strtotime($user->dt_start)); ?></p>
+				<p>Start: <?php echo convertToDateString($user->dt_start); ?></p>
 				<p>Finish: </p>
-				<p>Conferment: <?php echo date('Y-m-d', strtotime($user->dt_confer)); ?></p>
+				<p>Conferment: <?php echo convertToDateString($user->dt_confer); ?></p>
 				<p>M.A.: </p>
 				<p>Fee Status: </p>
 				<p>SSN Ref: </p>
@@ -159,10 +159,10 @@ $degree = Grads::find_by_studentkey($user->studentid);
 			<div class="tab-pane" id="reports">
 				
 				<div class="btn-group">
-					<a href="report.php?n=transcript.php&header=true&studentid=<?php echo $user->studentid; ?>" class="btn">Generate Transcript</a>
+					<a href="report.php?n=transcript.php&studentid=<?php echo $user->studentid; ?>" class="btn">Generate Transcript</a>
 					<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 					<ul class="dropdown-menu">
-						<li><a href="report.php?n=transcript.php&studentid=<?php echo $user->studentid; ?>">Without letter head</a></li>
+						<li><a href="report.php?n=transcript.php&exams=false&studentid=<?php echo $user->studentid; ?>">Without exam paper details</a></li>
 					</ul>
 				</div>
 				<p>test test</p>
