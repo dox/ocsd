@@ -1,14 +1,7 @@
 <?php
-$user = Students::find_by_uid($_GET['studentid']);
-$residences = ResidenceAddresses::find_all_by_student($_GET['studentid']);
-$addresses = Addresses::find_all_by_student($_GET['studentid']);
-$birthCountry = Countries::find_by_uid($user->birth_cykey);
-$residenceCountry = Countries::find_by_uid($user->resid_cykey);
-$citizenshipCountry = Countries::find_by_uid($user->citiz_cykey);
-$ethnicCountry = Countries::find_by_uid($user->ethkey);
-$degree = Grads::find_by_studentkey($user->studentid);
-
-
+$user = ArchStudents::find_by_uid($_GET['arstudentid']);
+$addresses = ArchAddresses::find_all_by_student($user->id());
+$degree = ArchGrads::find_academic_record_by_studentkey($user->id());
 ?>
 <div class="row">
 	<div class="span12">
@@ -41,6 +34,9 @@ $degree = Grads::find_by_studentkey($user->studentid);
 		<div class="clearfix"></div>
 	</div>
 	<div class="span9">
+		<div class="alert alert-info">
+			<strong>Archive</strong> This student is listed in the OCSD archives.
+		</div>
 		<ul class="nav nav-tabs" id="myTab">
 			<li class="active"><a href="#information" data-toggle="tab">Information</a></li>
 			<li><a href="#addresses" data-toggle="tab">Addresses</a></li>
@@ -104,6 +100,7 @@ $degree = Grads::find_by_studentkey($user->studentid);
 			echo "<h3>Notes: </h3>";
 			echo "<p>" . $user->notes . "</p>";
 		}
+		printArray($user);
 		?>
 		<div class="clearfix"></div>
 		<p><button class="btn btn-mini pull-right disabled" type="button">Last Modified By: <?php echo $user->who_mod . " (" . convertToDateString($user->dt_lastmod) . ")"; ?></button></p>
@@ -126,6 +123,9 @@ $degree = Grads::find_by_studentkey($user->studentid);
 				<p>Coming soon</p>
 			</div>
 			<div class="tab-pane" id="college">
+				<?php
+				printArray($degree);
+				?>
 				<p>Degree: <?php echo $degree->abbrv; ?></p>
 				<p>Course: <?php echo $degree->course_key; ?></p>
 				<p>Res. Status: </p>
@@ -158,11 +158,11 @@ $degree = Grads::find_by_studentkey($user->studentid);
 				
 				<div class="btn-group">
 					<?php
-					echo "<a href=\"report.php?n=transcript.php&studentid=" . $user->id() . "\" class=\"btn\">Generate Transcript</a>";
+					echo "<a href=\"report.php?n=arch_transcript.php&arstudentid=" . $user->id() . "\" class=\"btn\">Generate Transcript</a>";
 					?>
 					<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 					<ul class="dropdown-menu">
-						<li><a href="report.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
+						<li><a href="report.php?n=arch_transcript.php&exams=false&arstudentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
 					</ul>
 				</div>
 				<p>test test</p>

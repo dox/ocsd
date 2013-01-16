@@ -1,9 +1,8 @@
 <?php
-class Students {
-	protected static $table_name = "students";
+class ArchStudents {
+	protected static $table_name = "arch_students";
 	
-	public $studentid;
-	public $st_type;		// 'UG','PG','VX'
+	public $ar_studentid;
 	public $titlekey;
 	public $initials;
 	public $forenames;
@@ -11,42 +10,32 @@ class Students {
 	public $surname;
 	public $prev_surname;
 	public $suffix;
-	public $marital_status;
 	public $dt_birth;
 	public $gender;
 	public $nationality;
-	public $birth_cykey;
-	public $resid_cykey;
-	public $citiz_cykey;
 	public $optout;
-	public $family;
 	public $eng_lang;
 	public $occup_bg;
 	public $disability;
 	public $ethkey;
 	public $rskey;
-	public $cskey;
 	public $relkey;
 	public $rckey;
-	public $SSNref;
-	public $fee_status;
+	public $ssnref;
 	public $univ_cardno;
 	public $dt_card_exp;
-	public $course_yr;
+	public $dt_matric;
+	public $yr_cohort;
 	public $notes;
 	public $email1;
 	public $email2;
 	public $mobile;
-	public $dt_start;
-	public $dt_end;
-	public $dt_matric;
-	public $oucs_id;
-	public $yr_app;
-	public $yr_entry;
-	public $yr_cohort;
 	public $dt_created;
 	public $dt_lastmod;
 	public $who_mod;
+	public $dt_arched;
+	public $oss_pn;
+	public $oucs_id;
 	
 	public static function find_by_sql($sql="") {
 		global $database;
@@ -86,7 +75,7 @@ class Students {
 		global $database;
 		
 		$sql  = "SELECT * FROM " . self::$table_name . " ";
-		$sql .= "WHERE studentid = '" . $uid . "' ";
+		$sql .= "WHERE ar_studentid = '" . $uid . "' ";
 		$sql .= "LIMIT 1";
 		
 		$results = self::find_by_sql($sql);
@@ -98,7 +87,7 @@ class Students {
 		global $database;
 		
 		$sql  = "SELECT * FROM " . self::$table_name . " ";
-		$sql .= "ORDER BY studentid ASC";
+		$sql .= "ORDER BY ar_studentid ASC";
 		
 		$results = self::find_by_sql($sql);
 		
@@ -154,7 +143,7 @@ class Students {
 	}
 	
 	public function id() {
-		return $this->studentid;
+		return $this->ar_studentid;
 	}
 	
 	public function imageURL($fullImgTag = false) {
