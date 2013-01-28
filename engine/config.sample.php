@@ -1,7 +1,7 @@
 <?php
 // Site Constants
 //Replace all variables with your own details.  For example "{{DB_NAME}} would be "your_data_base_name"
-define ("SITE_VERSION", "0.1");
+define ("SITE_VERSION", "0.2");
 define ("SITE_UNIQUE_KEY", "sitea"); // if you're running more than 1 instance, this needs to be unique
 
 // Database Constants
