@@ -12,9 +12,9 @@ $allTutors = Tutors::find_all();
 		
 		<div class="tabbable"> <!-- Only required for left/right tabs -->
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#students" data-toggle="tab">Students On Roll</a></li>
-				<li><a href="#staff" data-toggle="tab">Tutors</a></li>
-				<li><a href="#archive" data-toggle="tab">Archive</a></li>
+				<li class="active"><a href="#students" data-toggle="tab"><?php echo "<span class=\"badge badge-info\">" . count($allStudents) . "</span>"; ?> Students</a></li>
+				<li><a href="#staff" data-toggle="tab"><?php echo "<span class=\"badge badge-info\">" . count($allTutors) . "</span>"; ?> Tutors</a></li>
+				<li><a href="#archive" data-toggle="tab"><?php echo "<span class=\"badge badge-info\">" . count($archStudents) . "</span>"; ?> Archive</a></li>
 			</ul>
 			
 			<div class="tab-content">
@@ -55,7 +55,7 @@ $allTutors = Tutors::find_all();
 						foreach($allTutors AS $tutor) {
 							echo "<tr>";
 							echo "<td>" . $tutor->tutid . "</td>";
-							echo "<td><a href=\"index.php?m=students&n=user.php&studentid=" . $tutor->tutid . "\">" . $tutor->fullDisplayName() . "</a> " . $tutor->identifier . "</td>";
+							echo "<td><a href=\"index.php?n=404.php&tutorid=" . $tutor->tutid . "\">" . $tutor->fullDisplayName() . "</a> " . $tutor->identifier . "</td>";
 							echo "</tr>";
 						}
 						?>

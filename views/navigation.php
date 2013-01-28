@@ -11,7 +11,7 @@
 				<ul class="nav">
 					<li class="active"><a href="index.php">Home</a></li>
 					<li><a href="index.php?m=students&n=index.php">Users</a></li>
-					<li><a href="#contact">Contact</a></li>
+					<li><a href="index.php?n=contact.php">Contact</a></li>
 				</ul>
 		
 				<form class="navbar-search pull-left">
@@ -23,9 +23,10 @@
 					<ul class="dropdown-menu">
 						<li><a href="index.php?m=reports&n=index.php">Reports</a></li>
 						<li><a href="index.php?m=epos&n=index.php">EPOS</a></li>
+						<li><a href="index.php?n=profile.php">My Profile</a></li>
 						<li class="divider"></li>
 						<li class="nav-header">Nav header</li>
-						<li><a href="#">Report Problem</a></li>
+						<li><a href="index.php?n=contact.php">Report Problem</a></li>
 						<li><a href="#">Log Out</a></li>
 					</ul>
 					</li>
