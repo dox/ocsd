@@ -21,4 +21,13 @@ function convertToDateString($dateString, $time = false) {
 	
 	return $returnDate;
 }
+
+
+function age($date = NULL) {
+	if ($birthDate == NULL) {
+		$birthDate = date('Y-m-d');
+	}
+	
+	return intval(substr(date('Ymd') - date('Ymd', strtotime($date)), 0, -4));
+}
 ?>

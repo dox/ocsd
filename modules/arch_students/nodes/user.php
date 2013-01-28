@@ -30,7 +30,7 @@ $degree = ArchGrads::find_academic_record_by_studentkey($user->id());
 		
 		<p><i class="icon-globe"></i> <?php echo $user->nationality; ?></p>
 		
-		<p><a class="btn" href="index.php?n=noedit.php">Edit Details &raquo;</a></p>
+		<p><a class="btn" href="index.php?n=404.php">Edit Details &raquo;</a></p>
 		<div class="clearfix"></div>
 	</div>
 	<div class="span9">
@@ -64,7 +64,7 @@ $degree = ArchGrads::find_academic_record_by_studentkey($user->id());
 				<p>Previous Family Name: <?php echo $user->prev_surname; ?></p>
 				<p><?php echo $user->suffix; ?></p>
 				<p>Marital Status: <?php echo $user->marital_status; ?></p>
-				<p>DOB: <?php echo $user->dt_birth; ?></p>
+				<p>DOB: <?php echo convertToDateString($user->dt_birth) . " (Age: " . age(convertToDateString($user->dt_birth)) . ")"; ?></p>
 				<p>Gender: <?php echo $user->gender; ?></p>
 				<p>Country of Birth: <?php if (isset($birthCountry->cyid)) { echo $birthCountry->fullDisplayName(true); }?></p>
 				<p>Country of Residence: <?php if (isset($residenceCountry->cyid)) { echo $residenceCountry->fullDisplayName(true); }?></p>
