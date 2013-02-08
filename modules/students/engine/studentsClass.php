@@ -146,7 +146,7 @@ class Students {
 				$url = "#";
 			}
 			
-			$bodcard = "<span class=\"label " . $labelClass . "\">" . $bodcard . "</a>";
+			$bodcard = "<span class=\"label " . $labelClass . "\">" . $bodcard . "</a></span>";
 			$bodcard = "<a href=\"" . $url . "\">" . $bodcard . "</a>" . $subMessage;
 		}
 		
