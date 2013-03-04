@@ -27,7 +27,7 @@
 						<li class="divider"></li>
 						<li class="nav-header">Nav header</li>
 						<li><a href="index.php?n=contact.php">Report Problem</a></li>
-						<li><a href="#">Log Out</a></li>
+						<li><a href="index.php?n=logon.php&logout=true">Log Out</a></li>
 					</ul>
 					</li>
 				</ul>
