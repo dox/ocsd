@@ -5,7 +5,7 @@ $degreeType = $degree->qualtype($degree->qtkey);
 $subject = QualSubjects::find_by_qsid($degree->qskey);
 $exams = ArchExams::find_by_ar_sarkey($degree->ar_sarid);
 
-$course = courseClass::find_by_ar_sarkey($degree->ar_sarid);
+$course = ugpgvxClass::find_by_ar_sarkey($degree->ar_sarid);
 
 $pdf->SetFont("Times", '', 12);
 $pdf->Cell(0, 10, date('d F Y'), 0, 1);
