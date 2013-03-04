@@ -158,11 +158,11 @@ $degree = ArchGrads::find_academic_record_by_studentkey($user->id());
 				
 				<div class="btn-group">
 					<?php
-					echo "<a href=\"report.php?n=arch_transcript.php&arstudentid=" . $user->id() . "\" class=\"btn\">Generate Transcript</a>";
+					echo "<a href=\"report_pdf.php?n=arch_transcript.php&arstudentid=" . $user->id() . "\" class=\"btn\">Generate Transcript</a>";
 					?>
 					<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 					<ul class="dropdown-menu">
-						<li><a href="report.php?n=arch_transcript.php&exams=false&arstudentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
+						<li><a href="report_pdf.php?n=arch_transcript.php&exams=false&arstudentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
 					</ul>
 				</div>
 				<p>test test</p>
