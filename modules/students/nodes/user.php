@@ -157,11 +157,11 @@ $degree = Grads::find_by_studentkey($user->studentid);
 				
 				<div class="btn-group">
 					<?php
-					echo "<a href=\"report.php?n=transcript.php&studentid=" . $user->id() . "\" class=\"btn\">Generate Transcript</a>";
+					echo "<a href=\"report_pdf.php?n=transcript.php&studentid=" . $user->id() . "\" class=\"btn\">Generate Transcript</a>";
 					?>
 					<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 					<ul class="dropdown-menu">
-						<li><a href="report.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
+						<li><a href="report_pdf.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
 					</ul>
 				</div>
 				<p>test test</p>
