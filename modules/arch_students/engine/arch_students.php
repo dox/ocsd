@@ -36,6 +36,7 @@ class ArchStudents {
 	public $dt_arched;
 	public $oss_pn;
 	public $oucs_id;
+	public $photo;
 	
 	public static function find_by_sql($sql="") {
 		global $database;
@@ -129,10 +130,11 @@ class ArchStudents {
 					$subMessage = "";
 				} else {
 					$labelClass = "label-important";
-					$subMessage = " <i>(card expired)</i>";
+					//$subMessage = " <i>(card expired)</i>";
+					$subMessage = "";
 				}
 				
-				$url = "#";
+				$url = "index.php?m=arch_students&n=user.php&arstudentid=" . $this->ar_studentid;
 			}
 			
 			$bodcard = "<span class=\"label " . $labelClass . "\">" . $bodcard . "</a>";
@@ -148,8 +150,11 @@ class ArchStudents {
 	
 	public function imageURL($fullImgTag = false) {
 		$pathToFiles = "uploads/";
-		$pathToFile = $pathToFiles . $this->univ_cardno . ".png";
+		$pathToFile = $pathToFiles . $this->photo;
 		
+		if (!isset($this->photo)) {
+			$pathToFile = "img/no_user_photo.png";
+		}
 		if (!file_exists($pathToFile)) {
 			$pathToFile = "img/no_user_photo.png";
 		}
