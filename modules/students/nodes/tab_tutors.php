@@ -2,6 +2,27 @@
 include_once("../../../engine/initialise.php");
 $allTutors = Tutors::find_all();
 ?>
+<div class="well" id="tutorfilter">
+	<form class="form-inline">
+		<select>
+			<option>- All -</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+			<option>5</option>
+		</select>
+		<select>
+			<option>- All -</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+			<option>5</option>
+		</select>
+		
+		<button type="submit" class="btn">Filter</button>
+	</form>
+</div>
+
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>

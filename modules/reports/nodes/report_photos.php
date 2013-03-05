@@ -1,11 +1,11 @@
 <?php
-$students = Students::find_by_sql("SELECT * FROM students ORDER BY surname ASC");
+$students = Students::find_by_sql("SELECT * FROM students WHERE photo IS NOT NULL ORDER BY surname ASC");
 
 $pdf->SetFont("Times", 'BU', 12);
 $pdf->Cell(0, 10, "St Edmund Hall", 0, 1);
 
 $pdf->SetFont("Times", 'BU', 12);
-$pdf->Cell(0, 10, "Lodgings Address List 2012-2013", 0, 1);
+$pdf->Cell(0, 10, "Photo List 2012-2013", 0, 1);
 
 $pdf->SetFont("Times", 'B', 10);
 $pdf->Cell(65, 7, "Name", 0, 0, 'L');
@@ -47,10 +47,11 @@ foreach ($students AS $student) {
 	
 	$name = $student->surname . ", " . $student->forenames;
 	
+	$photo = "uploads/" . $student->photo;
 	$pdf->SetFont("Times", '', 10);
 	$pdf->Cell(65, 7, $name, 'T', 0, 'L');
 	$pdf->Cell(75, 7, $addOutput, 'T', 0, 'L');
-	$pdf->Cell(40, 7, $phoneOutput, 'T', 0, 'L');
+	$pdf->Image($photo,null,null,30);
 	$pdf->Ln();
 }
 
