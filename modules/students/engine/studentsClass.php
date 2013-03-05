@@ -47,6 +47,7 @@ class Students {
 	public $dt_created;
 	public $dt_lastmod;
 	public $who_mod;
+	public $photo;
 	
 	public static function find_by_sql($sql="") {
 		global $database;
@@ -140,10 +141,11 @@ class Students {
 					$subMessage = "";
 				} else {
 					$labelClass = "label-important";
-					$subMessage = " <i>(card expired)</i>";
+					//$subMessage = " <i>(card expired)</i>";
+					$subMessage = "";
 				}
 				
-				$url = "#";
+				$url = "index.php?m=students&n=user.php&studentid=" . $this->studentid;
 			}
 			
 			$bodcard = "<span class=\"label " . $labelClass . "\">" . $bodcard . "</a></span>";
@@ -159,8 +161,11 @@ class Students {
 	
 	public function imageURL($fullImgTag = false) {
 		$pathToFiles = "uploads/";
-		$pathToFile = $pathToFiles . $this->univ_cardno . ".png";
+		$pathToFile = $pathToFiles . $this->photo;
 		
+		if (!isset($this->photo)) {
+			$pathToFile = "img/no_user_photo.png";
+		}
 		if (!file_exists($pathToFile)) {
 			$pathToFile = "img/no_user_photo.png";
 		}

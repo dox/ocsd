@@ -21,15 +21,17 @@ $degree = Grads::find_by_studentkey($user->studentid);
 		<?php echo $user->imageURL(true); ?>
 		<div class="clearfix"></div>
 		<p><i class="icon-barcode"></i> <?php echo $user->bodcard(); ?></p>
-		<p><i class="icon-user"></i> <?php echo $user->oucs_id; ?></p>
 		<?php
-		if ($user->mobile) {
+		if (isset($user->oucs_id)) {
+			echo "<p><i class=\"icon-user\"></i> " . $user->oucs_id . "</p>";
+		}
+		if (isset($user->mobile)) {
 			echo "<p><i class=\"icon-comment\"></i> " . $user->mobile . "</p>";
 		}
-		if ($user->email1) {
+		if (isset($user->email1)) {
 			echo "<p><i class=\"icon-envelope\"></i> <a href=\"mailto:" . $user->email1 . "\">" . $user->email1 . "</a></p>";
 		}
-		if ($user->email2) {
+		if (isset($user->email2)) {
 			echo "<p><i class=\"icon-envelope\"></i> <a href=\"mailto:" . $user->email2 . "\">" . $user->email2 . "</a></p>";
 		}
 		?>
@@ -154,7 +156,7 @@ $degree = Grads::find_by_studentkey($user->studentid);
 				<p>App. Type: <?php echo $degree->app_type; ?></p>
 			</div>
 			<div class="tab-pane" id="reports">
-				
+				<p>
 				<div class="btn-group">
 					<?php
 					echo "<a href=\"report_pdf.php?n=transcript.php&studentid=" . $user->id() . "\" class=\"btn\">Generate Transcript</a>";
@@ -164,12 +166,11 @@ $degree = Grads::find_by_studentkey($user->studentid);
 						<li><a href="report_pdf.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
 					</ul>
 				</div>
-				<p>test test</p>
-				<p>test test</p>
-				<p>test test</p>
-				<p>test test</p>
-				<p>test test</p>
-				<p>test test</p>
+				</p>
+				<p><button class="btn">Cert. College Membership</button></p>
+				<p><button class="btn">Cert. College Membership v.2</button></p>
+				<p><button class="btn">Council Tax Exemption</button></p>
+				<p><button class="btn">Immigration Permit Confirmation</button></p>
 			</div>
 		</div>
 		
