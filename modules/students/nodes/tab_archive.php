@@ -3,9 +3,10 @@ include_once("../../../engine/initialise.php");
 $archStudents = ArchStudents::find_all();
 ?>
 
+
 <form class="form-search">
 	<input type="text" class="input-medium search-query" id="archiveSearchAhead">
-	<button type="submit" class="btn">Search</button>
+	<button type="button" class="btn" id="archiveSearchButton">Search</button>
 </form>
 
 <table class="table table-bordered table-striped">
@@ -16,7 +17,7 @@ $archStudents = ArchStudents::find_all();
     		<th>Full Name</th>
     	</tr>
     </thead>
-    <tbody>
+    <tbody id="theList">
     	<?php
 	   	foreach($archStudents AS $user) {
     		echo "<tr>";
@@ -28,3 +29,22 @@ $archStudents = ArchStudents::find_all();
 		?>
 	</tbody>
 </table>
+
+<script language="javascript" type="text/javascript">
+
+
+$("#archiveSearchButton").click(function() {
+	
+	var value = $("#archiveSearchAhead").val();
+	
+	$("#theList > tr").each(function() {
+		if ($(this).text().search(new RegExp(value, "i")) > -1) {
+			$(this).show();
+		}
+		else {
+			$(this).hide();
+		}
+	});
+});
+
+</script>
