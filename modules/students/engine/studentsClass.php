@@ -81,6 +81,10 @@ class Students {
 		return array_key_exists($attribute, $object_vars);
 	}
 	
+	public function object_vars() {
+        return get_object_vars($this);
+    }
+	
 	///////////////////////
 	
 	public static function find_by_uid($uid = NULL) {
