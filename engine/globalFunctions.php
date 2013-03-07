@@ -42,4 +42,36 @@ function autoPluralise ($singular, $plural, $count = 1) {
 
 	return ($count == 1)? $singular : $plural;
 } // END function autoPluralise
+
+
+function sendMail($subject = "No Subject Specified", $recipients = NULL, $body = NULL) {
+	require_once($_SERVER['DOCUMENT_ROOT'] . '/ocsd/engine/PHPMailer/class.phpmailer.php');
+	
+	$mail = new PHPMailer;
+	
+	$mail->IsSMTP();
+	$mail->Host = EMAIL_HOST;
+	
+	$mail->From = EMAIL_FROM;
+	$mail->FromName = SITE_SHORT_NAME;
+	$mail->AddAddress('andrew.breakspear@seh.ox.ac.uk', 'Andrew Breakspear');
+	$mail->AddReplyTo(EMAIL_FROM, SITE_ADMIN_NAME);
+	
+	$mail->WordWrap = 50;                                 // Set word wrap to 50 characters
+	//$mail->AddAttachment('/var/tmp/file.tar.gz');         // Add attachments
+	//$mail->AddAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+	$mail->IsHTML(true);                                  // Set email format to HTML
+	
+	$mail->Subject = $subject;
+	$mail->Body    = $body;
+	//$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+	
+	if(!$mail->Send()) {
+	   echo 'Message could not be sent.';
+	   echo 'Mailer Error: ' . $mail->ErrorInfo;
+	   exit;
+	}
+	
+	echo 'Message has been sent';
+}
 ?>

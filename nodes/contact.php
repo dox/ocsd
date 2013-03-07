@@ -5,7 +5,6 @@
 		</div>
 	</div>
 	<div class="span12">
-		<p>Submit</p>
 		<form class="form-horizontal">
 		<div class="control-group">
 			<label class="control-label" for="inputEmail">Your E-Mail</label>
@@ -14,16 +13,17 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="inputEmail">Query/Problem</label>
+			<label class="control-label" for="textareaMessage">Query/Problem</label>
 			<div class="controls">
-				<textarea rows="3"></textarea>
+				<textarea rows="3" id="textareaMessage"></textarea>
 			</div>
 		</div>
 		<div class="control-group">
 			<div class="controls">
-				<button type="submit" class="btn">Submit (DON'T USE THIS YET)</button>
+				<button type="button" class="btn" id="submitFormButton">Submit</button>
 			</div>
 		</div>
 		</form>
+		<div id="responseAdded">test</div>
 	</div>
 </div>
