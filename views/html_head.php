@@ -21,6 +21,11 @@
     	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     
+    <script src="js/jquery.js"></script>
+	<script src="js/bootstrap.js"></script>
+	<script src="js/bootstrap-typeahead.js"></script>
+	<script src="js/ocsd.js"></script>
+    
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="ico/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">

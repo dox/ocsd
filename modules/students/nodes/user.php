@@ -177,9 +177,3 @@ $degree = Grads::find_by_studentkey($user->studentid);
 		
 	</div>
 </div>
-
-<script>
-$(function () {
-	$('#myTab a:last').tab('show');
-})
-</script>

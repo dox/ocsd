@@ -41,3 +41,10 @@ $(function() {
 		return false;
 	});
 });
+
+$(function() {
+	$(".label").tooltip({
+		'selector': '',
+		'placement': 'top'
+	});
+});

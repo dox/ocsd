@@ -9,7 +9,7 @@
 		<div class="control-group">
 			<label class="control-label" for="inputEmail">Your E-Mail</label>
 			<div class="controls">
-				<input type="text" id="inputEmail" placeholder="Email">
+				<input type="text" id="inputEmail" placeholder="E-Mail">
 			</div>
 		</div>
 		<div class="control-group">
@@ -20,10 +20,9 @@
 		</div>
 		<div class="control-group">
 			<div class="controls">
-				<button type="button" class="btn" id="submitFormButton">Submit</button>
+				<button type="button" class="btn btn-primary" id="submitFormButton">Submit</button>
 			</div>
 		</div>
 		</form>
-		<div id="responseAdded">test</div>
 	</div>
 </div>

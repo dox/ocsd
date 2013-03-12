@@ -127,7 +127,7 @@ class Students {
 	}
 	
 	public function bodcard($link = true) {
-		$subMessage = "";
+		$toolTip = "";
 		
 		if ($this->univ_cardno == "") {
 			$bodcard = "UNKNOWN";
@@ -141,22 +141,23 @@ class Students {
 				$url = "#";
 			} else {
 				if (date('Y-m-d') < convertToDateString($this->dt_card_exp)) {
-					$labelClass = "label-info";
-					$subMessage = "";
+					$labelClass = "label label-info";
+					$toolTip = "Expires on " . convertToDateString($this->dt_card_exp);
 				} else {
-					$labelClass = "label-important";
-					//$subMessage = " <i>(card expired)</i>";
-					$subMessage = "";
+					$labelClass = "label label-important";
+					$toolTip = "Bod Card expired on " . convertToDateString($this->dt_card_exp);
 				}
 				
 				$url = "index.php?m=students&n=user.php&studentid=" . $this->studentid;
 			}
 			
-			$bodcard = "<span class=\"label " . $labelClass . "\">" . $bodcard . "</a></span>";
-			$bodcard = "<a href=\"" . $url . "\">" . $bodcard . "</a>" . $subMessage;
+			//$bodcardOutput  = "<span class=\"label " . $labelClass . "\">";
+			$bodcardOutput  = "<a class=\"" . $labelClass . "\" href=\"" . $url . "\" data-toggle=\"tooltip\" title=\"" . $toolTip . "\">";
+			$bodcardOutput .= $bodcard;
+			$bodcardOutput .= "</a>";
 		}
 		
-		return $bodcard;
+		return $bodcardOutput;
 	}
 	
 	public function id() {

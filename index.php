@@ -28,11 +28,6 @@ include_once("engine/initialise.php");
 		?>
 		<?php include_once("views/footer.php"); ?>
 	</div>
-	
-	<script src="js/jquery.js"></script>
-	<script src="js/bootstrap.js"></script>
-	<script src="js/bootstrap-typeahead.js"></script>
-	<script src="js/ocsd.js"></script>
 </body>
 </html>
 
