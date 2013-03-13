@@ -26,10 +26,11 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="index.php?m=reports&n=index.php">Reports</a></li>
+						<li><a href="index.php?m=logs&n=index.php">Logs</a></li>
 						<li><a href="index.php?m=epos&n=index.php">EPOS</a></li>
-						<li><a href="index.php?n=profile.php">My Profile</a></li>
 						<li class="divider"></li>
-						<li class="nav-header">Nav header</li>
+						<li class="nav-header">My Details</li>
+						<li><a href="index.php?n=profile.php">My Profile</a></li>
 						<li><a href="index.php?n=contact.php">Report Problem</a></li>
 						<li><a href="index.php?n=logon.php&logout=true">Log Out</a></li>
 					</ul>
