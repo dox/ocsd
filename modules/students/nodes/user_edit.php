@@ -12,35 +12,54 @@ $degree = Grads::find_by_studentkey($user->studentid);
 <div class="row">
 	<div class="span12">
 		<div class="page-header">
-			<h1><?php echo $user->fullDisplayName(); ?> <small> Cohort: <?php echo $user->yr_cohort; ?></small></h1>
+			<h1>Edit User <small><?php echo $user->fullDisplayName(); ?></small></h1>
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="span3">
-		<?php echo $user->imageURL(true); ?>
-		<div class="clearfix"></div>
-		<p><i class="icon-barcode"></i> <?php echo $user->bodcard(); ?></p>
-		<?php
-		if (isset($user->oucs_id)) {
-			echo "<p><i class=\"icon-user\"></i> <span id=\"oucs_id\" data-type=\"text\" data-pk=\"" . $user->id() . "\" data-url=\"/ocsd/actions/test.php\" data-original-title=\"Enter OUCS ID\">" . $user->oucs_id . "</span></p>";
-
-		}
-		if (isset($user->mobile)) {
-			echo "<p><i class=\"icon-comment\"></i> <span id=\"mobile\" data-type=\"text\" data-pk=\"" . $user->id() . "\" data-url=\"/ocsd/actions/test.php\" data-original-title=\"Mobile Telephone Number\">" . $user->mobile . "</span></p>";
+		<form class="form-horizontal">
+			<?php echo $user->imageURL(true); ?>
+			<div class="clearfix"></div>
+			<div class="control-group">
+				<label class="control-label" for="inputBodcard">Bod Card</label>
+				<div class="controls">
+					<input type="text" id="inputBodcard" placeholder="Bodcard" value="<?php echo $user->bodcard(false); ?>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputOUCSID">OUCS ID</label>
+				<div class="controls">
+					<input type="text" id="inputOUCSID" placeholder="OUCS ID" value="<?php echo $user->oucs_id; ?>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputMobile">Mobile Number</label>
+				<div class="controls">
+					<input type="text" id="inputMobile" placeholder="Mobile Number" value="<?php echo $user->mobile; ?>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputEmail1">Oxford E-Mail Address</label>
+				<div class="controls">
+					<input type="text" id="inputEmail1" placeholder="Oxford E-Mail Address" value="<?php echo $user->email1; ?>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputEmail2">Personal E-Mail Address</label>
+				<div class="controls">
+					<input type="text" id="inputEmail2" placeholder="Personal E-Mail Address" value="<?php echo $user->email2; ?>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputNationality">Nationality</label>
+				<div class="controls">
+					<input type="text" id="inputNationality" placeholder="Nationality" value="<?php echo $user->nationality; ?>">
+				</div>
+			</div>
 			
-		}
-		if (isset($user->email1)) {
-			echo "<p><i class=\"icon-envelope\"></i> <a href=\"mailto:" . $user->email1 . "\">" . $user->email1 . "</a></p>";
-		}
-		if (isset($user->email2)) {
-			echo "<p><i class=\"icon-envelope\"></i> <a href=\"mailto:" . $user->email2 . "\">" . $user->email2 . "</a></p>";
-		}
-		?>
-		
-		<p><i class="icon-globe"></i> <?php echo $user->nationality; ?></p>
-		
-		<p><button id="enableEdit" class="btn">Enable Editing &raquo;</button></p>
+			<a class="btn btn-primary" href="index.php?n=404.php">Update Details</a>
+		</form>
 		<div class="clearfix"></div>
 	</div>
 	<div class="span9">
@@ -49,28 +68,76 @@ $degree = Grads::find_by_studentkey($user->studentid);
 			<li><a href="#addresses" data-toggle="tab">Addresses</a></li>
 			<li><a href="#education" data-toggle="tab">Education</a></li>
 			<li><a href="#college" data-toggle="tab">College</a></li>
-			<li><a href="#awards" data-toggle="tab">Awards</a></li>
 			<li><a href="#reports" data-toggle="tab">Reports</a></li>
 		</ul>
 		
 		<div class="tab-content">
 			<div class="tab-pane active" id="information">
-					<div class="span2 well lead">
-						English 1st: <?php echo $user->eng_lang; ?>
+				<form class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="inputEng_lang">English 1st</label>
+						<div class="controls">
+							<input type="text" id="inputEng_lang" placeholder="English 1st" value="<?php echo $user->eng_lang; ?>">
+						</div>
 					</div>
-					<div class="span3 well lead">
-						College Status: <?php echo $user->st_type; ?>
+					<div class="control-group">
+						<label class="control-label" for="inputSt_type">College Status</label>
+						<div class="controls">
+							<input type="text" id="inputSt_type" placeholder="College Status" value="<?php echo $user->st_type; ?>">
+						</div>
 					</div>
-					<div class="span2 well lead">
-						Course Year: <?php echo $user->course_yr; ?>
+					<div class="control-group">
+						<label class="control-label" for="inputCourse_yr">Course Year</label>
+						<div class="controls">
+							<input type="text" id="inputCourse_yr" placeholder="Course Year" value="<?php echo $user->course_yr; ?>">
+						</div>
 					</div>
-				<p>Disability: <?php echo $user->disability; ?></p>
-				<div class="clearfix"></div>
-				<hr />
-				<p>Full Name: <?php echo $user->fullDisplayName(); ?></p>
-				<p>Preferred First Name: <?php echo $user->prefname; ?></p>
-				<p>Previous Family Name: <?php echo $user->prev_surname; ?></p>
-				<p><?php echo $user->suffix; ?></p>
+					<div class="control-group">
+						<label class="control-label" for="inputDisability">Disability</label>
+						<div class="controls">
+							<input type="text" id="inputDisability" placeholder="Disability" value="<?php echo $user->disability; ?>">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="inputEng_lang">English 1st</label>
+						<div class="controls">
+							<input type="text" id="inputEng_lang" placeholder="English 1st" value="<?php echo $user->eng_lang; ?>">
+						</div>
+					</div>
+					
+					<hr />
+					
+					<div class="control-group">
+						<label class="control-label" for="inputTitle">Title</label>
+						<div class="controls">
+							<input type="text" id="inputTitle" placeholder="Title" value="<?php echo $user->title; ?>">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="inputForenames">Forenames</label>
+						<div class="controls">
+							<input type="text" id="inputForenames" placeholder="Forenames" value="<?php echo $user->forenames; ?>">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="inputPrefname">Preferred Name(s)</label>
+						<div class="controls">
+							<input type="text" id="inputPrefname" placeholder="Preferred Name(s)" value="<?php echo $user->prefname; ?>">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="inputPrev_surname">Previous Surname(s)</label>
+						<div class="controls">
+							<input type="text" id="inputPrev_surname" placeholder="Previous Surname(s)" value="<?php echo $user->prev_surname; ?>">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="inputSuffix">Suffix</label>
+						<div class="controls">
+							<input type="text" id="inputSuffix" placeholder="Suffix" value="<?php echo $user->suffix; ?>">
+						</div>
+					</div>
+					
 				<p>Marital Status: <?php echo $user->marital_status; ?></p>
 				<p>DOB: <?php echo convertToDateString($user->dt_birth) . " (Age: " . age(convertToDateString($user->dt_birth)) . ")"; ?></p>
 				<p>Gender: <?php echo $user->gender; ?></p>
@@ -158,9 +225,6 @@ $degree = Grads::find_by_studentkey($user->studentid);
 				<p>Entry Year: </p>
 				<p>App. Type: <?php echo $degree->app_type; ?></p>
 			</div>
-			<div class="tab-pane" id="awards">
-				<p>Coming soon</p>
-			</div>
 			<div class="tab-pane" id="reports">
 				<p>
 				<div class="btn-group">
@@ -183,21 +247,3 @@ $degree = Grads::find_by_studentkey($user->studentid);
 		
 	</div>
 </div>
-
-<script>
-//$.fn.editable.defaults.mode = 'inline';
-
-$("#enableEdit").click(function() {
-	$("#enableEdit").addClass("btn-warning");
-	$("#enableEdit").html('EDIT MODE ON');
-	
-	$('#oucs_id').editable();
-	$('#mobile').editable();
-	
-	return false;
-});
-
-
-
-
-</script>

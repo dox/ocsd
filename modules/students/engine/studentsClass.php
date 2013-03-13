@@ -155,6 +155,8 @@ class Students {
 			$bodcardOutput  = "<a class=\"" . $labelClass . "\" href=\"" . $url . "\" data-toggle=\"tooltip\" title=\"" . $toolTip . "\">";
 			$bodcardOutput .= $bodcard;
 			$bodcardOutput .= "</a>";
+		} else {
+			$bodcardOutput .= $bodcard;
 		}
 		
 		return $bodcardOutput;
@@ -162,6 +164,17 @@ class Students {
 	
 	public function id() {
 		return $this->studentid;
+	}
+	
+	public function inlineUpdate($studentid = NULL, $key, $value) {
+		global $database;
+		
+		$sql  = "UPDATE students ";
+		$sql .= "SET " . $database->escape_value($key) . " = '" . $database->escape_value($value) . "' ";
+		$sql .= "WHERE studentid = '" . $database->escape_value($studentid) . "' ";
+		$sql .= "LIMIT 1";
+		
+		$results = self::find_by_sql($sql);
 	}
 	
 	public function imageURL($fullImgTag = false) {
