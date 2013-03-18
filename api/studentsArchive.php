@@ -9,7 +9,7 @@ foreach ($allStudents AS $student) {
 	$studArray['description'] = "Description";
 	$studArray['language'] = "language";
 	$studArray['value'] = $student->ar_studentid;
-	$studArray['tokens'] = array($student->forenames, $student->surname, $student->bodcard(false));
+	$studArray['tokens'] = array($student->prefname, $student->bodcard(false), $student->oucs_id, $student->oss_pn);
 	
 	$masterArray[] = $studArray;
 	unset($studArray);
