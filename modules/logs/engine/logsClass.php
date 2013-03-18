@@ -97,8 +97,6 @@ class Logs {
 		$sql .= $database->escape_value($this->updated_value) . "', '";
 		$sql .= $database->escape_value($this->type) . "', ";
 		$sql .= "INET_ATON('" . $_SERVER['REMOTE_ADDR'] . "'))";
-
-		echo $sql;
 		
 		// check if the database entry was successful (by attempting it)
 		if ($database->query($sql)) {

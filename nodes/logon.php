@@ -1,7 +1,7 @@
 <?php
 //log them out?
 if (isset($_GET['logout'])) {
-	if ($_GET['logout'] == "yes") { //destroy the session
+	if ($_GET['logout'] == "true") { //destroy the session
 		$_SESSION = array();
 		session_destroy();
 		
@@ -41,6 +41,12 @@ if (isset($_POST["oldform"])) { //prevent null bind
 			
 			header($redir);
 			exit;
+		} else {
+			$log = new Logs;
+			$log->notes			= "Unsuccessful logon attempt";
+			$log->prev_value	= $username;
+			$log->type			= "logon";
+			$log->create();
 		}
 	}
 	
