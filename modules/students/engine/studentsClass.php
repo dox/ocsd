@@ -29,6 +29,7 @@ class Students {
 	public $relkey;
 	public $rckey;
 	public $SSNref;
+	public $oss_pn;
 	public $fee_status;
 	public $univ_cardno;
 	public $dt_card_exp;

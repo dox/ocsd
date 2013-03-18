@@ -23,6 +23,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		<div class="clearfix"></div>
 		<p><i class="icon-barcode"></i> <span id="bodcard" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Bodcard"><?php echo $user->bodcard(); ?></span></p>
 		<p><i class="icon-user"></i> <span id="oucs_id" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OUCS ID"><?php echo $user->oucs_id; ?></span></p>
+		<p><i class="icon-qrcode"></i> OSS: <span id="oss_pn" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OSS ID"><?php echo $user->oss_pn; ?></span></p>
 		<p><i class="icon-comment"></i> <span id="mobile" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Mobile Telephone Number"><?php echo $user->mobile; ?></span></p>
 		<p><i class="icon-envelope"></i> <span id="email1" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Oxford E-Mail Address"><a href="mailto:<?php echo $user->email2; ?>"><?php echo $user->email1; ?></a></span></p>
 		<p><i class="icon-envelope"></i> <span id="email2" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Personal E-Mail Address"><a href="mailto:<?php echo $user->email2; ?>"><?php echo $user->email2; ?></a></span></p>
@@ -196,6 +197,7 @@ $("#enableEdit").click(function() {
 	if ($("#enableEdit").html() == "Disable Edit Mode") {
 		$('#bodcard').editable('disable');
 		$('#oucs_id').editable('disable');
+		$('#oss_pn').editable('disable');
 		$('#mobile').editable('disable');
 		$('#email1').editable('disable');
 		$('#email2').editable('disable');
@@ -209,6 +211,7 @@ $("#enableEdit").click(function() {
 		
 		$('#bodcard').editable('enable');
 		$('#oucs_id').editable('enable');
+		$('#oss_pn').editable('enable');
 		$('#mobile').editable('enable');
 		$('#email1').editable('enable');
 		$('#email2').editable('enable');
