@@ -8,6 +8,7 @@ $citizenshipCountry = Countries::find_by_uid($user->citiz_cykey);
 $ethnicCountry = Countries::find_by_uid($user->ethkey);
 $degree = Grads::find_by_studentkey($user->studentid);
 
+$studentAwards = student_awardsClass::find_by_studentkey($user->id());
 ?>
 <div class="row">
 	<div class="span12">
@@ -62,7 +63,7 @@ $degree = Grads::find_by_studentkey($user->studentid);
 				<p><?php echo $user->suffix; ?></p>
 				<p>Marital Status: <?php echo $user->marital_status; ?></p>
 				<p>DOB: <?php echo convertToDateString($user->dt_birth) . " (Age: " . age(convertToDateString($user->dt_birth)) . ")"; ?></p>
-				<p>Gender: <?php echo $user->gender; ?></p>
+				<p>Gender: <span id="gender" data-type="select" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-value="<?php echo $user->gender; ?>" data-original-title="Gender"><?php echo $user->gender; ?></span></p>
 				<p>Country of Birth: <?php if (isset($birthCountry->cyid)) { echo $birthCountry->fullDisplayName(true); }?></p>
 				<p>Country of Residence: <?php if (isset($residenceCountry->cyid)) { echo $residenceCountry->fullDisplayName(true); }?></p>
 				<p>County of Citizenship: <?php if (isset($citizenshipCountry->cyid)) { echo $citizenshipCountry->fullDisplayName(true); }?></p>
@@ -148,7 +149,22 @@ $degree = Grads::find_by_studentkey($user->studentid);
 				<p>App. Type: <?php echo $degree->app_type; ?></p>
 			</div>
 			<div class="tab-pane" id="awards">
-				<p>Coming soon</p>
+				<?php
+				foreach ($studentAwards AS $studentAward) {
+					$award = Awards::find_by_uid($studentAward->awdkey);
+					
+					echo "<h3>" . $award->name . " <span class=\"label\">" . $award->given_by . " " . $award->type . "</span></h3>";
+					
+					echo "<p>Awarded: " . $studentAward->dt_awarded . "</p>";
+					echo "<p>From: " . convertToDateString($studentAward->dt_from) . " - To: " . convertToDateString($studentAward->dt_to) . "</p>";
+					echo "<p>Value: " . $studentAward->value . "</p>";
+					
+					if (isset($studentAward->notes)) {
+						echo "<p>Notes: " . $studentAward->notes . "</p>";
+					}
+					echo "<hr />";
+				}
+				?>
 			</div>
 			<div class="tab-pane" id="reports">
 				<p>
@@ -183,6 +199,7 @@ $("#enableEdit").click(function() {
 		$('#mobile').editable('disable');
 		$('#email1').editable('disable');
 		$('#email2').editable('disable');
+		$('#gender').editable('disable');
 		
 		$("#enableEdit").html("Enable Edit Mode &raquo;");
 		$("#enableEdit").removeClass("btn-warning");
@@ -195,8 +212,16 @@ $("#enableEdit").click(function() {
 		$('#mobile').editable('enable');
 		$('#email1').editable('enable');
 		$('#email2').editable('enable');
+		$('#gender').editable({
+			source: [
+				{value: 'M', text: 'Male'},
+				{value: 'F', text: 'Female'}
+			]
+		});
 	}
 });
+
+
 
 
 </script>
