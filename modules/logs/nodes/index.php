@@ -25,13 +25,38 @@ $logs = Logs::find_all();
 			<tbody>
 			<?php
 			foreach ($logs AS $log) {
+				if (!isset($log->student_id)) {
+					$log->student_id = "3";
+				}
 				$output  = "<tr>";
 				$output .= "<td>" . $log->date_stamp . "</td>";
+				
 				$output .= "<td>" . $log->username . " <span class=\"label\">" . $log->ip . "</span>" . "</td>";
-				$output .= "<td><a href=\"index.php?m=students&n=user.php&studentid=" . $log->student_id . "\">" . $log->student_id ."</a></td>";
-				$output .= "<td><code>" . $log->prev_value . "</code></td>";
-				$output .= "<td><code>" . $log->updated_value . "</code></td>";
-				$output .= "<td>" . $log->type . "</td>";
+				
+				if ($log->student_id == 0) {
+					$output .= "<td></td>";
+				} else {
+					$output .= "<td><a href=\"index.php?m=students&n=user.php&studentid=" . $log->student_id . "\">" . $log->student_id ."</a></td>";
+				}
+				
+				if ($log->prev_value == "") {
+					$output .= "<td></td>";
+				} else {
+					$output .= "<td><code>" . $log->prev_value . "</code></td>";
+				}
+				
+				if ($log->updated_value == "") {
+					$output .= "<td></td>";
+				} else {
+					$output .= "<td><code>" . $log->updated_value . "</code></td>";
+				}
+				
+				if ($log->type == "") {
+					$output .= "<td>unknown</td>";
+				} else {
+					$output .= "<td>" . $log->type . "</td>";
+				}
+				
 				$output .= "<td>" . $log->notes . "</td>";
 				$output .= "</tr>";
 				

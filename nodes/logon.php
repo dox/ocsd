@@ -33,6 +33,12 @@ if (isset($_POST["oldform"])) { //prevent null bind
 			$_SESSION["username"] = $username;
             $_SESSION["userinfo"] = $adldap->user()->info($username);
 			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
+			
+			$log = new Logs;
+			$log->notes			= $_SESSION["username"] . " logged on";
+			$log->type			= "logon";
+			$log->create();
+			
 			header($redir);
 			exit;
 		}
