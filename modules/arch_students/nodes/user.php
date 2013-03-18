@@ -15,6 +15,7 @@ $degree = ArchGrads::find_academic_record_by_studentkey($user->id());
 		<?php echo $user->imageURL(true); ?>
 		<div class="clearfix"></div>
 		<p><i class="icon-barcode"></i> <?php echo $user->bodcard(); ?></p>
+		<p><i class="icon-qrcode"></i> <?php echo $user->oss_pn; ?></p>
 		<p><i class="icon-user"></i> <?php echo $user->oucs_id; ?></p>
 		<?php
 		if ($user->mobile) {
