@@ -49,7 +49,8 @@ class Logs {
 	public static function find_by_uid($uid = NULL) {
 		global $database;
 		
-		$sql  = "SELECT * FROM " . self::$table_name . " ";
+		$sql  = "SELECT uid, date_stamp, username, student_id, notes, prev_value, updated_value, type, INET_NTOA(ip) AS ip ";
+		$sql .= "FROM " . self::$table_name . " ";
 		$sql .= "WHERE uid = '" . $uid . "' ";
 		$sql .= "LIMIT 1";
 		
@@ -61,7 +62,8 @@ class Logs {
 	public static function find_all() {
 		global $database;
 		
-		$sql  = "SELECT * FROM " . self::$table_name . " ";
+		$sql  = "SELECT uid, date_stamp, username, student_id, notes, prev_value, updated_value, type, INET_NTOA(ip) AS ip ";
+		$sql .= "FROM " . self::$table_name . " ";
 		$sql .= "ORDER BY date_stamp DESC";
 		
 		$results = self::find_by_sql($sql);
