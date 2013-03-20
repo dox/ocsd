@@ -26,6 +26,7 @@
 	<script src="js/bootstrap.js"></script>
 	<script src="js/bootstrap-typeahead.js"></script>
 	<script src="js/bootstrap-editable.min.js"></script>
+	<script src="js/moment.min.js"></script>
 	<script src="js/ocsd.js"></script>
     
     <!-- Le fav and touch icons -->
