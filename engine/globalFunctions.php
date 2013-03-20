@@ -13,11 +13,11 @@ function convertToDateString($dateString, $time = false) {
 	}
 	
 	if ($dateString == "") {
-		$returnDate = "Unknown";
-	} else {
-		$date = strtotime($dateString);
-		$returnDate = date($dateFormat, $date);
+		$dateString = date('Y-m-d H:i:s');
 	}
+	
+	$date = strtotime($dateString);
+	$returnDate = date($dateFormat, $date);
 	
 	return $returnDate;
 }
