@@ -19,7 +19,17 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 </div>
 <div class="row">
 	<div class="span3">
-		<?php echo $user->imageURL(true); ?>
+		<div>
+			<?php echo $user->imageURL(true); ?>
+			<div id="image-list"></div>
+		</div>
+		<form id="photoUploadForm" method="post" enctype="multipart/form-data"  action="modules/students/actions/photoUpload.php">  
+			<input type="file" name="images" id="images" />  
+			<button type="submit" id="btn">Upload Files!</button>
+			<input type="hidden" id="studentkey" value="<?php echo $user->id(); ?>">
+		</form>  
+        <div id="response"></div>
+        <hr />
 		<div class="clearfix"></div>
 		<p style="white-space:nowrap;"><i class="icon-barcode"></i> <span id="bodcard" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Bodcard"><?php echo $user->bodcard(); ?></span></p>
 		<p style="white-space:nowrap;"><i class="icon-user"></i> <span id="oucs_id" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OUCS ID"><?php echo $user->oucs_id; ?></span></p>
@@ -252,6 +262,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 
 <script>
 $("#awardsFormAdd").hide();
+$("#photoUploadForm").hide();
 
 //$.fn.editable.defaults.mode = 'inline';
 $('#dt_birth').editable('disable');
@@ -268,6 +279,7 @@ $("#enableEdit").click(function() {
 		$('#dt_birth').editable('disable');
 		
 		$("#awardsFormAdd").hide();
+		$('#photoUploadForm').hide();
 		
 		$("#enableEdit").html("Enable Edit Mode &raquo;");
 		$("#enableEdit").removeClass("btn-warning");
@@ -276,6 +288,7 @@ $("#enableEdit").click(function() {
 		$("#enableEdit").html('Disable Edit Mode');
 		
 		$('#awardsFormAdd').show('slow');
+		$('#photoUploadForm').show('slow');
 		
 		$('#bodcard').editable('enable');
 		$('#oucs_id').editable('enable');
@@ -339,3 +352,7 @@ $("#awardAddButton").click(function() {
 	return false;
 });
 </script>
+
+  	
+	
+<script src="modules/students/js/upload.js"></script>

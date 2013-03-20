@@ -179,7 +179,7 @@ class Students {
 	}
 	
 	public function imageURL($fullImgTag = false) {
-		$pathToFiles = "uploads/";
+		$pathToFiles = "uploads/userphoto/";
 		$pathToFile = $pathToFiles . $this->photo;
 		
 		if (!isset($this->photo)) {
@@ -191,8 +191,7 @@ class Students {
 		//$url = "uploads/2703628.jpg";
 		
 		if ($fullImgTag == true) {
-			$output  = "<img src=\"" . $pathToFile . "\" class=\"img-polaroid \" style=\"max-height: 300px;\">";
-			$output .= "<hr />";
+			$output  = "<img id=\"userPhoto\" src=\"" . $pathToFile . "\" class=\"img-polaroid \" style=\"max-height: 300px;\">";
 		} else {
 			$output = $pathToFile;
 		}
