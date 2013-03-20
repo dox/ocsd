@@ -79,5 +79,25 @@ class student_awardsClass {
 		
 		return $results;
 	}
+	
+	public function create() {
+		global $database;
+		
+		$sql  = "INSERT INTO " . self::$table_name . " (";
+		$sql .= "studentkey, awdkey, dt_awarded, dt_from, dt_to, value, notes";
+		$sql .= ") VALUES ('";
+		$sql .= $database->escape_value($this->studentkey) . "', '";
+		$sql .= $database->escape_value($this->awdkey) . "', '";
+		$sql .= $database->escape_value($this->dt_awarded) . "', '";
+		$sql .= $database->escape_value($this->dt_from) . "', '";
+		$sql .= $database->escape_value($this->dt_to) . "', '";
+		$sql .= $database->escape_value($this->value) . "', '";
+		$sql .= $database->escape_value($this->notes) . "')";
+		
+		// check if the database entry was successful (by attempting it)
+		if ($database->query($sql)) {
+			//$this->uid = $database->insert_id();
+		}
+	}
 }
 ?>

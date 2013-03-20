@@ -150,6 +150,63 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p>App. Type: <?php echo $degree->app_type; ?></p>
 			</div>
 			<div class="tab-pane" id="awards">
+				<div id="awardsFormAdd">
+					<form class="form-horizontal">
+						<div class="control-group">
+							<label class="control-label" for="inputAward">Award</label>
+							<div class="controls">
+								<select id="inputAward">
+								
+									<?php
+									$awards = Awards::find_all();
+									foreach($awards AS $award) {
+										$output  = "<option value=\"" . $award->awdid . "\">";
+										$output .= $award->name . " (" . $award->type . ")";
+										$output .= "</option>";
+										
+										echo $output;
+									}
+									?>
+									
+								</select>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputDateAwarded">Date Awarded</label>
+							<div class="controls">
+								<input type="text" id="inputDateAwarded" placeholder="inputDateAwarded" value="<?php echo convertToDateString(null,false); ?>">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputDateFrom">Date From</label>
+							<div class="controls">
+								<input type="text" id="inputDateFrom" placeholder="inputDateFrom" value="<?php echo convertToDateString(null,false); ?>">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputDateTo">Date To</label>
+							<div class="controls">
+								<input type="text" id="inputDateTo" placeholder="inputDateTo" value="<?php echo convertToDateString(null,false); ?>">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputAwardValue">Value</label>
+							<div class="controls">
+								<input type="text" id="inputAwardValue" placeholder="Value">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputNotes">Notes</label>
+							<div class="controls">
+								<textarea rows="3" id="inputNotes"></textarea>
+							</div>
+						</div>
+						<button id="awardAddButton" type="button" class="btn">Submit</button>
+						<input type="hidden" id="inputStudentkey" value="<?php echo $user->studentid; ?>">
+					</form>
+					<div id="response_added"></div>
+					<div class="clearfix"></div>
+				</div>
 				<?php
 				foreach ($studentAwards AS $studentAward) {
 					$award = Awards::find_by_uid($studentAward->awdkey);
@@ -191,6 +248,8 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 </div>
 
 <script>
+$("#awardsFormAdd").hide();
+
 //$.fn.editable.defaults.mode = 'inline';
 
 $("#enableEdit").click(function() {
@@ -203,11 +262,15 @@ $("#enableEdit").click(function() {
 		$('#email2').editable('disable');
 		$('#gender').editable('disable');
 		
+		$("#awardsFormAdd").hide();
+		
 		$("#enableEdit").html("Enable Edit Mode &raquo;");
 		$("#enableEdit").removeClass("btn-warning");
 	} else {
 		$("#enableEdit").addClass("btn-warning");
 		$("#enableEdit").html('Disable Edit Mode');
+		
+		$('#awardsFormAdd').show('slow');
 		
 		$('#bodcard').editable('enable');
 		$('#oucs_id').editable('enable');
@@ -223,8 +286,49 @@ $("#enableEdit").click(function() {
 		});
 	}
 });
+</script>
 
+<script>
+$("#awardAddButton").click(function() {
+	var studentkey = $("input#inputStudentkey").val();
+	var awdkey = $("select#inputAward").val();
+	
+	var dt_awarded = $("input#inputDateAwarded").val();
+	if (dt_awarded == "") {
+		alert("There is no 'Date Awarded' specified.");
+		return false;
+	}
+	
+	var dt_from = $("input#inputDateFrom").val();
+	if (dt_from == "") {
+		alert("There is no 'Date From' specified.");
+		return false;
+	}
+	
+	var dt_to = $("input#inputDateTo").val();
+	if (dt_to == "") {
+		alert("There is no 'Date To' specified.");
+		return false;
+	}
+	
+	var value = $("input#inputAwardValue").val();
+	var notes = $("textarea#notes").val();
 
-
-
+	var url = 'modules/awards/actions/addStudentAward.php';
+	
+	// perform the post to the action (take the info and submit to database)
+	$.post(url,{
+		studentkey: studentkey,
+		awdkey: awdkey,
+		dt_awarded: dt_awarded,
+		dt_from: dt_from,
+		dt_to: dt_to,
+		value: value,
+		notes: notes
+	}, function(data){
+		alert('Award added - please refresh this page');
+	},'html');
+	
+	return false;
+});
 </script>
