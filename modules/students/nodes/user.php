@@ -31,12 +31,12 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
         <div id="response"></div>
         <hr />
 		<div class="clearfix"></div>
-		<p style="white-space:nowrap;"><i class="icon-barcode"></i> <span id="bodcard" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Bodcard"><?php echo $user->bodcard(); ?></span></p>
-		<p style="white-space:nowrap;"><i class="icon-user"></i> <span id="oucs_id" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OUCS ID"><?php echo $user->oucs_id; ?></span></p>
-		<p style="white-space:nowrap;"><i class="icon-qrcode"></i> OSS: <span id="oss_pn" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OSS ID"><?php echo $user->oss_pn; ?></span></p>
-		<p style="white-space:nowrap;"><i class="icon-comment"></i> <span id="mobile" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Mobile Telephone Number"><?php echo $user->mobile; ?></span></p>
-		<p style="white-space:nowrap"><i class="icon-envelope"></i> <span id="email1" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Oxford E-Mail Address"><a href="mailto:<?php echo $user->email2; ?>"><?php echo $user->email1; ?></a></span></p>
-		<p style="white-space:nowrap;"><i class="icon-envelope"></i> <span id="email2" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Personal E-Mail Address"><a href="mailto:<?php echo $user->email2; ?>"><?php echo $user->email2; ?></a></span></p>
+		<p style="white-space:nowrap;"><i class="icon-barcode"></i> <span id="bodcard" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Bodcard"><?php echo $user->bodcard(); ?></span></p>
+		<p style="white-space:nowrap;"><i class="icon-user"></i> <span id="oucs_id" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OUCS ID"><?php echo $user->oucs_id; ?></span></p>
+		<p style="white-space:nowrap;"><i class="icon-qrcode"></i> OSS: <span id="oss_pn" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OSS ID"><?php echo $user->oss_pn; ?></span></p>
+		<p style="white-space:nowrap;"><i class="icon-comment"></i> <span id="mobile" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Mobile Telephone Number"><?php echo $user->mobile; ?></span></p>
+		<p style="white-space:nowrap"><i class="icon-envelope"></i> <span id="email1" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Oxford E-Mail Address"><a href="mailto:<?php echo $user->email2; ?>"><?php echo $user->email1; ?></a></span></p>
+		<p style="white-space:nowrap;"><i class="icon-envelope"></i> <span id="email2" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Personal E-Mail Address"><a href="mailto:<?php echo $user->email2; ?>"><?php echo $user->email2; ?></a></span></p>
 
 		
 		<p><i class="icon-globe"></i> <?php echo $user->nationality; ?></p>
@@ -73,8 +73,8 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p>Previous Family Name: <?php echo $user->prev_surname; ?></p>
 				<p><?php echo $user->suffix; ?></p>
 				<p>Marital Status: <?php echo $user->marital_status; ?></p>
-				<p>DOB: <a href="#" id="dt_birth" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_birth); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-template="YYYY / MMM / D" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date of birth"></a> (Age: <?php echo age(convertToDateString($user->dt_birth)); ?>)</p>
-				<p>Gender: <span id="gender" data-type="select" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-value="<?php echo $user->gender; ?>" data-original-title="Gender"><?php echo $user->gender; ?></span></p>
+				<p>DOB: <a href="#" id="dt_birth" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_birth); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-template="YYYY / MMM / D" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date of birth"></a> (Age: <?php echo age(convertToDateString($user->dt_birth)); ?>)</p>
+				<p>Gender: <span id="gender" class="inlineEditble" data-type="select" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-value="<?php echo $user->gender; ?>" data-original-title="Gender"><?php echo $user->gender; ?></span></p>
 				<p>Country of Birth: <?php if (isset($birthCountry->cyid)) { echo $birthCountry->fullDisplayName(true); }?></p>
 				<p>Country of Residence: <?php if (isset($residenceCountry->cyid)) { echo $residenceCountry->fullDisplayName(true); }?></p>
 				<p>County of Citizenship: <?php if (isset($citizenshipCountry->cyid)) { echo $citizenshipCountry->fullDisplayName(true); }?></p>
@@ -224,6 +224,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				foreach ($studentAwards AS $studentAward) {
 					$award = Awards::find_by_uid($studentAward->awdkey);
 					
+					echo "<div>";
 					$button  = "<button class=\"btn btn-mini btn-danger pull-right awardDeleteButton\" id=\"" . $studentAward->sawid . "\">Delete</button>";
 					$button .= "<button class=\"btn btn-mini pull-right\">Edit</button>";
 					$button .= "";
@@ -239,6 +240,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 					if (isset($studentAward->notes)) {
 						echo "<p>Notes: " . $studentAward->notes . "</p>";
 					}
+					echo "</div>";
 					echo "<hr />";
 				}
 				?>
@@ -272,18 +274,16 @@ $(".awardDeleteButton").click(function() {
 	
 	var url = 'modules/awards/actions/deleteStudentAward.php';
 	
-	if(confirm("Are you sure?")) {
+	if(confirm("Are you sure you want to delete this award?")) {
 		$.post(url,{
 			student_awdkey: student_awdkey
-		}, function(data){
-			alert('Award deleted - please refresh this page');
+		}, function(data) {
 		},'html');
 	} else {
 		e.preventDefault();
 	}
-	// perform the post to the action (take the info and submit to database)
 	
-	
+	$(this).parent("div").hide();
 	return false;
 });
 
@@ -292,18 +292,12 @@ $("#photoUploadForm").hide();
 $(".awardDeleteButton").hide();
 
 //$.fn.editable.defaults.mode = 'inline';
-$('#dt_birth').editable('disable');
+$('.inlineEditble').editable('disable');
 
 $("#enableEdit").click(function() {
 	if ($("#enableEdit").html() == "Disable Edit Mode") {
-		$('#bodcard').editable('disable');
-		$('#oucs_id').editable('disable');
-		$('#oss_pn').editable('disable');
-		$('#mobile').editable('disable');
-		$('#email1').editable('disable');
-		$('#email2').editable('disable');
-		$('#gender').editable('disable');
-		$('#dt_birth').editable('disable');
+		$('.inlineEditble').editable('disable');
+
 		
 		$("#awardsFormAdd").hide();
 		$('#photoUploadForm').hide();
@@ -319,14 +313,7 @@ $("#enableEdit").click(function() {
 		$('#photoUploadForm').show('slow');
 		$('.awardDeleteButton').show();
 		
-		$('#bodcard').editable('enable');
-		$('#oucs_id').editable('enable');
-		$('#oss_pn').editable('enable');
-		$('#mobile').editable('enable');
-		$('#email1').editable('enable');
-		$('#email2').editable('enable');
-		$('#dt_birth').editable('enable');
-		
+		$('.inlineEditble').editable('enable');
 		$('#gender').editable({
 			source: [
 				{value: 'M', text: 'Male'},
