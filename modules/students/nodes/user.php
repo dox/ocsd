@@ -332,7 +332,7 @@ $("#awardAddButton").click(function() {
 	}
 	
 	var value = $("input#inputAwardValue").val();
-	var notes = $("textarea#notes").val();
+	var notes = $("textarea#inputNotes").val();
 
 	var url = 'modules/awards/actions/addStudentAward.php';
 	
