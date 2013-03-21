@@ -224,6 +224,12 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				foreach ($studentAwards AS $studentAward) {
 					$award = Awards::find_by_uid($studentAward->awdkey);
 					
+					$button  = "<button class=\"btn btn-mini btn-danger pull-right awardDeleteButton\" id=\"" . $studentAward->sawid . "\">Delete</button>";
+					$button .= "<button class=\"btn btn-mini pull-right\">Edit</button>";
+					$button .= "";
+					
+					echo $button;
+					
 					echo "<h3>" . $award->name . " <span class=\"label\">" . $award->given_by . " " . $award->type . "</span></h3>";
 					
 					echo "<p>Awarded: " . $studentAward->dt_awarded . "</p>";
@@ -261,8 +267,29 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 </div>
 
 <script>
+$(".awardDeleteButton").click(function() {
+	var student_awdkey = $(this).attr('id');
+	
+	var url = 'modules/awards/actions/deleteStudentAward.php';
+	
+	if(confirm("Are you sure?")) {
+		$.post(url,{
+			student_awdkey: student_awdkey
+		}, function(data){
+			alert('Award deleted - please refresh this page');
+		},'html');
+	} else {
+		e.preventDefault();
+	}
+	// perform the post to the action (take the info and submit to database)
+	
+	
+	return false;
+});
+
 $("#awardsFormAdd").hide();
 $("#photoUploadForm").hide();
+$(".awardDeleteButton").hide();
 
 //$.fn.editable.defaults.mode = 'inline';
 $('#dt_birth').editable('disable');
@@ -280,6 +307,7 @@ $("#enableEdit").click(function() {
 		
 		$("#awardsFormAdd").hide();
 		$('#photoUploadForm').hide();
+		$('.awardDeleteButton').hide();
 		
 		$("#enableEdit").html("Enable Edit Mode &raquo;");
 		$("#enableEdit").removeClass("btn-warning");
@@ -289,6 +317,7 @@ $("#enableEdit").click(function() {
 		
 		$('#awardsFormAdd').show('slow');
 		$('#photoUploadForm').show('slow');
+		$('.awardDeleteButton').show();
 		
 		$('#bodcard').editable('enable');
 		$('#oucs_id').editable('enable');
@@ -351,6 +380,8 @@ $("#awardAddButton").click(function() {
 	
 	return false;
 });
+
+
 </script>
 
   	

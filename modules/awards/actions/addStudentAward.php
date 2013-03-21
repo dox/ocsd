@@ -15,7 +15,7 @@ if (isset($_POST['studentkey'])) {
 	
 	$log = new Logs;
 	$log->student_id	= $_POST['studentkey'];
-	$log->notes			= "Award added";
+	$log->notes			= "Student award added";
 	$log->updated_value	= $_POST['awdkey'];
 	$log->type			= "create";
 	$log->create();

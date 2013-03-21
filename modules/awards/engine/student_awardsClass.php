@@ -99,5 +99,18 @@ class student_awardsClass {
 			//$this->uid = $database->insert_id();
 		}
 	}
+	
+	public function delete() {
+		global $database;
+		
+		$sql  = "DELETE FROM " . self::$table_name . " ";
+		$sql .= "WHERE sawid = '" . $database->escape_value($this->sawid) . "' ";
+		$sql .= "LIMIT 1";
+		
+		// check if the database entry was successful (by attempting it)
+		if ($database->query($sql)) {
+			//$this->uid = $database->insert_id();
+		}
+	}
 }
 ?>
