@@ -7,10 +7,15 @@
     <script src="js/typeahead.js"></script>
     <script src="js/hogan-2.0.0.js"></script>
 
-    <style>
+<style>
       .container {
         width: 800px;
         margin: 50px auto;
+      }
+
+      .typeahead-wrapper {
+        display: block;
+        margin: 50px 0;
       }
 
       .tt-dropdown-menu {
@@ -20,6 +25,12 @@
 
       .tt-suggestion.tt-is-under-cursor {
         background-color: #ccc;
+      }
+
+      .triggered-events {
+        float: right;
+        width: 500px;
+        height: 300px;
       }
     </style>
   </head>
@@ -33,13 +44,15 @@
 $('.typeahead').typeahead({
 	name: 'twitter',
 	prefetch: './api/studentsAll.php',
-	remote: './api/studentsArchive.php',
 	template: '<p class="repo-language">{{name}}</p>',
 	engine: Hogan
-});
+}).on('typeahead:selected', function($e) {
+	var $typeahead = $(this);
+	var studentUID = $typeahead[0].value;
+	var url = 'index.php?m=students&n=user.php&studentid=' + studentUID;
+	
+	window.location = url;
 
-$("#repo-language").click(function() {
-  alert("Handler for .click() called.");
 });
 
 </script>

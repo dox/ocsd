@@ -22,9 +22,8 @@
     	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     
-    <script src="js/jquery.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script src="js/bootstrap.js"></script>
-	<script src="js/bootstrap-typeahead.js"></script>
 	<script src="js/bootstrap-editable.min.js"></script>
 	<script src="js/moment.min.js"></script>
 	<script src="js/ocsd.js"></script>
