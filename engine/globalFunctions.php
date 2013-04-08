@@ -74,4 +74,35 @@ function sendMail($subject = "No Subject Specified", $recipients = NULL, $body =
 	
 	echo 'Message has been sent';
 }
+
+function isingroup($groupname) {
+	$username = $_SESSION['username'];
+	$usergroups = $_SESSION['userinfo'][0]['memberof'];
+	
+	//clean the LDAP group names up
+	foreach ($usergroups AS $group) {
+		if (strlen($group) > 1) {
+			$firstcomma = strpos($group, ",");
+			$firstCN = strpos($group, "CN=");
+			$name = substr($group, $firstCN + 3, $firstcomma - 3);
+			
+			$groupArray[] = $name;
+		}
+	}
+	
+	// check each LDAP group this user is a member of against $groupnamecheck
+	foreach ($groupArray AS $group) {
+		if ($groupname == $group) {
+			return true;
+			break;
+		}
+	}
+}
+function gatekeeper($groupnamecheck = "All Staff") {
+	if (isingroup($groupnamecheck)) {
+	} else {
+		echo "SECURITY ACCESS DENIED";
+		exit;
+	}
+}
 ?>

@@ -23,10 +23,7 @@
   <span class="add-on"><i class="icon-th"></i></span>
 </div>
 
-<?
-//printArray($adldap);
-//printArray($_SESSION);
-?>
+
 <script>
 	// this needs to be in index for some reason
   $('#dp3').datepicker();

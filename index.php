@@ -9,7 +9,6 @@ include_once("engine/initialise.php");
 <body>
 	<?php
 	include_once("views/navigation.php");
-	
 	include_once("views/hero.php");
 	?>
 	<div class="container">
@@ -23,6 +22,8 @@ include_once("engine/initialise.php");
 		}
 		if (!isset($_SESSION['username']) && $fileInclude != "nodes/logon.php") {
 			$fileInclude = "nodes/logon.php";
+		} else {
+			gatekeeper();
 		}
 		include_once($fileInclude);
 		?>
