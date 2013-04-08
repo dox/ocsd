@@ -1,4 +1,4 @@
-<script src="js/typeahead.js"></script>
+<script src="js/typeahead.min.js"></script>
 <script src="js/hogan-2.0.0.js"></script>
     
     <div class="navbar navbar-fixed-top">
