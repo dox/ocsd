@@ -18,8 +18,11 @@
 				</ul>
 				
 				<form class="navbar-search pull-left">
-					<!-- <input type="text" class="search-query" id="searchAhead" placeholder="Search" /> -->
-					<input type="text" class="typeahead" placeholder="Search" />
+					<?php
+					if (isset($_SESSION['username'])) {
+						echo "<input type=\"text\" class=\"typeahead\" placeholder=\"Search\" autocomplete=\"off\" />";
+					}
+					?>
 				</form>
 				
 				<?php
