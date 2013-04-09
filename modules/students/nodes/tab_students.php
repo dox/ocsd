@@ -2,6 +2,10 @@
 include_once("../../../engine/initialise.php");
 $allStudents = Students::find_all();
 ?>
+<script src="js/jquery.fastLiveFilter.js"></script>
+
+<input type="text" class="input-medium search-query" id="search_input" placeholder="Quick Filter">
+
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>
@@ -10,7 +14,7 @@ $allStudents = Students::find_all();
     		<th>Full Name</th>
     	</tr>
     </thead>
-    <tbody>
+    <tbody id="search_list">
     	<?php
 	   	foreach($allStudents AS $user) {
     		echo "<tr>";
@@ -22,3 +26,9 @@ $allStudents = Students::find_all();
 		?>
 	</tbody>
 </table>
+
+<script>
+$(function() {
+	$('#search_input').fastLiveFilter('#search_list');
+});
+</script>

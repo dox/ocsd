@@ -1,6 +1,8 @@
 <?php
 $logs = Logs::find_all();
 ?>
+<script src="js/jquery.fastLiveFilter.js"></script>
+
 <div class="row">
 	<div class="span12">
 		<div class="page-header">
@@ -10,6 +12,8 @@ $logs = Logs::find_all();
 </div>
 <div class="row">
 	<div class="span12">
+		<input type="text" class="input-medium search-query" id="logs_search_input" placeholder="Quick Filter">
+		
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -22,7 +26,7 @@ $logs = Logs::find_all();
 					<th>Notes</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="logs_search_list">
 			<?php
 			foreach ($logs AS $log) {
 				if (!isset($log->student_id)) {
@@ -67,3 +71,9 @@ $logs = Logs::find_all();
 		</table>
 	</div>
 </div>
+
+<script>
+$(function() {
+	$('#logs_search_input').fastLiveFilter('#logs_search_list');
+});
+</script>

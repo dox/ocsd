@@ -2,12 +2,9 @@
 include_once("../../../engine/initialise.php");
 $archStudents = ArchStudents::find_all();
 ?>
+<script src="js/jquery.fastLiveFilter.js"></script>
 
-
-<form class="form-search">
-	<input type="text" class="input-medium search-query" id="archiveSearchAhead">
-	<button type="button" class="btn" id="archiveSearchButton">Search</button>
-</form>
+<input type="text" class="input-medium search-query" id="arch_search_input" placeholder="Quick Filter">
 
 <table class="table table-bordered table-striped">
 	<thead>
@@ -17,7 +14,7 @@ $archStudents = ArchStudents::find_all();
     		<th>Full Name</th>
     	</tr>
     </thead>
-    <tbody id="theList">
+    <tbody id="arch_search_list">
     	<?php
 	   	foreach($archStudents AS $user) {
     		echo "<tr>";
@@ -30,21 +27,8 @@ $archStudents = ArchStudents::find_all();
 	</tbody>
 </table>
 
-<script language="javascript" type="text/javascript">
-
-
-$("#archiveSearchButton").click(function() {
-	
-	var value = $("#archiveSearchAhead").val();
-	
-	$("#theList > tr").each(function() {
-		if ($(this).text().search(new RegExp(value, "i")) > -1) {
-			$(this).show();
-		}
-		else {
-			$(this).hide();
-		}
-	});
+<script>
+$(function() {
+	$('#arch_search_input').fastLiveFilter('#arch_search_list');
 });
-
 </script>

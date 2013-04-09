@@ -2,26 +2,9 @@
 include_once("../../../engine/initialise.php");
 $allTutors = Tutors::find_all();
 ?>
-<div class="well" id="tutorfilter">
-	<form class="form-inline">
-		<select>
-			<option>- All -</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-			<option>5</option>
-		</select>
-		<select>
-			<option>- All -</option>
-			<option>2</option>
-			<option>3</option>
-			<option>4</option>
-			<option>5</option>
-		</select>
-		
-		<button type="submit" class="btn">Filter</button>
-	</form>
-</div>
+<script src="js/jquery.fastLiveFilter.js"></script>
+
+<input type="text" class="input-medium search-query" id="tutor_search_input" placeholder="Quick Filter">
 
 <table class="table table-bordered table-striped">
 	<thead>
@@ -30,7 +13,7 @@ $allTutors = Tutors::find_all();
     		<th>Full Name</th>
     	</tr>
     </thead>
-    <tbody>
+    <tbody id="tutor_search_list">
     	<?php
 	   	foreach($allTutors AS $user) {
     		echo "<tr>";
@@ -41,3 +24,9 @@ $allTutors = Tutors::find_all();
 		?>
 	</tbody>
 </table>
+
+<script>
+$(function() {
+	$('#tutor_search_input').fastLiveFilter('#tutor_search_list');
+});
+</script>
