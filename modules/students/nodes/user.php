@@ -79,8 +79,8 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p>Previous Family Name: <?php echo $user->prev_surname; ?></p>
 				<p><?php echo $user->suffix; ?></p>
 				<p>Marital Status: <?php echo $user->marital_status; ?></p>
-				<p>DOB: <a href="#" id="dt_birth" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_birth); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-template="YYYY / MMM / D" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date of birth"></a> (Age: <?php echo age(convertToDateString($user->dt_birth)); ?>)</p>
-				<p>Gender: <span id="gender" class="inlineEditble" data-type="select" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-value="<?php echo $user->gender; ?>" data-original-title="Gender"><?php echo $user->gender; ?></span></p>
+				<p>DOB: <span id="dt_birth" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_birth); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-template="YYYY / MMM / D" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date of Birth"></span> (Age: <?php echo age(convertToDateString($user->dt_birth)); ?>)</p>
+				<p>Gender: <span id="gender" data-type="select" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-value="<?php echo $user->gender; ?>" data-original-title="Gender"><?php echo $user->gender; ?></span></p>
 				<p>Country of Birth: <?php if (isset($birthCountry->cyid)) { echo $birthCountry->fullDisplayName(true); }?></p>
 				<p>Country of Residence: <?php if (isset($residenceCountry->cyid)) { echo $residenceCountry->fullDisplayName(true); }?></p>
 				<p>County of Citizenship: <?php if (isset($citizenshipCountry->cyid)) { echo $citizenshipCountry->fullDisplayName(true); }?></p>
