@@ -2,6 +2,7 @@
 $logs = Logs::find_all();
 ?>
 <script src="js/jquery.fastLiveFilter.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
 
 <div class="row">
 	<div class="span12">
@@ -12,6 +13,8 @@ $logs = Logs::find_all();
 </div>
 <div class="row">
 	<div class="span12">
+		<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+		
 		<input type="text" class="input-medium search-query" id="logs_search_input" placeholder="Quick Filter">
 		
 		<table class="table table-striped">
@@ -75,5 +78,68 @@ $logs = Logs::find_all();
 <script>
 $(function() {
 	$('#logs_search_input').fastLiveFilter('#logs_search_list');
+});
+</script>
+
+<?php
+foreach ($logs AS $log) {
+	$logType = $log->type;
+	$logDate = date('Y-m-d', strtotime($log->date_stamp));
+	
+	$logArray[$logType][$logDate] = $logArray[$logType][$logDate] + 1;
+}
+
+
+foreach ($logArray AS $logTypeName => $logs) {
+	$logType = $logTypeName;
+	
+	foreach ($logs AS $date => $value) {
+		$logType;
+		$logDateString[$logType][] = "[Date.UTC(" . date('Y', strtotime($date)) . ", " . (date('m', strtotime($date)) - 1) . ", "  . date('d', strtotime($date)) . "), " . $value . "]";
+	}
+}
+?>
+
+<script>
+$(function () {
+	$('#container').highcharts({
+		chart: {
+			type: 'spline'
+		},
+		title: {
+			text: 'Logs History Over Time'
+		},
+		xAxis: {
+			type: 'datetime',
+			dateTimeLabelFormats: { // don't display the dummy year
+			month: '%e. %b',
+			year: '%b'
+		}
+	},
+	yAxis: {
+		title: {
+			text: 'Total Log Events'
+		},
+		min: 0
+	},
+	tooltip: {
+		formatter: function() {
+			return '<b>'+ this.series.name +'</b><br/>'+
+			Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y +' m';
+		}
+	},
+	series: [
+		<?php
+		foreach ($logDateString AS $name => $logs) {
+			$output  = "{ name: '" . $name . "',";
+			$output .= "data: [" . implode(",", $logs) . "] }";
+			
+			$seriesOutput[] = $output;
+		}
+		
+		echo implode(",", $seriesOutput);
+		?>
+	]
+	});
 });
 </script>
