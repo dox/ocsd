@@ -44,7 +44,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		<p><i class="icon-globe"></i> <?php echo $user->nationality; ?></p>
 		
 		<?php
-		if (isingroup("IT Support")) {
+		if (isingroup("OCSD Edit")) {
 			echo "<p><button id=\"enableEdit\" class=\"btn\">Enable Edit Mode &raquo;</button></p>";
 		}
 		?>
