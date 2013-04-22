@@ -190,19 +190,19 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 						<div class="control-group">
 							<label class="control-label" for="inputDateAwarded">Date Awarded</label>
 							<div class="controls">
-								<input type="text" id="inputDateAwarded" placeholder="inputDateAwarded" value="<?php echo convertToDateString(null,false); ?>">
+								<input type="date" id="inputDateAwarded" placeholder="YYYY-MM-DD" value="<?php echo convertToDateString(null,false); ?>">
 							</div>
 						</div>
 						<div class="control-group">
 							<label class="control-label" for="inputDateFrom">Date From</label>
 							<div class="controls">
-								<input type="text" id="inputDateFrom" placeholder="inputDateFrom" value="<?php echo convertToDateString(null,false); ?>">
+								<input type="date" id="inputDateFrom" placeholder="YYYY-MM-DD" value="<?php echo convertToDateString(null,false); ?>">
 							</div>
 						</div>
 						<div class="control-group">
 							<label class="control-label" for="inputDateTo">Date To</label>
 							<div class="controls">
-								<input type="text" id="inputDateTo" placeholder="inputDateTo" value="<?php echo convertToDateString(null,false); ?>">
+								<input type="date" id="inputDateTo" placeholder="YYYY-MM-DD" value="<?php echo convertToDateString(null,false); ?>">
 							</div>
 						</div>
 						<div class="control-group">
@@ -210,7 +210,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 							<div class="controls">
 								<div class="input-prepend">
 									<span class="add-on">£</span>
-									<input class="span2" id="inputAwardValue" type="text" placeholder="Value">
+									<input class="span2" id="inputAwardValue" type="number">
 								</div>
 							</div>
 						</div>
