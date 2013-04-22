@@ -106,6 +106,9 @@ $(function () {
 		chart: {
 			type: 'spline'
 		},
+		credits: {
+			enabled: false
+		},
 		title: {
 			text: 'Logs History Over Time'
 		},
@@ -124,8 +127,8 @@ $(function () {
 	},
 	tooltip: {
 		formatter: function() {
-			return '<b>'+ this.series.name +'</b><br/>'+
-			Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y +' m';
+			return '<b>'+ this.series.name +' events</b><br/>'+
+			Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y;
 		}
 	},
 	series: [
