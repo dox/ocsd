@@ -54,7 +54,9 @@ function sendMail($subject = "No Subject Specified", $recipients = NULL, $body =
 	
 	$mail->From = EMAIL_FROM;
 	$mail->FromName = SITE_SHORT_NAME;
-	$mail->AddAddress('andrew.breakspear@seh.ox.ac.uk', 'Andrew Breakspear');
+	
+	$mail->AddAddress($recipients, 'OCSD Recipient');
+	
 	$mail->AddReplyTo(EMAIL_FROM, SITE_ADMIN_NAME);
 	
 	$mail->WordWrap = 50;                                 // Set word wrap to 50 characters
