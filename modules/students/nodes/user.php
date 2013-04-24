@@ -41,7 +41,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		<p style="white-space:nowrap;"><i class="icon-envelope"></i> <span id="email2" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Personal E-Mail Address"><a href="mailto:<?php echo $user->email2; ?>"><?php echo $user->email2; ?></a></span></p>
 
 		
-		<p><i class="icon-globe"></i> <?php echo $user->nationality; ?></p>
+		<p><i class="icon-globe"></i> <span id="nationality" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Nationality"><?php echo $user->nationality; ?></span></p>
 		
 		<?php
 		if (isingroup("OCSD Edit")) {
@@ -80,7 +80,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p>Previous Family Name: <?php echo $user->prev_surname; ?></p>
 				<p><?php echo $user->suffix; ?></p>
 				<p>Marital Status: <?php echo $user->marital_status; ?></p>
-				<p>DOB: <span id="dt_birth" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_birth); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-template="YYYY / MMM / D" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date of Birth"></span> (Age: <?php echo age(convertToDateString($user->dt_birth)); ?>)</p>
+				<p>DOB: <span id="dt_birth" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_birth); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date of Birth"></span> (Age: <?php echo age(convertToDateString($user->dt_birth)); ?>)</p>
 				<p>Gender: <span id="gender" data-type="select" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-value="<?php echo $user->gender; ?>" data-original-title="Gender"><?php echo $user->gender; ?></span></p>
 				<p>Country of Birth: <?php if (isset($birthCountry->cyid)) { echo $birthCountry->fullDisplayName(true); }?></p>
 				<p>Country of Residence: <?php if (isset($residenceCountry->cyid)) { echo $residenceCountry->fullDisplayName(true); }?></p>
@@ -110,13 +110,10 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		<p>Year Entry: <?php echo $user->yr_entry; ?></p>
 		<p>Date Created: <?php echo convertToDateString($user->dt_created); ?></p>
 		
-		<?php
-		if ($user->notes) {
-			echo "<hr />";
-			echo "<h3>Notes: </h3>";
-			echo "<p>" . $user->notes . "</p>";
-		}
-		?>
+		<hr />
+		<h3>Notes</h3>
+		<span id="notes" class="inlineEditble" data-type="textarea" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Notes"><?php echo $user->notes; ?></span>
+
 		<div class="clearfix"></div>
 		<p><button class="btn btn-mini pull-right disabled" type="button">Last Modified By: <?php echo $user->who_mod . " (" . convertToDateString($user->dt_lastmod) . ")"; ?></button></p>
 			</div>
