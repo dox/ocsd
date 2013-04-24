@@ -17,14 +17,22 @@
 				<li><a href="report_pdf.php?n=report_lodgingslist.php&header=false&type=csv"><i class="icon-th"></i> Generate as CSV</a></li>
 				<li><a href="#"><i class="icon-wrench"></i> Edit Report</a></li>
 			</ul>
-		</div>
-		</p>
+		</div></p>
 		<p><div class="btn-group">
 			<a href="report_pdf.php?n=report_photos.php&header=false" class="btn btn-small">Photo List</a>
 			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li><a href="report_pdf.php?n=report_photos.php&header=false"><i class="icon-file"></i> Generate as PDF</a></li>
 				<li><a href="report_pdf.php?n=report_photos.php&header=false&type=csv"><i class="icon-th"></i> Generate as CSV</a></li>
+				<li><a href="#"><i class="icon-wrench"></i> Edit Report</a></li>
+			</ul>
+		</div></p>
+		<p><div class="btn-group">
+			<a href="report_pdf.php?n=report_nationalities.php&header=false" class="btn btn-small">Nationalities</a>
+			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li><a href="report_pdf.php?n=report_nationalities.php&header=false"><i class="icon-file"></i> Generate as PDF</a></li>
+				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&type=csv"><i class="icon-th"></i> Generate as CSV</a></li>
 				<li><a href="#"><i class="icon-wrench"></i> Edit Report</a></li>
 			</ul>
 		</div></p>

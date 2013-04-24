@@ -31,7 +31,7 @@ if ($_GET['type'] == "csv") {
 		
 		$i++;
 	}
-
+	
 	function outputCSV($data) {
 		$outstream = fopen("php://output", "w");
 		
