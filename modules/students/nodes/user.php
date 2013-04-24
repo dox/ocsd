@@ -99,13 +99,12 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		<p>RC Key: <?php echo $user->rckey; ?></p>
 		<p>SSN Reference: <?php echo $user->SSNref; ?></p>
 		<p>Fee Status: <?php echo $user->fee_status; ?></p>
+		
 		<hr />
 		
-		
-		
-		<p>Date Started: <?php echo convertToDateString($user->dt_start); ?></p>
-		<p>Date End: <?php echo convertToDateString($user->dt_end); ?></p>
-		<p>Date Matriculated: <?php echo convertToDateString($user->dt_matric); ?></p>
+		<p>Date Started: <span id="dt_start" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_start); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date Started"></span></p>
+		<p>Date End: <span id="dt_end" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_end); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date End"></span></p>
+		<p>Date Matriculated: <span id="dt_matric" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_matric); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date Matriculated"></span></p>
 		<p>Year Applied: <?php echo $user->yr_app; ?></p>
 		<p>Year Entry: <?php echo $user->yr_entry; ?></p>
 		<p>Date Created: <?php echo convertToDateString($user->dt_created); ?></p>
