@@ -8,6 +8,7 @@ class Tutors {
 	public $forenames;
 	public $surname;
 	public $identifier;
+	public $photo;
 	
 	public static function find_by_sql($sql="") {
 		global $database;
@@ -73,6 +74,42 @@ class Tutors {
 		$familyname = $this->surname;
 		
 		return $title . " " . $firstname . " " . $initials . " " . $familyname;
+	}
+	
+	public function id() {
+		return $this->tutid;
+	}
+	
+	public function imageURL($fullImgTag = false) {
+		$pathToFiles = "uploads/userphoto/";
+		$pathToFile = $pathToFiles . $this->photo;
+		
+		if (!isset($this->photo)) {
+			$pathToFile = "img/no_user_photo.png";
+		}
+		if (!file_exists($pathToFile)) {
+			$pathToFile = "img/no_user_photo.png";
+		}
+		//$url = "uploads/2703628.jpg";
+		
+		if ($fullImgTag == true) {
+			$output  = "<img id=\"userPhoto\" src=\"" . $pathToFile . "\" class=\"img-polaroid \" style=\"max-height: 300px;\">";
+		} else {
+			$output = $pathToFile;
+		}
+		
+		return $output;
+	}
+	
+	public function inlineUpdate($tutorid = NULL, $key, $value) {
+		global $database;
+		
+		$sql  = "UPDATE " . self::$table_name . " ";
+		$sql .= "SET " . $database->escape_value($key) . " = '" . $database->escape_value($value) . "' ";
+		$sql .= "WHERE tutid = '" . $database->escape_value($tutorid) . "' ";
+		$sql .= "LIMIT 1";
+		
+		$results = self::find_by_sql($sql);
 	}
 
 }

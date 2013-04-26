@@ -18,7 +18,7 @@ $allTutors = Tutors::find_all();
 	   	foreach($allTutors AS $user) {
     		echo "<tr>";
     		echo "<td>" . $user->tutid . "</td>";
-			echo "<td><a href=\"index.php?n=404.php&tutorid=" . $user->tutid . "\">" . $user->fullDisplayName() . "</a> " . $user->identifier . "</td>";
+			echo "<td><a href=\"index.php?m=staff&n=staff.php&tutorid=" . $user->tutid . "\">" . $user->fullDisplayName() . "</a> " . $user->identifier . "</td>";
 			echo "</tr>";
 		}
 		?>
