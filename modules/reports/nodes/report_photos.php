@@ -93,7 +93,7 @@ outputCSV($outputArray);
 		
 		$name = $student->surname . ", " . $student->forenames;
 		
-		$photo = "uploads/" . $student->photo;
+		$photo = "uploads/userphoto/" . $student->photo;
 		$pdf->SetFont("Times", '', 10);
 		$pdf->Cell(65, 7, $name, 'T', 0, 'L');
 		$pdf->Cell(75, 7, $addOutput, 'T', 0, 'L');
