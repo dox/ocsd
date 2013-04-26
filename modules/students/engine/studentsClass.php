@@ -88,11 +88,11 @@ class Students {
 	
 	///////////////////////
 	
-	public static function find_by_uid($uid = NULL) {
+	public static function find_by_uid($uid = NULL, $lookupValue = "studentid") {
 		global $database;
 		
 		$sql  = "SELECT * FROM " . self::$table_name . " ";
-		$sql .= "WHERE studentid = '" . $uid . "' ";
+		$sql .= "WHERE " . $lookupValue . " = '" . $uid . "' ";
 		$sql .= "LIMIT 1";
 		
 		$results = self::find_by_sql($sql);
