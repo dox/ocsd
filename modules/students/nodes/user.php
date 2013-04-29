@@ -93,7 +93,6 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		
 		<hr />
 		<p>Ethnic Origin: <?php if (isset($ethnicCountry->cyid)) { echo $ethnicCountry->fullDisplayName(true); }?></p>
-		<p>RS Key: <?php echo $user->rskey; ?></p>
 		<p>CS Key: <?php echo $user->cskey; ?></p>
 		<p>Religion: <?php echo $user->relkey; ?></p>
 		<p>RC Key: <?php echo $user->rckey; ?></p>
@@ -117,6 +116,12 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		<p><button class="btn btn-mini pull-right disabled" type="button">Last Modified By: <?php echo $user->who_mod . " (" . convertToDateString($user->dt_lastmod) . ")"; ?></button></p>
 			</div>
 			<div class="tab-pane" id="addresses">
+				<?
+				$resStatusClass = new resStatus;
+				$resStatuses = $resStatusClass->find_all();
+				$resStatus = $resStatusClass->find_by_uid($user->rskey);
+				?>
+				<p class="lead">Resident Status: <?php echo $resStatus->status; ?></p>
 				<?php
 				echo "<h3>Home Residence</h3>";
 				foreach ($addresses AS $address) {
