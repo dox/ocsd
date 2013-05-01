@@ -3,13 +3,7 @@
 	formdata = false;
 	
 	function showUploadedItem (source) {
-		var list = document.getElementById("image-list"),
-		img  = document.createElement("img");
-		
-		img.src = source;
-		list.appendChild(img);
-		//list.appendChild(li);
-		//alert(source);
+		$("#userPhoto").attr("src", source);
 	}
 	
 	if (window.FormData) {

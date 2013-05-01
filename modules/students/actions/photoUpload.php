@@ -24,7 +24,7 @@ foreach ($_FILES["images"]["error"] as $key => $error) {
 		
 		$log = new Logs;
 		$log->student_id	= $student->id();
-		$log->notes			= "Photo uploaded/amedned";
+		$log->notes			= "Photo uploaded/amended";
 		$log->prev_value	= $previousValue;
 		$log->updated_value	= $_FILES['images']['name'][$key];
 		$log->type			= "update";
