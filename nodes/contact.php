@@ -5,7 +5,7 @@
 		</div>
 	</div>
 	<div class="span12">
-		<form class="form-horizontal">
+		<form class="form-horizontal" id="contactForm">
 		<div class="control-group">
 			<label class="control-label" for="inputEmail">Your E-Mail</label>
 			<div class="controls">
@@ -73,6 +73,7 @@ $(function() {
 		}, function(data){
 			//$("#response_added").append(data);
 			alert("Message sent");
+			$('#contactForm')[0].reset();
 		},'html');
 		
 		return false;
