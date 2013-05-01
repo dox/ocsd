@@ -1,5 +1,20 @@
 <?php
-$students = Students::find_by_sql("SELECT * FROM students ORDER BY surname ASC");
+if (isset($_GET['studenttype'])) {
+	if ($_GET['studenttype'] == "ug") {
+		$sql = "SELECT * FROM students WHERE st_type = 'ug' ORDER BY surname ASC";
+		$reportTitle = "Nationalities (Undergraduates Only)";
+	} elseif ($_GET['studenttype'] == "pg") {
+		$sql = "SELECT * FROM students WHERE st_type = 'pg' ORDER BY surname ASC";
+		$reportTitle = "Nationalities (Postgraduates Only)";
+	} elseif ($_GET['studenttype'] == "vx") {
+		$sql = "SELECT * FROM students WHERE st_type = 'vx' ORDER BY surname ASC";
+		$reportTitle = "Nationalities (Visiting Students Only)";
+	}
+} else {
+	$sql = "SELECT * FROM students ORDER BY surname ASC";
+	$reportTitle = "Nationalities";
+}
+$students = Students::find_by_sql($sql);
 
 if ($_GET['type'] == "csv") {
 	// build header rows for CSV
@@ -51,7 +66,7 @@ outputCSV($outputArray);
 	$pdf->Cell(0, 10, "St Edmund Hall", 0, 1);
 	
 	$pdf->SetFont("Times", 'BU', 12);
-	$pdf->Cell(0, 10, "Nationalities 2012-2013", 0, 1);
+	$pdf->Cell(0, 10, $reportTitle, 0, 1);
 	
 	$pdf->SetFont("Times", '', 10);
 	foreach ($students AS $student) {
