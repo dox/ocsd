@@ -68,14 +68,27 @@ outputCSV($outputArray);
 	$pdf->SetFont("Times", 'BU', 12);
 	$pdf->Cell(0, 10, $reportTitle, 0, 1);
 	
-	$pdf->SetFont("Times", '', 10);
 	foreach ($students AS $student) {
-		$nationalityTotals[$student->nationality] = $nationalityTotals[$student->nationality] + 1;
+		$friendlyNatationName = str_replace("/", "", $student->nationality);
+		$friendlyNatationName = str_replace(" ", "", $friendlyNatationName);
+		//$friendlyNatationName = "test";
+		$nationalityTotals[$friendlyNatationName] = $nationalityTotals[$friendlyNatationName] + 1;
 	}
-	arsort($nationalityTotals);
-	foreach ($nationalityTotals AS $nation => $total) {
-		$pdf->Cell(0, 5, $nation . ": " . $total, 0, 1);
-	}
+	
+	$url  = "http://chart.googleapis.com/chart";
+	$url .= "?chxt=y";
+	$url .= "&chxr=0,0," . max(array_values($nationalityTotals));
+	$url .= "&chbh=a";
+	$url .= "&chds=0," . max(array_values($nationalityTotals));
+	$url .= "&chxl=0:|" . implode("|", array_keys($nationalityTotals));
+	$url .= "&chs=680x425";
+	$url .= "&cht=bhg";
+	$url .= "&chco=A2C180";
+	$url .= "&chd=t:" . implode(",", array_values($nationalityTotals));
+	//$url .= "&chtt=Vertical+bar+chart";
+	
+	$pdf->Image($url,10,10,0,0,'PNG');
+	$pdf->Cell(0, 90, "", 0, 1);
 	
 	$pdf->SetFont("Times", 'B', 10);
 	$pdf->Cell(65, 7, "Name", 0, 0, 'L');
