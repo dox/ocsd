@@ -122,18 +122,39 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				$resStatus = $resStatusClass->find_by_uid($user->rskey);
 				?>
 				<p class="lead">Resident Status: <?php echo $resStatus->status; ?></p>
-				<?php
-				echo "<h3>Home Residence</h3>";
-				foreach ($addresses AS $address) {
-					echo $address->displayAddress();
-				}
+				<h3>Home Residence</h3>
 				
-				echo "<h3>College Residence</h3>";
-				foreach ($residences AS $resAddress) {
-					echo $resAddress->displayAddress();
+				<?php
+				foreach ($addresses AS $address) {
+					echo "<div class=\"row\">";
+					echo "<div class=\"span3\">";
+					echo $address->displayAddress();
+					echo "</div>";
+					echo "<div class=\"span6\">";
+					
+					$googleFrame  = "<iframe width=\"425\" height=\"350\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" ";
+					$googleFrame .= "src=\"https://maps.google.co.uk/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=";
+					$googleFrame .= $address->line1 . " " . $address->county . " " . $address->postcode;
+					//$googleFrame .= "&amp;aq=&amp;sll=53.800651,-4.064941&amp;sspn=6.725398,25.444336&amp;ie=UTF8&amp;hq=&amp;hnear=53+Gwendwr+Rd,+London+W14+9BG,+United+Kingdom";
+					$googleFrame .= "&amp;t=m&amp;z=14&amp;iwloc=A&amp;output=embed\">";
+					$googleFrame .= "</iframe><br />";
+					
+					echo "<p>" . $googleFrame . "</p>";
+					echo "</div>";
+					echo "</div>";
 				}
-				//echo $residence->displayAddress();
-				 ?>
+				?>
+				
+				<h3>College Residence</h3>
+				<?php
+				foreach ($residences AS $resAddress) {
+					echo "<div class=\"row\">";
+					echo "<div class=\"span9\">";
+					echo $resAddress->displayAddress();
+					echo "</div>";
+					echo "</div>";
+				}
+				?>
 			</div>
 			<div class="tab-pane" id="education">
 				<p>Coming soon</p>
