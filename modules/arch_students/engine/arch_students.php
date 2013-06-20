@@ -108,7 +108,7 @@ class ArchStudents {
 		
 		$familyname = $this->surname;
 		
-		return $title->title . " " . $firstname . " " . $initials . $familyname;
+		return $title->title . " " . $firstname . " " . $familyname;
 	}
 	
 	public function bodcard($link = true) {
