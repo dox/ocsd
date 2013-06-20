@@ -75,5 +75,5 @@ if ($_GET['exams'] != 'false') {
 $pdf->Ln(20);
 $pdf->Cell(0, 10, "Signed:", 0, 1);
 $pdf->Ln(10);
-$pdf->Cell(0, 10, "ACADEMIC ADMINISTRATOR", 0, 1);
+$pdf->Cell(0, 60, "ACADEMIC ADMINISTRATOR", 0, 1);
 ?>
