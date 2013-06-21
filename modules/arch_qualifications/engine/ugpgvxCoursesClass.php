@@ -56,13 +56,26 @@ class ugpgvxClass {
 	public static function find_by_ar_sarkey($ar_sarkey = NULL) {
 		global $database;
 		
-		$sql  = "SELECT * FROM " . self::$ug_table_name . " ";
+		$sql  = "SELECT * FROM " . self::$pg_table_name . " ";
 		$sql .= "WHERE ar_sarkey = '" . $ar_sarkey . "' ";
 		$sql .= "LIMIT 1";
 		
 		$results = self::find_by_sql($sql);
 		
-		return !empty($results) ? array_shift($results) : false;
+		if (count($results) == 1) {
+			return !empty($results) ? array_shift($results) : false;
+		} else {
+			$sql  = "SELECT * FROM " . self::$ug_table_name . " ";
+			$sql .= "WHERE ar_sarkey = '" . $ar_sarkey . "' ";
+			$sql .= "LIMIT 1";
+			
+			$results = self::find_by_sql($sql);
+			
+			return !empty($results) ? array_shift($results) : false;
+			
+		}
+		
+		
 	}
 	
 	public static function qualtype($qtid = NULL) {
