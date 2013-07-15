@@ -14,7 +14,9 @@ $pdf->SetFont("Times", '', 12);
 $pdf->Cell(0, 10, "Oxford University does not issue official transcripts, but this is to certify that", 0, 1);
 
 $pdf->SetFont("Times", 'B', 14);
-$pdf->Cell(0, 10, $user->fullDisplayName(), 0, 1, 'C');
+$pdf->Cell(0, 5, $user->fullDisplayName(), 0, 1, 'C');
+$pdf->SetFont("Times", '', 10);
+$pdf->Cell(0, 10, "Date of Birth: " . convertToDateString($user->dt_birth), 0, 1, 'C');
 
 $pdf->SetFont("Times", '', 12);
 $pdf->Write(5, "is a full-time member of this College, in the University of Oxford, studying for the Degree Course detailed below:");
