@@ -86,13 +86,13 @@ $pdf->Cell(30, 10, $degree->grade, 0, 0);
 $pdf->SetFont("Times", '', 12);
 $pdf->Cell(30, 10, "Date Conferred: ", 0, 0);
 $pdf->SetFont("Times", 'B', 12);
-$pdf->Cell(40, 10, convertToDateString($course->dt_confer), 0, 0);
+$pdf->Cell(40, 10, date('d F Y', strtotime($course->dt_confer)), 0, 0);
 
 if ($course->dt_MA > 0) {
 	$pdf->SetFont("Times", '', 12);
 	$pdf->Cell(20, 10, "Date MA: ", 0, 0);
 	$pdf->SetFont("Times", 'B', 12);
-	$pdf->Cell(30, 10, convertToDateString($course->dt_MA), 0, 1);
+	$pdf->Cell(30, 10, date('d F Y', strtotime($course->dt_MA)), 0, 0);
 }
 
 $pdf->Ln();
