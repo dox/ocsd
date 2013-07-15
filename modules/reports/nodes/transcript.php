@@ -4,6 +4,7 @@ $degree = Grads::find_by_studentkey($user->id());
 $subject = QualSubjects::find_by_qsid($degree->qskey);
 $exams = Exams::find_by_studentkey($user->id());
 
+$pdf->Cell(0, 20, "", 0, 1);
 $pdf->SetFont("Times", '', 12);
 $pdf->Cell(0, 10, date('d F Y'), 0, 1);
 

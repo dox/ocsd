@@ -8,6 +8,7 @@ $exams = ArchExams::find_by_ar_sarkey($degree->ar_sarid);
 $course = ugpgvxClass::find_by_ar_sarkey($degree->ar_sarid);
 
 $pdf->SetFont("Times", '', 12);
+$pdf->Cell(0, 20, "", 0, 1);
 $pdf->Cell(0, 10, date('d F Y'), 0, 1);
 
 $pdf->SetFont("Times", 'U', 12);
