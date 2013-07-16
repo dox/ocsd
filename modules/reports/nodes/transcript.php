@@ -6,7 +6,7 @@ $exams = Exams::find_by_studentkey($user->id());
 
 $pdf->Cell(0, 20, "", 0, 1);
 $pdf->SetFont("Times", '', 12);
-$pdf->Cell(0, 10, date('d F Y'), 0, 1);
+$pdf->Cell(0, 10, convertToDateString(), 0, 1);
 
 $pdf->SetFont("Times", 'U', 12);
 $pdf->Cell(0, 10, "To Whom It May Concern", 0, 1);
@@ -15,9 +15,7 @@ $pdf->SetFont("Times", '', 12);
 $pdf->Cell(0, 10, "Oxford University does not issue official transcripts, but this is to certify that", 0, 1);
 
 $pdf->SetFont("Times", 'B', 14);
-$pdf->Cell(0, 5, $user->fullDisplayName(), 0, 1, 'C');
-$pdf->SetFont("Times", '', 10);
-$pdf->Cell(0, 10, "Date of Birth: " . convertToDateString($user->dt_birth), 0, 1, 'C');
+$pdf->Cell(0, 5, $user->fullDisplayName() . "  (DOB: " . convertToDateString($user->dt_birth) . ")", 0, 1, 'C');
 
 $pdf->SetFont("Times", '', 12);
 $pdf->Write(5, "is a full-time member of this College, in the University of Oxford, studying for the Degree Course detailed below:");

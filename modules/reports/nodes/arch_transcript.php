@@ -9,7 +9,7 @@ $course = ugpgvxClass::find_by_ar_sarkey($degree->ar_sarid);
 
 $pdf->SetFont("Times", '', 12);
 $pdf->Cell(0, 20, "", 0, 1);
-$pdf->Cell(0, 10, date('d F Y'), 0, 1);
+$pdf->Cell(0, 10, convertToDateString(), 0, 1);
 
 $pdf->SetFont("Times", 'U', 12);
 $pdf->Cell(0, 10, "To Whom It May Concern", 0, 1);
@@ -18,9 +18,8 @@ $pdf->SetFont("Times", '', 12);
 $pdf->Cell(0, 10, "Oxford University does not issue official transcripts, but this is to certify that", 0, 1);
 
 $pdf->SetFont("Times", 'B', 14);
-$pdf->Cell(0, 5, $user->fullDisplayName(), 0, 1, 'C');
-$pdf->SetFont("Times", '', 10);
-$pdf->Cell(0, 10, "Date of Birth: " . convertToDateString($user->dt_birth), 0, 1, 'C');
+$pdf->Cell(0, 5, $user->fullDisplayName() . "  (DOB: " . convertToDateString($user->dt_birth) . ")", 0, 1, 'C');
+
 
 $pdf->SetFont("Times", '', 12);
 $pdf->Write(5, "was a full-time member of this College, in the University of Oxford, studying for the Degree Course detailed below:");
@@ -89,13 +88,13 @@ $pdf->Cell(30, 10, $degree->grade, 0, 0);
 $pdf->SetFont("Times", '', 12);
 $pdf->Cell(30, 10, "Date Conferred: ", 0, 0);
 $pdf->SetFont("Times", 'B', 12);
-$pdf->Cell(40, 10, date('d F Y', strtotime($course->dt_confer)), 0, 0);
+$pdf->Cell(40, 10, convertToDateString($course->dt_confer), 0, 0);
 
 if ($course->dt_MA > 0) {
 	$pdf->SetFont("Times", '', 12);
 	$pdf->Cell(20, 10, "Date MA: ", 0, 0);
 	$pdf->SetFont("Times", 'B', 12);
-	$pdf->Cell(30, 10, date('d F Y', strtotime($course->dt_MA)), 0, 0);
+	$pdf->Cell(30, 10, convertToDateString($course->dt_MA), 0, 0);
 }
 
 $pdf->Ln();

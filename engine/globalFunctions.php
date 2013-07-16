@@ -7,9 +7,9 @@ function printArray($array) {
 
 function convertToDateString($dateString, $time = false) {
 	if ($time == "true") {
-		$dateFormat = "Y-m-d H:i:s";
+		$dateFormat = "d F Y H:i:s";
 	} else {
-		$dateFormat = "Y-m-d";
+		$dateFormat = "d F Y";
 	}
 	
 	if ($dateString == "") {
