@@ -68,10 +68,29 @@ if ($_GET['exams'] != 'false') {
 		    foreach ($papers AS $paper) {
 		    	$pdf->Cell(30, 7, "", 0, 0, 'C');
 		    	$pdf->Cell(20, 7, $paper->paperno, 0, 0, 'C');
-		    	$pdf->Cell(90, 7, $paper->title, 0, 0, 'L');
-		    	$pdf->Cell(20, 7, $paper->grade, 0, 0, 'C');
-		    	$pdf->Cell(20, 7, "", 0, 0, 'C');
-		    	$pdf->Ln();
+		    	
+		    	if (strlen($paper->title) > 62) {
+		    		// split cells up if it's a long title
+		    		$pdf->Cell(90, 7, substr($paper->title, 0, 62) . "...", 0, 0, 'L');
+		    		$pdf->Cell(20, 7, $paper->grade, 0, 0, 'C');
+			    	$pdf->Cell(20, 7, "", 0, 0, 'C');
+			    	$pdf->Ln();
+			    	$pdf->Cell(30, 7, "", 0, 0, 'C');
+					$pdf->Cell(20, 7, "", 0, 0, 'C');
+		    	
+		    		$pdf->Cell(90, 7, substr($paper->title, 62, 1000) , 0, 0, 'L');
+		    		$pdf->Cell(20, 7, "", 0, 0, 'C');
+			    	$pdf->Cell(20, 7, "", 0, 0, 'C');
+					$pdf->Ln();
+		    	} else {
+			    	$pdf->Cell(90, 7, $paper->title, 0, 0, 'L');
+			    	$pdf->Cell(20, 7, $paper->grade, 0, 0, 'C');
+			    	$pdf->Cell(20, 7, "", 0, 0, 'C');
+					$pdf->Ln();
+		    	}
+		    	//$pdf->MultiCell(90, 7, $paper->title, 0, 'L', false);
+		    	
+		    	
 		    }
 		}
 	} else {
@@ -106,4 +125,5 @@ $pdf->SetFont("Times", '', 12);
 $pdf->Cell(0, 10, "Signed:", 0, 1);
 $pdf->Ln(10);
 $pdf->Cell(0, 60, "ACADEMIC ADMINISTRATOR", 0, 1);
+
 ?>
