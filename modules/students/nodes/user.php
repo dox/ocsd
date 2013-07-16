@@ -282,7 +282,13 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 					?>
 					<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 					<ul class="dropdown-menu">
+						<li class="nav-header">With Letterhead</li>
+						<li><a href="report_pdf.php?n=transcript.php&studentid=<?php echo $user->id(); ?>">With exam paper details</a></li>
 						<li><a href="report_pdf.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
+						
+						<li class="nav-header">Without Letterhead</li>
+						<li><a href="report_pdf.php?n=transcript.php&studentid=<?php echo $user->id(); ?>&header=false">With exam paper details</a></li>
+						<li><a href="report_pdf.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>&header=false">Without exam paper details</a></li>
 					</ul>
 				</div>
 				</p>

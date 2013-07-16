@@ -163,8 +163,16 @@ $degree = ArchGrads::find_academic_record_by_studentkey($user->id());
 					?>
 					<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 					<ul class="dropdown-menu">
+						<li class="nav-header">With Letterhead</li>
+						<li><a href="report_pdf.php?n=arch_transcript.php&arstudentid=<?php echo $user->id(); ?>">With exam paper details</a></li>
 						<li><a href="report_pdf.php?n=arch_transcript.php&exams=false&arstudentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
+						
+						<li class="nav-header">Without Letterhead</li>
+						<li><a href="report_pdf.php?n=arch_transcript.php&arstudentid=<?php echo $user->id(); ?>&header=false">With exam paper details</a></li>
+						<li><a href="report_pdf.php?n=arch_transcript.php&exams=false&arstudentid=<?php echo $user->id(); ?>&header=false">Without exam paper details</a></li>
 					</ul>
+					
+					
 				</div>
 				<p>test test</p>
 				<p>test test</p>
