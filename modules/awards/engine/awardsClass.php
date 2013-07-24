@@ -63,5 +63,21 @@ class Awards {
 		
 		return $results;
 	}
+	
+	public function create() {
+		global $database;
+		
+		$sql  = "INSERT INTO " . self::$table_name . " (";
+		$sql .= "name, type, given_by";
+		$sql .= ") VALUES ('";
+		$sql .= $database->escape_value($this->name) . "', '";
+		$sql .= $database->escape_value($this->type) . "', '";
+		$sql .= $database->escape_value($this->given_by) . "')";
+		
+		// check if the database entry was successful (by attempting it)
+		if ($database->query($sql)) {
+			$this->awdid = $database->insert_id();
+		}
+	}
 }
 ?>
