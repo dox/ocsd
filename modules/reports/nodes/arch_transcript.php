@@ -18,7 +18,7 @@ $pdf->SetFont("Times", '', 12);
 $pdf->Cell(0, 10, "Oxford University does not issue official transcripts, but this is to certify that", 0, 1);
 
 $pdf->SetFont("Times", 'B', 14);
-$pdf->Cell(0, 5, $user->fullDisplayName() . "  (DOB: " . convertToDateString($user->dt_birth) . ")", 0, 1, 'C');
+$pdf->Cell(0, 10, $user->fullDisplayName() . "  (DOB: " . convertToDateString($user->dt_birth) . ")", 0, 1, 'C');
 
 
 $pdf->SetFont("Times", '', 12);
@@ -31,11 +31,11 @@ $pdf->Cell(70, 10, $degreeType->abbrv, 0, 0);
 $pdf->SetFont("Times", '', 12);
 $pdf->Cell(90, 10, "Start: " . date('Y M', strtotime($degree->dt_start)) . "           End: " . date('Y M', strtotime($degree->dt_end)), 0, 1, 'R');
 
-$pdf->Cell(20, 10, "Subject: ", 0, 0);
+$pdf->Cell(20, 0, "Subject: ", 0, 0);
 $pdf->SetFont("Times", 'B', 12);
-$pdf->Cell(40, 10, $subject->name, 0, 0);
+$pdf->Cell(40, 0, $subject->name, 0, 0);
+$pdf->Cell(0, 10, "", 0, 0);
 $pdf->Ln();
-
 if ($_GET['exams'] != 'false') {
 	if (count($exams) > 0) {
 		$pdf->SetFont("Times", 'B', 14);
