@@ -80,7 +80,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p>Previous Family Name: <?php echo $user->prev_surname; ?></p>
 				<p><?php echo $user->suffix; ?></p>
 				<p>Marital Status: <?php echo $user->marital_status; ?></p>
-				<p>DOB: <span id="dt_birth" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_birth); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date of Birth"></span> (Age: <?php echo age(convertToDateString($user->dt_birth)); ?>)</p>
+				<p>DOB: <span id="dt_birth" class="inlineEditble" data-type="combodate" data-value="<?php echo $user->dt_birth; ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date of Birth"></span> (Age: <?php echo age($user->dt_birth); ?>)</p>
 				<p>Gender: <span id="gender" data-type="select" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-value="<?php echo $user->gender; ?>" data-original-title="Gender"><?php echo $user->gender; ?></span></p>
 				<p>Country of Birth: <?php if (isset($birthCountry->cyid)) { echo $birthCountry->fullDisplayName(true); }?></p>
 				<p>Country of Residence: <?php if (isset($residenceCountry->cyid)) { echo $residenceCountry->fullDisplayName(true); }?></p>
@@ -101,9 +101,9 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		
 		<hr />
 		
-		<p>Date Started: <span id="dt_start" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_start); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date Started"></span></p>
-		<p>Date End: <span id="dt_end" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_end); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date End"></span></p>
-		<p>Date Matriculated: <span id="dt_matric" class="inlineEditble" data-type="combodate" data-value="<?php echo convertToDateString($user->dt_matric); ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date Matriculated"></span></p>
+		<p>Date Started: <span id="dt_start" class="inlineEditble" data-type="combodate" data-value="<?php echo $user->dt_start; ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date Started"></span></p>
+		<p>Date End: <span id="dt_end" class="inlineEditble" data-type="combodate" data-value="<?php echo $user->dt_end; ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date End"></span></p>
+		<p>Date Matriculated: <span id="dt_matric" class="inlineEditble" data-type="combodate" data-value="<?php echo $user->dt_matric; ?>" data-format="YYYY-MM-DD" data-viewformat="YYYY/MM/DD" data-pk="<?php echo $user->id();?>" data-url="/ocsd/actions/u_students.php" data-original-title="Date Matriculated"></span></p>
 		<p>Year Applied: <?php echo $user->yr_app; ?></p>
 		<p>Year Entry: <?php echo $user->yr_entry; ?></p>
 		<p>Date Created: <?php echo convertToDateString($user->dt_created); ?></p>
