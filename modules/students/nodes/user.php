@@ -7,6 +7,7 @@ $residenceCountry = Countries::find_by_uid($user->resid_cykey);
 $citizenshipCountry = Countries::find_by_uid($user->citiz_cykey);
 $ethnicCountry = Countries::find_by_uid($user->ethkey);
 $degree = Grads::find_by_studentkey($user->studentid);
+$subject = QualSubjects::find_by_qsid($degree->qskey);
 
 $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 ?>

@@ -1,104 +1,74 @@
 <?php
 $studentClass = new Students;
-$students = $studentClass->find_by_sql("SELECT * FROM students WHERE photo IS NOT NULL ORDER BY surname ASC");
+$students = $studentClass->find_by_sql("SELECT * FROM students WHERE yr_cohort = '" . $_GET['cohort'] . "' ORDER BY surname ASC");
 
-if ($_GET['type'] == "csv") {
-	// build header rows for CSV
-	$classVars1 = get_class_vars(get_class($studentClass));
-	
-	$n = 0;
-	
-	foreach ($classVars1 as $name => $value) {
-		$outputArray[1][$n] = $name;
-		$n++;
-	}
-	
-	// start itterating through the database
-	$i = 2;
-	
-	foreach ($students AS $student) {
-		$n = 0;
-		$classVars2 = get_object_vars($student);
-	
-		foreach ($classVars2 as $name => $value) {
-			if ($value == "" || $value == null) {
-				$value = "";
-			}
-		
-			$outputArray[$i][$n] = $value;
-			
-			$n++;
-		}
-		
-		$i++;
-	}
-	
-	function outputCSV($data) {
-		$outstream = fopen("php://output", "w");
-		
-		function __outputCSV(&$vals, $key, $filehandler) {
-			fputcsv($filehandler, $vals, ',', '"');
-		}
-		
-		array_walk($data, '__outputCSV', $outstream);
-		
-		fclose($outstream);
-	}
-outputCSV($outputArray);
 
-} else {
-	$pdf->SetFont("Times", 'BU', 12);
-	$pdf->Cell(0, 10, "St Edmund Hall", 0, 1);
+$pdf->SetAutoPageBreak(false);
+
+$pdf->SetFont("Times", 'B', 10);
+$studentArray = array();
+
+foreach ($students AS $student) {
+	$degree = Grads::find_by_studentkey($student->studentid);
+	$subject = QualSubjects::find_by_qsid($degree->qskey);
 	
-	$pdf->SetFont("Times", 'BU', 12);
-	$pdf->Cell(0, 10, "Photo List 2012-2013", 0, 1);
+	if (isset($student->photo)) {
+		$photo = "uploads/userphoto/" . $student->photo;
+	} else {
+		$photo = null;
+	}
 	
-	$pdf->SetFont("Times", 'B', 10);
-	$pdf->Cell(65, 7, "Name", 0, 0, 'L');
-	$pdf->Cell(75, 7, "Room/Address", 0, 0, 'L');
-	$pdf->Cell(40, 7, "Telephone", 0, 0, 'L');
+	if (strlen($subject->name) > 45) {
+		$subjetName = $subject->abbrv;
+	} else {
+		$subjetName = $subject->name;
+	}
+	
+	$studentArray[] = array('studentPhoto' => $photo, 'studentName' => ($student->surname . ", " . $student->forenames), 'studentDegree' => $degree->abbrv, 'studentSubject' => $subjetName);
+	
+	
+}
+
+$rowCounter = 0;
+$sets = array_chunk($studentArray, 3);
+foreach ($sets as $set) {
+	if (file_exists($set[0]['studentPhoto'])) {
+		$pdf->Cell(65, 50, $pdf->Image($set[0]['studentPhoto'], $pdf->GetX()+ 15, $pdf->GetY(), 38), 0, 0, 'C', false );
+	} else {
+		$pdf->Cell(65, 50, "", 1, 0, 'C', false);
+	}
+	if (file_exists($set[1]['studentPhoto'])) {
+		$pdf->Cell(65, 50, $pdf->Image($set[1]['studentPhoto'], $pdf->GetX()+ 15, $pdf->GetY(), 38), 0, 0, 'C', false );
+	} else {
+		$pdf->Cell(65, 50, "", 1, 0, 'C', false);
+	}
+	if (file_exists($set[2]['studentPhoto'])) {
+		$pdf->Cell(65, 50, $pdf->Image($set[2]['studentPhoto'], $pdf->GetX()+ 15, $pdf->GetY(), 38), 0, 1, 'C', false );
+	} else {
+		$pdf->Cell(65, 50, "", 1, 1, 'C', false);
+	}
+	$pdf->Cell(65, 5, $set[0]['studentName'], 0, 0, 'C', false);
+	$pdf->Cell(65, 5, $set[1]['studentName'], 0, 0, 'C', false);
+	$pdf->Cell(65, 5, $set[2]['studentName'], 0, 1, 'C', false);
+	$pdf->Cell(65, 5, $set[0]['studentDegree'], 0, 0, 'C', false);
+	$pdf->Cell(65, 5, $set[1]['studentDegree'], 0, 0, 'C', false);
+	$pdf->Cell(65, 5, $set[2]['studentDegree'], 0, 1, 'C', false);
+	$pdf->Cell(65, 5, $set[0]['studentSubject'], 0, 0, 'C', false);
+	$pdf->Cell(65, 5, $set[1]['studentSubject'], 0, 0, 'C', false);
+	$pdf->Cell(65, 5, $set[2]['studentSubject'], 0, 1, 'C', false);
 	$pdf->Ln();
 	
-	foreach ($students AS $student) {
-		$addresses = ResidenceAddresses::find_all_by_student($student->studentid);
-		foreach ($addresses AS $address) {
-			$resAddress = ResAddress::find_by_uid($address->radkey);
-			 
-			$addOutput  = "";
-			$phoneOutput  = "";
-			
-			if ($address->roomno) {
-				$addOutput .= $address->roomno . " ";
-			}
-			
-			if ($resAddress->line1) {
-				$addOutput .= $resAddress->line1 . " ";
-			}
-			if ($resAddress->line2) {
-				$addOutput .= $resAddress->line2 . " ";
-			}
-			
-			// phone numbers
-			if ($address->phone) {
-				$phoneOutput .= $address->phone . "  ";
-			}
-			if ($resAddress->phone) {
-				$phoneOutput .= $resAddress->phone . " ";
-			}
-			if ($student->mobile) {
-				$phoneOutput .= $student->mobile . " ";
-			}
-			
-		}
-		
-		$name = $student->surname . ", " . $student->forenames;
-		
-		$photo = "uploads/userphoto/" . $student->photo;
-		$pdf->SetFont("Times", '', 10);
-		$pdf->Cell(65, 7, $name, 'T', 0, 'L');
-		$pdf->Cell(75, 7, $addOutput, 'T', 0, 'L');
-		$pdf->Image($photo,null,null,30);
-		$pdf->Ln();
+	$rowCounter = $rowCounter + 1;
+	
+	if ($rowCounter >= '4') {
+		$pdf->AddPage();
+		$rowCounter = 0;
 	}
 }
+
+$log = new Logs;
+$log->notes			= "Report 'Photo' Generated for " . $_GET['cohort'] . " Cohort";
+$log->prev_value	= $_GET['n'];
+$log->type			= "report";
+$log->create();
 ?>
