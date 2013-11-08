@@ -43,6 +43,15 @@
 				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=vx"><i class="icon-globe"></i> Only Visiting Students</a></li>
 			</ul>
 		</div></p>
+		<p><div class="btn-group">
+			<a href="#" class="btn btn-small">Address Lists</a>
+			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=ug"><i class="icon-user"></i> Only Undergraduates</a></li>
+				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=pg"><i class="icon-user"></i> Only Postgrads</a></li>
+				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=vx"><i class="icon-globe"></i> Only Visiting Students</a></li>
+			</ul>
+		</div></p>
 		</div>
 	</div>
 	<div class="span9">
