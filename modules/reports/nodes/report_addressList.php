@@ -74,4 +74,10 @@ function outputCSV($data) {
 }
 
 outputCSV($outputArray);
+
+$log = new Logs;
+$log->notes			= "Report 'Address List' Generated for Student Type " . $_GET['studenttype'];
+$log->prev_value	= $_GET['n'];
+$log->type			= "report";
+$log->create();
 ?>

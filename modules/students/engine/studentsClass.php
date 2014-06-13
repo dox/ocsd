@@ -136,6 +136,8 @@ class Students {
 			$bodcard = $this->univ_cardno;
 		}
 		
+		$bodcardOutput = "";
+		
 		if ($link == true) {
 			if ($bodcard == "UNKNOWN") {
 				$labelClass = "";

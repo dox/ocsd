@@ -63,4 +63,10 @@ foreach ($students AS $student) {
 	$pdf->Cell(40, 7, $birth_nation->short, 'T', 0, 'L');
 	$pdf->Ln();
 }
+
+$log = new Logs;
+$log->notes			= "Report 'Nationalities' Generated for Student Type " . $_GET['studenttype'];
+$log->prev_value	= $_GET['n'];
+$log->type			= "report";
+$log->create();
 ?>

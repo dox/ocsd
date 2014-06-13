@@ -100,4 +100,10 @@ outputCSV($outputArray);
 		$pdf->Ln();
 	}
 }
+
+$log = new Logs;
+$log->notes			= "Report 'Lodgings List' Generated";
+$log->prev_value	= $_GET['n'];
+$log->type			= "report";
+$log->create();
 ?>
