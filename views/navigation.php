@@ -34,7 +34,7 @@
 			</form>
 			
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="index.php?n=contact.php" class="btn btn-primary btn-mini pull-right"><i class="fa fa-flag"></i></a></li>
+				<li><a href="index.php?n=contact.php"><i class="fa fa-flag"></i></a></li>
 				<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 					<ul class="dropdown-menu">
