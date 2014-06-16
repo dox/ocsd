@@ -11,15 +11,12 @@ $subject = QualSubjects::find_by_qsid($degree->qskey);
 
 $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 ?>
-<div class="row">
-	<div class="span12">
-		<div class="page-header">
-			<h1><?php echo $user->fullDisplayName(); ?> <small> Cohort: <?php echo $user->yr_cohort; ?></small></h1>
-		</div>
-	</div>
+<div class="page-header">
+	<h1><?php echo $user->fullDisplayName(); ?> <small> Cohort: <?php echo $user->yr_cohort; ?></small></h1>
 </div>
+
 <div class="row">
-	<div class="span3">
+	<div class="col-md-4">
 		<div>
 			<?php echo $user->imageURL(true); ?>
 			<div id="image-list"></div>
@@ -51,7 +48,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		?>
 		<div class="clearfix"></div>
 	</div>
-	<div class="span9">
+	<div class="col-md-6">
 		<a href="index.php?n=contact.php&studentName=<?php echo $user->fullDisplayName();?>&studentID=<?php echo $user->studentid; ?>" class="btn btn-primary btn-mini pull-right"><i class="icon-flag icon-white"></i> Contact College Office</a>
 		<ul class="nav nav-tabs" id="myTab">
 			<li class="active"><a href="#information" data-toggle="tab">Information</a></li>
