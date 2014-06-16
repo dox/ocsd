@@ -48,7 +48,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		?>
 		<div class="clearfix"></div>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-8">
 		<ul class="nav nav-tabs" id="myTab">
 			<li class="active"><a href="#information" data-toggle="tab">Information</a></li>
 			<li><a href="#addresses" data-toggle="tab">Addresses</a></li>
