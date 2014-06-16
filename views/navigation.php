@@ -1,3 +1,7 @@
+<script src="js/typeahead.jquery.min.js"></script>
+<script src="js/handlebars.js"></script>
+<script src="js/bloodhound.min.js"></script>
+
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class="container">
 		<div class="navbar-header">

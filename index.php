@@ -90,15 +90,5 @@ if (isset($_POST["oldform"])) { //prevent null bind
 		?>
 		<?php include_once("views/footer.php"); ?>
 	</div>
-	
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/js/bootstrap-editable.min.js"></script>
-	<script src="js/moment.min.js"></script>
-	<script src="js/ocsd.js"></script>
-	
-	<script src="js/typeahead.jquery.min.js"></script>
-	<script src="js/handlebars.js"></script>
-	<script src="js/bloodhound.min.js"></script>
 </body>
 </html>
