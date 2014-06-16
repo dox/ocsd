@@ -96,5 +96,9 @@ if (isset($_POST["oldform"])) { //prevent null bind
 	<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/js/bootstrap-editable.min.js"></script>
 	<script src="js/moment.min.js"></script>
 	<script src="js/ocsd.js"></script>
+	
+	<script src="js/typeahead.jquery.min.js"></script>
+	<script src="js/handlebars.js"></script>
+	<script src="js/bloodhound.min.js"></script>
 </body>
 </html>
