@@ -19,7 +19,7 @@
 			$value = "";
 		}
 		?>
-		<input type="text" id="inputStudent" placeholder="Full Student Name" value="<?php echo $value; ?>">
+		<input type="text" class="form-control" id="inputStudent" placeholder="Full Student Name" value="<?php echo $value; ?>">
 	</div>
 </div>
 
@@ -29,7 +29,7 @@ if (isset($_GET['studentID'])) {
 <div class="form-group">
 		<label class="col-sm-2 control-label" for="inputStudentID">Reference Student ID</label>
 		<div class="col-sm-10">
-			<input type="number" id="inputStudentID" placeholder="Student ID" value="<?php echo $_GET['studentID']; ?>">
+			<input type="number" class="form-control" id="inputStudentID" placeholder="Student ID" value="<?php echo $_GET['studentID']; ?>">
 		</div>
 	</div>
 <?php
