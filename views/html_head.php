@@ -14,6 +14,7 @@
 	}
 	</style>
 	<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/style1.css" rel="stylesheet">
 	
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
