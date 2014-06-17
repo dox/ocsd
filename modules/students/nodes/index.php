@@ -10,7 +10,7 @@
 </ul>
 
 <div class="tab-content">
-	<div class="tab-pane" id="ajax_students"><i class="icon-refresh"></i> Loading...</div>
-	<div class="tab-pane" id="ajax_tutors"><i class="icon-refresh"></i> Loading...</div>
-	<div class="tab-pane" id="ajax_archive"><i class="icon-refresh"></i> Loading...</div>
+	<div class="tab-pane" id="ajax_students"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
+	<div class="tab-pane" id="ajax_tutors"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
+	<div class="tab-pane" id="ajax_archive"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
 </div>

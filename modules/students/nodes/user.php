@@ -29,17 +29,17 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
         <div id="response"></div>
         <hr />
 		<div class="clearfix"></div>
-		<p style="white-space:nowrap;"><i class="icon-barcode"></i> <span id="bodcard" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Bodcard"><?php echo $user->bodcard(); ?></span></p>
-		<p style="white-space:nowrap;"><i class="icon-user"></i> <span id="oucs_id" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OUCS ID"><?php echo $user->oucs_id; ?></span></p>
-		<p style="white-space:nowrap;"><i class="icon-qrcode"></i> OSS: <span id="oss_pn" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OSS ID"><?php echo $user->oss_pn; ?></span></p>
-		<p style="white-space:nowrap;"><i class="icon-comment"></i> <span id="mobile" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Mobile Telephone Number"><?php echo $user->mobile; ?></span></p>
+		<p style="white-space:nowrap;"><i class="fa fa-barcode"></i> <span id="bodcard" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Bodcard"><?php echo $user->bodcard(); ?></span></p>
+		<p style="white-space:nowrap;"><i class="fa fa-university"></i> <span id="oucs_id" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OUCS ID"><?php echo $user->oucs_id; ?></span></p>
+		<p style="white-space:nowrap;"><i class="fa fa-graduation-cap"></i> OSS: <span id="oss_pn" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="OSS ID"><?php echo $user->oss_pn; ?></span></p>
+		<p style="white-space:nowrap;"><i class="fa fa-mobile"></i> <span id="mobile" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Mobile Telephone Number"><?php echo $user->mobile; ?></span></p>
 		
-		<p style="white-space:nowrap;"><i class="icon-envelope"></i> <span id="email1" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Oxford E-Mail Address"><a href="mailto:<?php echo $user->email1; ?>"><?php echo $user->email1; ?></a></span></p>
+		<p style="white-space:nowrap;"><i class="fa fa-envelope"></i> <span id="email1" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Oxford E-Mail Address"><a href="mailto:<?php echo $user->email1; ?>"><?php echo $user->email1; ?></a></span></p>
 		
-		<p style="white-space:nowrap;"><i class="icon-envelope"></i> <span id="email2" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Personal E-Mail Address"><a href="mailto:<?php echo $user->email2; ?>"><?php echo $user->email2; ?></a></span></p>
+		<p style="white-space:nowrap;"><i class="fa fa-envelope-o"></i> <span id="email2" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Personal E-Mail Address"><a href="mailto:<?php echo $user->email2; ?>"><?php echo $user->email2; ?></a></span></p>
 
 		
-		<p><i class="icon-globe"></i> <span id="nationality" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Nationality"><?php echo $user->nationality; ?></span></p>
+		<p><i class="fa fa-globe"></i> <span id="nationality" class="inlineEditble" data-type="text" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Nationality"><?php echo $user->nationality; ?></span></p>
 		
 		<?php
 		if (isingroup("OCSD Edit")) {

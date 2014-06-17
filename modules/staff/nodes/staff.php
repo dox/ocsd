@@ -24,7 +24,7 @@ $user = Tutors::find_by_uid($_GET['tutorid']);
 		<div class="clearfix"></div>
 	</div>
 	<div class="span9">
-		<a href="index.php?n=contact.php&studentName=<?php echo $user->fullDisplayName();?>&studentID=<?php echo $user->studentid; ?>" class="btn btn-primary btn-mini pull-right"><i class="icon-flag icon-white"></i> Contact College Office</a>
+		<a href="index.php?n=contact.php&studentName=<?php echo $user->fullDisplayName();?>&studentID=<?php echo $user->studentid; ?>" class="btn btn-primary btn-mini pull-right"><i class="fa fa-flag"></i> Contact College Office</a>
 		<ul class="nav nav-tabs" id="myTab">
 			<li class="active"><a href="#information" data-toggle="tab">Information</a></li>
 		</ul>

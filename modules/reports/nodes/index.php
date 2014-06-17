@@ -13,9 +13,9 @@
 			<a href="report_pdf.php?n=report_lodgingslist.php&header=false" class="btn btn-small">Lodgings List</a>
 			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">
-				<li><a href="report_pdf.php?n=report_lodgingslist.php&header=false"><i class="icon-file"></i> Generate as PDF</a></li>
-				<li><a href="report_pdf.php?n=report_lodgingslist.php&header=false&type=csv"><i class="icon-th"></i> Generate as CSV</a></li>
-				<li><a href="#"><i class="icon-wrench"></i> Edit Report</a></li>
+				<li><a href="report_pdf.php?n=report_lodgingslist.php&header=false"><i class="fa fa-file-pdf-o"></i> Generate as PDF</a></li>
+				<li><a href="report_pdf.php?n=report_lodgingslist.php&header=false&type=csv"><i class="fa fa-file-excel-o"></i> Generate as CSV</a></li>
+				<li><a href="#"><i class="fa fa-wrench"></i> Edit Report</a></li>
 			</ul>
 		</div></p>
 		<p><div class="btn-group">
@@ -26,7 +26,7 @@
 				$year = date('Y');
 				$i = 0;
 				do {
-					echo "<li><a href=\"report_pdf.php?n=report_photos.php&header=false&cohort=" . $year . "\"><i class=\"icon-file\"></i> " . $year . " Cohort</a></li>";
+					echo "<li><a href=\"report_pdf.php?n=report_photos.php&header=false&cohort=" . $year . "\"><i class=\"fa fa-file-pdf-o\"></i> " . $year . " Cohort</a></li>";
 					
 					$year --;
 					$i ++;
@@ -38,18 +38,18 @@
 			<a href="report_pdf.php?n=report_nationalities.php&header=false" class="btn btn-small">Nationalities</a>
 			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">
-				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=ug"><i class="icon-user"></i> Only Undergraduates</a></li>
-				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=pg"><i class="icon-user"></i> Only Postgraduates</a></li>
-				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=vx"><i class="icon-globe"></i> Only Visiting Students</a></li>
+				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=ug"><i class="fa fa-file-pdf-o"></i> Only Undergraduates</a></li>
+				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=pg"><i class="fa fa-file-pdf-o"></i> Only Postgraduates</a></li>
+				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=vx"><i class="fa fa-file-pdf-o"></i> Only Visiting Students</a></li>
 			</ul>
 		</div></p>
 		<p><div class="btn-group">
 			<a href="#" class="btn btn-small">Address Lists</a>
 			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">
-				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=ug"><i class="icon-user"></i> Only Undergraduates</a></li>
-				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=pg"><i class="icon-user"></i> Only Postgrads</a></li>
-				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=vx"><i class="icon-globe"></i> Only Visiting Students</a></li>
+				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=ug"><i class="fa fa-file-pdf-o"></i> Only Undergraduates</a></li>
+				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=pg"><i class="fa fa-file-pdf-o"></i> Only Postgrads</a></li>
+				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=vx"><i class="fa fa-file-pdf-o"></i> Only Visiting Students</a></li>
 			</ul>
 		</div></p>
 		</div>

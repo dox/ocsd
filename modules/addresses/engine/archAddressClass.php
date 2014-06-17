@@ -80,7 +80,7 @@ class ArchAddresses {
 	public function displayAddress() {
 		$output  = "<address class=\"well\">";
 		
-		$output .= "<a href=\"modules/addresses/views/archAddressDymo.php?uid=" . $this->ar_addrid . "\"><i class=\"icon-print pull-right\"></i></a>";
+		$output .= "<a href=\"modules/addresses/views/archAddressDymo.php?uid=" . $this->ar_addrid . "\"><i class=\"fa fa-print pull-right\"></i></a>";
 		
 		
 		if ($this->defalt == "Yes") {

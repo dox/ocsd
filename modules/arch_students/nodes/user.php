@@ -14,22 +14,22 @@ $degree = ArchGrads::find_academic_record_by_studentkey($user->id());
 	<div class="span3">
 		<?php echo $user->imageURL(true); ?>
 		<div class="clearfix"></div>
-		<p><i class="icon-barcode"></i> <?php echo $user->bodcard(); ?></p>
-		<p><i class="icon-qrcode"></i> <?php echo $user->oss_pn; ?></p>
-		<p><i class="icon-user"></i> <?php echo $user->oucs_id; ?></p>
+		<p><i class="fa fa-barcode"></i> <?php echo $user->bodcard(); ?></p>
+		<p><i class="fa fa-university"></i> <?php echo $user->oucs_id; ?></p>
+		<p><i class="fa fa-graduation-cap"></i> <?php echo $user->oss_pn; ?></p>
 		<?php
 		if ($user->mobile) {
-			echo "<p><i class=\"icon-comment\"></i> " . $user->mobile . "</p>";
+			echo "<p><i class=\"fa fa-mobile\"></i> " . $user->mobile . "</p>";
 		}
 		if ($user->email1) {
-			echo "<p><i class=\"icon-envelope\"></i> <a href=\"mailto:" . $user->email1 . "\">" . $user->email1 . "</a></p>";
+			echo "<p><i class=\"fa fa-envelope\"></i> <a href=\"mailto:" . $user->email1 . "\">" . $user->email1 . "</a></p>";
 		}
 		if ($user->email2) {
-			echo "<p><i class=\"icon-envelope\"></i> <a href=\"mailto:" . $user->email2 . "\">" . $user->email2 . "</a></p>";
+			echo "<p><i class=\"fa fa-envelope-o\"></i> <a href=\"mailto:" . $user->email2 . "\">" . $user->email2 . "</a></p>";
 		}
 		?>
 		
-		<p><i class="icon-globe"></i> <?php echo $user->nationality; ?></p>
+		<p><i class="fa fa-globe"></i> <?php echo $user->nationality; ?></p>
 		
 		<p><a class="btn" href="index.php?n=404.php">Edit Details &raquo;</a></p>
 		<div class="clearfix"></div>

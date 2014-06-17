@@ -83,7 +83,7 @@ class Addresses {
 	public function displayAddress() {
 		$output  = "<address class=\"well\">";
 		
-		$output .= "<a href=\"modules/addresses/views/addressDymo.php?uid=" . $this->addrid . "\"><i class=\"icon-print pull-right\"></i></a>";
+		$output .= "<a href=\"modules/addresses/views/addressDymo.php?uid=" . $this->addrid . "\"><i class=\"fa fa-print pull-right\"></i></a>";
 		
 		if ($this->line1) {
 			$output .= $this->line1 . "<br />";
