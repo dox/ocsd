@@ -23,6 +23,7 @@ if (isset($_POST['page'])) {
 		<label class="col-sm-2 control-label" for="inputRef">Reference Page</label>
 		<div class="col-sm-10">
 			<input type="text" class="form-control" id="inputRef" placeholder="Reference" readonly value="<?php echo $_POST['page']; ?>">
+			<p class="help-block">This is the page you were on when you clicked 'flag'.  It is used by the Administrator to help resolve your query/problem.</p>
 		</div>
 	</div>
 <?php
