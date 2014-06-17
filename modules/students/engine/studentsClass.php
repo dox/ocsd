@@ -144,10 +144,10 @@ class Students {
 				$url = "#";
 			} else {
 				if (date('Y-m-d') < convertToDateString($this->dt_card_exp)) {
-					$labelClass = "label label-info";
+					$labelClass = "label label-primary";
 					$toolTip = "Expires on " . convertToDateString($this->dt_card_exp);
 				} else {
-					$labelClass = "label label-important";
+					$labelClass = "label label-warning";
 					$toolTip = "Bod Card expired on " . convertToDateString($this->dt_card_exp);
 				}
 				
