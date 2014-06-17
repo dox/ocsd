@@ -17,12 +17,12 @@
 </div>
 
 <?php
-if (isset($_GET['page'])) {
+if (isset($_POST['page'])) {
 ?>
 <div class="form-group">
 		<label class="col-sm-2 control-label" for="inputRef">Reference Page</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="inputRef" placeholder="Reference" readonly value="<?php echo $_GET['page']; ?>">
+			<input type="text" class="form-control" id="inputRef" placeholder="Reference" readonly value="<?php echo $_POST['page']; ?>">
 		</div>
 	</div>
 <?php

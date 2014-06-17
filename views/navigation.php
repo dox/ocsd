@@ -34,7 +34,11 @@
 			</form>
 			
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="index.php?n=contact.php&page=<?php echo curPageURL(); ?>"><i class="fa fa-flag"></i></a></li>
+				<form action="showMessage.jsp" method="post">
+					<li><a href="javascript:;" onclick="parentNode.submit();"><i class="fa fa-flag"></i></a></li>
+					<input type="hidden" name="page" value="<?php echo curPageURL(); ?>"/>
+				</form>
+				<!--<li><a href="index.php?n=contact.php&page="><i class="fa fa-flag"></i></a></li>-->
 				<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 					<ul class="dropdown-menu">
