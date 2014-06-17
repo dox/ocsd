@@ -12,24 +12,17 @@
 <div class="form-group">
 	<label class="col-sm-2 control-label" for="inputStudent">Reference Student</label>
 	<div class="col-sm-10">
-		<?php
-		if (isset($_GET['studentName'])) {
-			$value = $_GET['studentName'];
-		} else {
-			$value = "";
-		}
-		?>
-		<input type="text" class="form-control" id="inputStudent" placeholder="Full Student Name" value="<?php echo $value; ?>">
+		<input type="text" class="form-control" id="inputStudent" placeholder="Full Student Name">
 	</div>
 </div>
 
 <?php
-if (isset($_GET['studentID'])) {
+if (isset($_GET['page'])) {
 ?>
 <div class="form-group">
-		<label class="col-sm-2 control-label" for="inputStudentID">Reference Student ID</label>
+		<label class="col-sm-2 control-label" for="inputRef">Reference Page</label>
 		<div class="col-sm-10">
-			<input type="number" class="form-control" id="inputStudentID" placeholder="Student ID" value="<?php echo $_GET['studentID']; ?>">
+			<input type="text" class="form-control" id="inputRef" placeholder="Reference" readonly value="<?php echo $_GET['page']; ?>">
 		</div>
 	</div>
 <?php
@@ -55,10 +48,10 @@ $(function() {
 		var subject = "Message From OCSD";
 		var recipient = "andrew.breakspear@seh.ox.ac.uk";
 		var studentName = $("input#inputStudent").val();
-		var studentID = $("input#inputStudentID").val();
+		var ref = $("input#inputRef").val();
 		var message = $("textarea#textareaMessage").val();
 		
-		var messageBody = "Student: " + studentName + " (" + studentID + ")" + " - " + message;
+		var messageBody = "Student: " + studentName + " (Ref: " + ref + ")" + " - " + message;
 		var url = 'actions/sendMail.php';
 		
 		// perform the post to the action (take the info and submit to database)
