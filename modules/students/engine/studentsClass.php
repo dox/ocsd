@@ -151,13 +151,14 @@ class Students {
 					$toolTip = "Bod Card expired on " . convertToDateString($this->dt_card_exp);
 				}
 				
+				// not used
 				$url = "index.php?m=students&n=user.php&studentid=" . $this->studentid;
 			}
 			
 			//$bodcardOutput  = "<span class=\"label " . $labelClass . "\">";
-			$bodcardOutput  = "<a class=\"" . $labelClass . "\" href=\"" . $url . "\" data-toggle=\"tooltip\" title=\"" . $toolTip . "\">";
+			$bodcardOutput  = "<span class=\"" . $labelClass . "\" data-toggle=\"tooltip\" title=\"" . $toolTip . "\">";
 			$bodcardOutput .= $bodcard;
-			$bodcardOutput .= "</a>";
+			$bodcardOutput .= "</span>";
 		} else {
 			$bodcardOutput .= $bodcard;
 		}
