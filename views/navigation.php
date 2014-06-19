@@ -34,12 +34,12 @@
 			</form>
 			
 			<ul class="nav navbar-nav navbar-right">
-					<li>
-						<form action="index.php?n=contact.php" method="post">
-						<button type="submit" class="btn btn-default"><a href="javascript:;" onclick="parentNode.submit();"><i class="fa fa-flag"></i></a></button>
+				<li>
+					<form class="navbar-form" action="index.php?n=contact.php" method="post">
+						<a href="#" onclick="parentNode.submit();"><i class="fa fa-flag"></i></a>
 						<input type="hidden" name="page" value="<?php echo curPageURL(); ?>"/>
-						</form>
-					</li>
+					</form>
+				</li>
 				<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 					<ul class="dropdown-menu">
