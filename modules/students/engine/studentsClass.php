@@ -194,7 +194,7 @@ class Students {
 		//$url = "uploads/2703628.jpg";
 		
 		if ($fullImgTag == true) {
-			$output  = "<img id=\"userPhoto\" src=\"" . $pathToFile . "\" class=\"img-polaroid \" style=\"max-height: 300px;\">";
+			$output  = "<img id=\"userPhoto\" src=\"" . $pathToFile . "\" class=\"img-thumbnail \" alt=\"Photograph of " . $this->fullDisplayName() . "\" style=\"max-height: 300px;\">";
 		} else {
 			$output = $pathToFile;
 		}
