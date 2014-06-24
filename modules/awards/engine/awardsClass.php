@@ -79,5 +79,32 @@ class Awards {
 			$this->awdid = $database->insert_id();
 		}
 	}
+	
+	public function delete() {
+		global $database;
+		
+		// see if there are any students with this award already
+		$check = student_awardsClass::find_all_by_awdkey($this->awdid);
+					
+		// if there are no students with this award, it's safe to delete
+		if (count($check) == 0) {
+			$sql  = "DELETE FROM " . self::$table_name . " ";
+			$sql .= "WHERE awdid = '" . $database->escape_value($this->awdid) . "' ";
+			$sql .= "LIMIT 1";
+			
+			// check if the database entry was successful (by attempting it)
+			if ($database->query($sql)) {
+				//$this->uid = $database->insert_id();
+			}
+		} else {
+			$log = new Logs;
+			$log->notes			= "Cannot delete award type when there are " . count($check) . " student(s) with the award.";
+			$log->prev_value	= $this->sawid;
+			$log->type			= "error";
+			$log->create();
+		}
+		
+		
+	}
 }
 ?>

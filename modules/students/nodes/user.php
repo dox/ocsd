@@ -15,6 +15,8 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 	<h1><?php echo $user->fullDisplayName(); ?> <small> Cohort: <?php echo $user->yr_cohort; ?></small></h1>
 </div>
 
+
+
 <div class="row">
 	<div class="col-md-4">
 		<div>
