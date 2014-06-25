@@ -2,7 +2,6 @@
 $awards = Awards::find_all();
 ?>
 <script src="js/jquery.fastLiveFilter.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
 
 <div class="page-header">
 	<h1>Awards <small></small></h1>
