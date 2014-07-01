@@ -11,10 +11,34 @@ $subject = QualSubjects::find_by_qsid($degree->qskey);
 
 $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 ?>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5A8xxvvZ292FvbVNP7JgUrUGUJ_6x-zI"></script>
+
+<script>
+var map;
+
+function initialize() {
+	var mapOptions = {
+		zoom: 8,
+		center: new google.maps.LatLng(-34.397, 150.644)
+	};
+	map = new google.maps.Map(document.getElementById('map-canvas'),
+	mapOptions);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
 <div class="page-header">
 	<h1><?php echo $user->fullDisplayName(); ?> <small> Cohort: <?php echo $user->yr_cohort; ?></small></h1>
 </div>
 
+<style>
+#map-canvas {
+	width: 100%;
+	height: 500px;
+}
+</style>
 
 
 <div class="row">
@@ -112,7 +136,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		<span id="notes" class="inlineEditble" data-type="textarea" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Notes"><?php echo $user->notes; ?></span>
 
 		<div class="clearfix"></div>
-		<p><button class="btn btn-mini pull-right disabled" type="button">Last Modified By: <?php echo $user->who_mod . " (" . convertToDateString($user->dt_lastmod) . ")"; ?></button></p>
+		<p><button class="btn btn-default btn-xs pull-right disabled" type="button">Last Modified By: <?php echo $user->who_mod . " (" . convertToDateString($user->dt_lastmod) . ")"; ?></button></p>
 			</div>
 			<div class="tab-pane" id="addresses">
 				<?
@@ -123,15 +147,28 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p class="lead">Resident Status: <?php echo $resStatus->status; ?></p>
 				<h3>Home Residence</h3>
 				
+				<!--<div id="map-canvas"></div>-->
+				
 				<?php
 				foreach ($addresses AS $address) {
 					echo "<div class=\"row\">";
-					echo "<div class=\"span3\">";
+					echo "<div class=\"col-md-4\">";
 					echo $address->displayAddress();
 					echo "</div>";
-					echo "<div class=\"span6\">";
+					echo "<div class=\"col-md-8\">";
 					
-					$googleFrame  = "<iframe width=\"425\" height=\"350\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" ";
+					
+					$googleMapsMode = "place";
+					$googleMapsEmbedAPI = "AIzaSyB5A8xxvvZ292FvbVNP7JgUrUGUJ_6x-zI";
+					
+					$googleFrame  = "<iframe ";
+					$googleFrame .= "width=\"425\" ";
+					$googleFrame .= "height=\"350\" ";
+					$googleFrame .= "frameborder=\"0\" style=\"border:0\" ";
+					//$googleFrame .= "scrolling=\"no\" ";
+					//$googleFrame .= "marginheight=\"0\" ";
+					//$googleFrame .= "marginwidth=\"0\" ";
+					//$googleFrame .= "https://www.google.com/maps/embed/v1/" . $googleMapsMode . "?key=" . $googleMapsEmbedAPI . "&";
 					$googleFrame .= "src=\"https://maps.google.co.uk/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=";
 					$googleFrame .= $address->line1 . " " . $address->county . " " . $address->postcode;
 					//$googleFrame .= "&amp;aq=&amp;sll=53.800651,-4.064941&amp;sspn=6.725398,25.444336&amp;ie=UTF8&amp;hq=&amp;hnear=53+Gwendwr+Rd,+London+W14+9BG,+United+Kingdom";
@@ -397,6 +434,4 @@ $("#awardAddButton").click(function() {
 $('#dp3').datepicker();
 </script>
 
-  	
-	
 <script src="modules/students/js/upload.js"></script>
