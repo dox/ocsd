@@ -34,12 +34,7 @@
 			</form>
 			
 			<ul class="nav navbar-nav navbar-right">
-				<li>
-					<form class="navbar-form" action="index.php?n=contact.php" method="post">
-						<a href="#" onclick="parentNode.submit();"><i class="fa fa-flag"></i></a>
-						<input type="hidden" name="page" value="<?php echo curPageURL(); ?>"/>
-					</form>
-				</li>
+				<li><a href="index.php?n=contact.php"><i class="fa fa-flag"></i></a></li>
 				<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 					<ul class="dropdown-menu">
