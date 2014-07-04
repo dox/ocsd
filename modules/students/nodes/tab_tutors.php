@@ -4,8 +4,9 @@ $allTutors = Tutors::find_all();
 ?>
 <script src="js/jquery.fastLiveFilter.js"></script>
 
-<input type="text" class="input-medium search-query" id="tutor_search_input" placeholder="Quick Filter">
+<p><input type="text" class="form-control search-query" id="tutor_search_input" placeholder="Quick Filter"></p>
 
+<a href="index.php?m=students&n=add_tutor.php" class="btn btn-primary">Add New</a>
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>

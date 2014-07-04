@@ -3,7 +3,7 @@ class Tutors {
 	protected static $table_name = "tutors";
 	
 	public $tutid;
-	public $title;
+	public $titlekey;
 	public $initials;
 	public $forenames;
 	public $surname;
@@ -111,7 +111,31 @@ class Tutors {
 		
 		$results = self::find_by_sql($sql);
 	}
-
+	
+	public function create() {
+		global $database;
+		
+		$sql  = "INSERT INTO " . self::$table_name . " (";
+		$sql .= "titlekey, initials, forenames, surname, identifier, photo";
+		$sql .= ") VALUES ('";
+		$sql .= $database->escape_value($this->titlekey) . "', '";
+		$sql .= $database->escape_value($this->initials) . "', '";
+		$sql .= $database->escape_value($this->forenames) . "', '";
+		$sql .= $database->escape_value($this->surname) . "', '";
+		$sql .= $database->escape_value($this->identifier) . "', '";
+		$sql .= $database->escape_value($this->photo) . "')";
+		
+		// check if the database entry was successful (by attempting it)
+		if ($database->query($sql)) {
+			$log = new Logs;
+			$log->notes			= "New tutor created";
+			$log->prev_value	= $this->tutid;
+			$log->type			= "create";
+			$log->create();
+			
+			$this->tutid = $database->insert_id();
+		}
+	}
 }
 ?>
 
