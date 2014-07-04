@@ -111,10 +111,14 @@ class Students {
 		return $results;
 	}
 	
-	public function fullDisplayName() {
+	public function title() {
 		$title = Titles::find_by_titleid($this->titlekey);
-		$firstname = $this->forenames;
 		
+		return $title->title;
+		
+	}
+	
+	public function fullDisplayName() {
 		if ($this->initials) {
 			$initials = str_replace(" ", ". ", $this->initials);
 			$initials = $initials . ". ";
@@ -124,7 +128,7 @@ class Students {
 		
 		$familyname = $this->surname;
 		
-		return $title->title . " " . $firstname . " " . $familyname;
+		return $this->title() . " " . $firstname . " " . $familyname;
 	}
 	
 	public function bodcard($link = true) {
