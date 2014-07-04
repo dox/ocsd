@@ -67,13 +67,19 @@ class Tutors {
 		return $results;
 	}
 	
+	public function title() {
+		$title = Titles::find_by_titleid($this->titlekey);
+		
+		return $title->title;
+		
+	}
+	
 	public function fullDisplayName() {
-		$title = $this->title;
 		$firstname = $this->forenames;
 		$initials = $this->initials;
 		$familyname = $this->surname;
 		
-		return $title . " " . $firstname . " " . $initials . " " . $familyname;
+		return $this->title() . " " . $firstname . " " . $familyname;
 	}
 	
 	public function id() {

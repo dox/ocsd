@@ -1,15 +1,11 @@
 <?php
 $user = Tutors::find_by_uid($_GET['tutorid']);
 ?>
-<div class="row">
-	<div class="span12">
-		<div class="page-header">
-			<h1><?php echo $user->fullDisplayName(); ?></h1>
-		</div>
-	</div>
+<div class="page-header">
+	<h1><?php echo $user->fullDisplayName(); ?> <small><?php echo $user->identifier; ?></small></h1>
 </div>
 <div class="row">
-	<div class="span3">
+	<div class="col-md-4">
 		<div>
 			<?php echo $user->imageURL(true); ?>
 			<div id="image-list"></div>
@@ -23,8 +19,7 @@ $user = Tutors::find_by_uid($_GET['tutorid']);
         <hr />
 		<div class="clearfix"></div>
 	</div>
-	<div class="span9">
-		<a href="index.php?n=contact.php&studentName=<?php echo $user->fullDisplayName();?>&studentID=<?php echo $user->studentid; ?>" class="btn btn-primary btn-mini pull-right"><i class="fa fa-flag"></i> Contact College Office</a>
+	<div class="col-md-8">
 		<ul class="nav nav-tabs" id="myTab">
 			<li class="active"><a href="#information" data-toggle="tab">Information</a></li>
 		</ul>

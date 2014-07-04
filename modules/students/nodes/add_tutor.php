@@ -20,8 +20,6 @@ if (isset($_POST['form_submit'])) {
 	<h1>Add New Tutor</h1>
 </div>
 
-	
-	
 <form role="form" action="index.php?m=students&n=add_tutor.php" method="post">
 	<div class="form-group">
 		<label for="addTitle">Title</label>
