@@ -1,9 +1,4 @@
 <?php
-
-if ($_GET['studenttype'] == "ug") {
-}
-
-//$awardTypes = Awards::find_all($sql);
 $studentAwards = student_awardsClass::find_all();
 
 // build header rows for CSV
@@ -26,14 +21,13 @@ foreach ($studentAwards AS $studentAward) {
 	$award = Awards::find_by_uid($studentAward->awdkey);
 	$degree = Grads::find_by_studentkey($student->studentid);
 	$subject = QualSubjects::find_by_qsid($degree->qskey);
-	//$outputArray[$i["test"] = $studentAward->sawid;
 	
 	$outputArray[$i]["student_title"] = $student->title();
 	$outputArray[$i]["student_initials"] = $student->initials;
 	$outputArray[$i]["student_forenames"] = $student->forenames;
 	$outputArray[$i]["student_surname"] = $student->surname;
 	$outputArray[$i]["student_email"] = $student->email1;
-	$outputArray[$i]["student_course"] = "TEST";
+	$outputArray[$i]["student_course"] = $subject->name;
 	$outputArray[$i]["student_courseyear"] = $student->course_yr;
 	$outputArray[$i]["award_name"] = $award->name;
 	$outputArray[$i]["award_awardeddate"] = $studentAward->dt_awarded;
@@ -58,7 +52,7 @@ function outputCSV($data) {
 outputCSV($outputArray);
 
 $log = new Logs;
-$log->notes			= "Report 'Address List' Generated for Student Type " . $_GET['studenttype'];
+$log->notes			= "Report 'Awards List' Generated for Student Type " . $_GET['studenttype'];
 $log->prev_value	= $_GET['n'];
 $log->type			= "report";
 $log->create();
