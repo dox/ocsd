@@ -2,73 +2,77 @@
 $awards = Awards::find_all();
 ?>
 <script src="js/jquery.fastLiveFilter.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<div class="page-header">
+	<h1>Awards <small></small></h1>
+</div>
+
+<h2>Awards List</h2>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th width="50%">Name</th>
+			<th width="20%">Type</th>
+			<th width="20%">Given By</th>
+			<th width="10%"></th>
+		</tr>
+	</thead>
+	<tbody id="awards_search_list">
+	<tr>
+		<td><a href="#" class="myeditable" id="new_award_name" data-type="text" data-name="new_award_name" data-original-title="Enter Award Name"></a></td>
+		<td><a href="#" class="myeditable" id="new_award_type" data-type="select" data-name="new_award_type" data-original-title="Select Award Type"></a></td>
+		<td><a href="#" class="myeditable" id="new_award_given_by" data-type="select" data-name="new_award_given_by" data-original-title="Select Award Given By"></a></td>
+		<td><button class="btn btn-primary btn-sm" id="new_award_save">Add Award</button></td>
+	</tr>
+	</tbody>
+</table>
 
 <div class="row">
-	<div class="span12">
-		<div class="page-header">
-			<h1>Awards <small></small></h1>
-		</div>
+	<div class="col-xs-3">
+		<input type="text" class="form-control search-query" id="awards_search_input" placeholder="Quick Filter">
 	</div>
 </div>
-<div class="row">
-	<div class="span3">
-		<h2>Add New</h2>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th width="50%">Name</th>
+			<th width="20%">Type</th>
+			<th width="20%">Given By</th>
+			<th width="10%"></th>
+		</tr>
+	</thead>
+	<tbody id="awards_search_list">
+	<?php
+	foreach ($awards AS $award) {
+		$output  = "<tr>";
+		$output .= "<td>" . $award->name . "</td>";
 		
-		<table id="user" class="table table-bordered table-striped">
-			<tbody>
-				<tr>
-					<td>Name</td>
-					<td><a href="#" class="myeditable" id="new_award_name" data-type="text" data-name="new_award_name" data-original-title="Enter Award Name"></a></td>
-				</tr>
-				<tr>
-					<td>Type</td>
-					<td><a href="#" class="myeditable" id="new_award_type" data-type="select" data-name="new_award_type" data-original-title="Select Award Type"></a></td>
-				</tr>
-				<tr>
-					<td>Given By</td>
-					<td><a href="#" class="myeditable" id="new_award_given_by" data-type="select" data-name="new_award_given_by" data-original-title="Select Award Given By"></a></td>
-				</tr>
-			</tbody>
-		</table>
+		$output .= "<td>" . $award->type . "</td>";
 		
-		<div class="alert hidden" id="msg"></div>
+		$output .= "<td>" . $award->given_by ."</td>";
 		
-		<button class="btn btn-primary" id="new_award_save">Add Award</button>
-		<button id="reset-btn" class="btn pull-right">Reset</button>
-	</div>
-	<div class="row">
-	<div class="span9">
-		<h2>Awards List</h2>
-		<input type="text" class="input-medium search-query" id="awards_search_input" placeholder="Quick Filter">
+		$output .= "<td>";
+		$output .= "<div class=\"btn-group\">";
+		$output .= "<button type=\"button\" class=\"btn btn-default btn-xs dropdown-toggle\" data-toggle=\"dropdown\">";
+		$output .= "Action <span class=\"caret\"></span>";
+		$output .= "</button>";
+		$output .= "<ul class=\"dropdown-menu\" role=\"menu\">";
+		//$output .= "<li><a href=\"#\">Edit</a></li>";
+		//$output .= "<li><a href=\"#\">Recipients</a></li>";
+		$output .= "<li class=\"divider\"></li>";
+		$output .= "<li><a id=\"" . $award->awdid . "\" class=\"delete_award\" href=\"#\">Delete</a></li>";
+		$output .= "</ul>";
+		$output .= "</div>";
+		$output .= "</td>";
 		
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Type</th>
-					<th>Given By</th>
-				</tr>
-			</thead>
-			<tbody id="awards_search_list">
-			<?php
-			foreach ($awards AS $award) {
-				$output  = "<tr>";
-				$output .= "<td>" . $award->name . "</td>";
-				
-				$output .= "<td>" . $award->type . "</td>";
-				
-				$output .= "<td>" . $award->given_by ."</td>";
-				
-				$output .= "</tr>";
-				
-				echo $output;
-			}
-			?>
-			</tbody>
-		</table>
-	</div>
-</div>
+		$output .= "</tr>";
+		
+		echo $output;
+	}
+	?>
+	</tbody>
+</table>
+
 <script>
 $(function() {
 	$('#awards_search_input').fastLiveFilter('#awards_search_list');
@@ -82,6 +86,16 @@ $(function() {
 	}
 	
 ?>
+
+<style>
+table.table tr td div.btn-group {
+	display:none;
+}
+table.table tr:hover td div.btn-group {
+	display:inline-block;
+}
+</style>
+
 <script>
 $('#new_award_name').editable();
 
@@ -114,10 +128,24 @@ $('#new_award_save').click(function() {
 	});
 });
 
-$('#reset-btn').click(function() {
-	$('#new_award_name').editable('setValue', "").editable('option', 'pk', null).removeClass('editable-unsaved');
-	$('#new_award_type').editable('setValue', "").editable('option', 'pk', null).removeClass('editable-unsaved');
+$('.delete_award').click(function() {
+	var r=confirm("Are you sure you want to delete this award?  This cannot be undone.");
 	
-	$('#msg').hide();                
+	if (r==true) {
+		var thisObject = $(this);
+		var awdid = $(thisObject).attr('id');
+		
+		var url = 'modules/awards/actions/deleteAwardType.php';
+		
+		// perform the post to the action (take the info and submit to database)
+		$.post(url,{
+		    awdid: awdid
+		}, function(data){
+			$(thisObject).parent().parent().parent().parent().parent().fadeOut();
+		},'html');
+	} else {
+	}
+	
+	return false;
 });
 </script>

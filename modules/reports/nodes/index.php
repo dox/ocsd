@@ -1,26 +1,24 @@
-<div class="row">
-	<div class="span12">
-		<div class="page-header">
-			<h1>Reports</h1>
-		</div>
-	</div>
+<div class="page-header">
+	<h1>Reports</h1>
 </div>
+
 <div class="row">
-	<div class="span3">
+	<div class="col-md-4">
 		<div class="well">
 		<h4>Quick Reports</h4>
-		<p><div class="btn-group">
-			<a href="report_pdf.php?n=report_lodgingslist.php&header=false" class="btn btn-small">Lodgings List</a>
-			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+		<div class="btn-group">
+			<a href="report_pdf.php?n=report_lodgingslist.php&header=false" class="btn btn-default">Lodgings List</a>
+			<button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li><a href="report_pdf.php?n=report_lodgingslist.php&header=false"><i class="fa fa-file-pdf-o"></i> Generate as PDF</a></li>
 				<li><a href="report_pdf.php?n=report_lodgingslist.php&header=false&type=csv"><i class="fa fa-file-excel-o"></i> Generate as CSV</a></li>
 				<li><a href="#"><i class="fa fa-wrench"></i> Edit Report</a></li>
 			</ul>
-		</div></p>
-		<p><div class="btn-group">
-			<span class="btn btn-small">Photo List</span>
-			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btn-group">
+			<span class="btn btn-default">Photo List</span>
+			<button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<?php
 				$year = date('Y');
@@ -33,28 +31,38 @@
 				} while ($i <= 10);
 				?>
 			</ul>
-		</div></p>
-		<p><div class="btn-group">
-			<a href="report_pdf.php?n=report_nationalities.php&header=false" class="btn btn-small">Nationalities</a>
-			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btn-group">
+			<a href="report_pdf.php?n=report_nationalities.php&header=false" class="btn btn-default">Nationalities</a>
+			<button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=ug"><i class="fa fa-file-pdf-o"></i> Only Undergraduates</a></li>
 				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=pg"><i class="fa fa-file-pdf-o"></i> Only Postgraduates</a></li>
 				<li><a href="report_pdf.php?n=report_nationalities.php&header=false&studenttype=vx"><i class="fa fa-file-pdf-o"></i> Only Visiting Students</a></li>
 			</ul>
-		</div></p>
-		<p><div class="btn-group">
-			<a href="#" class="btn btn-small">Address Lists</a>
-			<button class="btn btn-small dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btn-group">
+			<a href="#" class="btn btn-default">Address Lists</a>
+			<button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=ug"><i class="fa fa-file-pdf-o"></i> Only Undergraduates</a></li>
 				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=pg"><i class="fa fa-file-pdf-o"></i> Only Postgrads</a></li>
 				<li><a href="report_pdf.php?n=report_addressList.php&type=csv&studenttype=vx"><i class="fa fa-file-pdf-o"></i> Only Visiting Students</a></li>
 			</ul>
-		</div></p>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btn-group">
+			<a href="#" class="btn btn-default">Awards List</a>
+			<button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li><a href="report_pdf.php?n=report_awardsList.php&type=csv&sencompass=year"><i class="fa fa-file-excel-o"></i> All Awards</a></li>
+			</ul>
+		</div>
 		</div>
 	</div>
-	<div class="span9">
+	<div class="col-md-8">
 		<h2>Guided Report</h2>
 		<form class="form-horizontal" action="index.php?m=reports&n=guidedReport.php" method="post">
 		<h3>Step 1 <small> Select fields to include</small></h3>

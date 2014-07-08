@@ -57,6 +57,17 @@ class student_awardsClass {
 		return !empty($results) ? array_shift($results) : false;
 	}
 	
+	public static function find_all_by_awdkey($awdkey = NULL) {
+		global $database;
+		
+		$sql  = "SELECT * FROM " . self::$table_name . " ";
+		$sql .= "WHERE awdkey = '" . $awdkey . "' ";
+		
+		$results = self::find_by_sql($sql);
+		
+		return $results;
+	}
+	
 	public static function find_by_studentkey($studentkey = NULL) {
 		global $database;
 		

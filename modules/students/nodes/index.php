@@ -1,3 +1,25 @@
+<script>
+$(function() {
+	$("#MainTabs").tab();
+	
+	// load first tab
+	$('#MainTabs a:first').tab('show');
+
+	
+	// onclick on each tab, show the loading, then load the ajax content
+	$('#MainTabs a').click(function (e) {
+		e.preventDefault();
+		
+		$(this).tab('show');
+		
+		var contentID  = $(e.target).attr("data-target");
+		var contentURL = $(e.target).attr("href");
+		
+		$(contentID).load(contentURL, function(){ $("#MainTabs").tab(); });
+	})
+});
+</script>
+
 <div class="page-header">
 	<h1>Users</h1>
 </div>

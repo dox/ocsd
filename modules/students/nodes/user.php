@@ -11,9 +11,35 @@ $subject = QualSubjects::find_by_qsid($degree->qskey);
 
 $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 ?>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5A8xxvvZ292FvbVNP7JgUrUGUJ_6x-zI"></script>
+
+<script>
+var map;
+
+function initialize() {
+	var mapOptions = {
+		zoom: 8,
+		center: new google.maps.LatLng(-34.397, 150.644)
+	};
+	map = new google.maps.Map(document.getElementById('map-canvas'),
+	mapOptions);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
 <div class="page-header">
 	<h1><?php echo $user->fullDisplayName(); ?> <small> Cohort: <?php echo $user->yr_cohort; ?></small></h1>
 </div>
+
+<style>
+#map-canvas {
+	width: 100%;
+	height: 500px;
+}
+</style>
+
 
 <div class="row">
 	<div class="col-md-4">
@@ -110,7 +136,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		<span id="notes" class="inlineEditble" data-type="textarea" data-pk="<?php echo $user->id(); ?>" data-url="/ocsd/actions/u_students.php" data-original-title="Notes"><?php echo $user->notes; ?></span>
 
 		<div class="clearfix"></div>
-		<p><button class="btn btn-mini pull-right disabled" type="button">Last Modified By: <?php echo $user->who_mod . " (" . convertToDateString($user->dt_lastmod) . ")"; ?></button></p>
+		<p><button class="btn btn-default btn-xs pull-right disabled" type="button">Last Modified By: <?php echo $user->who_mod . " (" . convertToDateString($user->dt_lastmod) . ")"; ?></button></p>
 			</div>
 			<div class="tab-pane" id="addresses">
 				<?
@@ -121,15 +147,28 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p class="lead">Resident Status: <?php echo $resStatus->status; ?></p>
 				<h3>Home Residence</h3>
 				
+				<!--<div id="map-canvas"></div>-->
+				
 				<?php
 				foreach ($addresses AS $address) {
 					echo "<div class=\"row\">";
-					echo "<div class=\"span3\">";
+					echo "<div class=\"col-md-4\">";
 					echo $address->displayAddress();
 					echo "</div>";
-					echo "<div class=\"span6\">";
+					echo "<div class=\"col-md-8\">";
 					
-					$googleFrame  = "<iframe width=\"425\" height=\"350\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" ";
+					
+					$googleMapsMode = "place";
+					$googleMapsEmbedAPI = "AIzaSyB5A8xxvvZ292FvbVNP7JgUrUGUJ_6x-zI";
+					
+					$googleFrame  = "<iframe ";
+					$googleFrame .= "width=\"425\" ";
+					$googleFrame .= "height=\"350\" ";
+					$googleFrame .= "frameborder=\"0\" style=\"border:0\" ";
+					//$googleFrame .= "scrolling=\"no\" ";
+					//$googleFrame .= "marginheight=\"0\" ";
+					//$googleFrame .= "marginwidth=\"0\" ";
+					//$googleFrame .= "https://www.google.com/maps/embed/v1/" . $googleMapsMode . "?key=" . $googleMapsEmbedAPI . "&";
 					$googleFrame .= "src=\"https://maps.google.co.uk/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=";
 					$googleFrame .= $address->line1 . " " . $address->county . " " . $address->postcode;
 					//$googleFrame .= "&amp;aq=&amp;sll=53.800651,-4.064941&amp;sspn=6.725398,25.444336&amp;ie=UTF8&amp;hq=&amp;hnear=53+Gwendwr+Rd,+London+W14+9BG,+United+Kingdom";
@@ -187,11 +226,11 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 			</div>
 			<div class="tab-pane" id="awards">
 				<div id="awardsFormAdd">
-					<form class="form-horizontal">
-						<div class="control-group">
-							<label class="control-label" for="inputAward">Award</label>
-							<div class="controls">
-								<select id="inputAward">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputAward">Award</label>
+							<div class="col-sm-10">
+								<select id="inputAward" class="form-control">
 								
 									<?php
 									$awards = Awards::find_all();
@@ -207,40 +246,37 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 								</select>
 							</div>
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="inputDateAwarded">Date Awarded</label>
-							<div class="controls">
-								<input type="date" id="inputDateAwarded" placeholder="YYYY-MM-DD" value="<?php echo convertToDateString(null,false); ?>">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputDateAwarded">Date Awarded</label>
+							<div class="col-sm-10">
+								<input type="date" class="form-control" id="inputDateAwarded" placeholder="YYYY-MM-DD" value="<?php echo convertToDateString(null,false); ?>">
 							</div>
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="inputDateFrom">Date From</label>
-							<div class="controls">
-								<input type="date" id="inputDateFrom" placeholder="YYYY-MM-DD" value="<?php echo convertToDateString(null,false); ?>">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputDateFrom">Date From</label>
+							<div class="col-sm-10">
+								<input type="date" class="form-control" id="inputDateFrom" placeholder="YYYY-MM-DD" value="<?php echo convertToDateString(null,false); ?>">
 							</div>
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="inputDateTo">Date To</label>
-							<div class="controls">
-								<input type="date" id="inputDateTo" placeholder="YYYY-MM-DD" value="<?php echo convertToDateString(null,false); ?>">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputDateTo">Date To</label>
+							<div class="col-sm-10">
+								<input type="date" class="form-control" id="inputDateTo" placeholder="YYYY-MM-DD" value="<?php echo convertToDateString(null,false); ?>">
 							</div>
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="inputAwardValue">Value</label>
-							<div class="controls">
-								<div class="input-prepend">
-									<span class="add-on">£</span>
-									<input class="span2" id="inputAwardValue" type="number">
-								</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputAwardValue">Value (£)</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="inputAwardValue" type="number">
 							</div>
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="inputNotes">Notes</label>
-							<div class="controls">
-								<textarea rows="3" id="inputNotes"></textarea>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputNotes">Notes</label>
+							<div class="col-sm-10">
+								<textarea class="form-control" rows="3" id="inputNotes"></textarea>
 							</div>
 						</div>
-						<button id="awardAddButton" type="button" class="btn">Submit</button>
+						<button id="awardAddButton" type="button" class="btn btn-primary">Submit</button>
 						<input type="hidden" id="inputStudentkey" value="<?php echo $user->studentid; ?>">
 					</form>
 					<div id="response_added"></div>
@@ -252,7 +288,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 					
 					echo "<div>";
 					$button  = "<button class=\"btn btn-mini btn-danger pull-right awardDeleteButton\" id=\"" . $studentAward->sawid . "\">Delete</button>";
-					$button .= "<button class=\"btn btn-mini pull-right\">Edit</button>";
+					//$button .= "<button class=\"btn btn-mini pull-right\">Edit</button>";
 					$button .= "";
 					
 					echo $button;
@@ -261,7 +297,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 					
 					echo "<p>Awarded: " . $studentAward->dt_awarded . "</p>";
 					echo "<p>From: " . convertToDateString($studentAward->dt_from) . " - To: " . convertToDateString($studentAward->dt_to) . "</p>";
-					echo "<p>Value: " . $studentAward->value . "</p>";
+					echo "<p>Value (£): " . $studentAward->value . "</p>";
 					
 					if (isset($studentAward->notes)) {
 						echo "<p>Notes: " . $studentAward->notes . "</p>";
@@ -274,18 +310,13 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 			<div class="tab-pane" id="reports">
 				<p>
 				<div class="btn-group">
-					<?php
-					echo "<a href=\"report_pdf.php?n=transcript.php&studentid=" . $user->id() . "\" class=\"btn\">Generate Transcript</a>";
-					?>
-					<button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-					<ul class="dropdown-menu">
-						<li class="nav-header">With Letterhead</li>
-						<li><a href="report_pdf.php?n=transcript.php&studentid=<?php echo $user->id(); ?>">With exam paper details</a></li>
-						<li><a href="report_pdf.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>">Without exam paper details</a></li>
-						
-						<li class="nav-header">Without Letterhead</li>
-						<li><a href="report_pdf.php?n=transcript.php&studentid=<?php echo $user->id(); ?>&header=false">With exam paper details</a></li>
-						<li><a href="report_pdf.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>&header=false">Without exam paper details</a></li>
+					<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Generate Transcript <span class="caret"></span></button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="report_pdf.php?n=transcript.php&studentid=<?php echo $user->id(); ?>">Letterhead and exam paper details</a></li>
+						<li><a href="report_pdf.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>">Letterhead without exam paper details</a></li>
+						<li class="divider"></li>
+						<li><a href="report_pdf.php?n=transcript.php&studentid=<?php echo $user->id(); ?>&header=false">Without letterhead and with exam paper details</a></li>
+						<li><a href="report_pdf.php?n=transcript.php&exams=false&studentid=<?php echo $user->id(); ?>&header=false">Without letterhead and without exam paper details</a></li>
 					</ul>
 				</div>
 				</p>
@@ -400,9 +431,7 @@ $("#awardAddButton").click(function() {
 	return false;
 });
 
-
+$('#dp3').datepicker();
 </script>
 
-  	
-	
 <script src="modules/students/js/upload.js"></script>
