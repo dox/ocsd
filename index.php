@@ -82,7 +82,7 @@ if (isset($_POST["oldform"])) { //prevent null bind
 	}
 	
 	include_once("views/navigation.php");
-	include_once("views/jumbotron.php");
+	//include_once("views/jumbotron.php");
 	?>
 	<div class="container">
 		<?php

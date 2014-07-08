@@ -126,6 +126,7 @@ class Students {
 			$initials = "";
 		}
 		
+		$firstname = $this->forenames;
 		$familyname = $this->surname;
 		
 		return $this->title() . " " . $firstname . " " . $familyname;

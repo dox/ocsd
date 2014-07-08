@@ -17,12 +17,12 @@
 </div>
 
 <?php
-if (isset($_POST['page'])) {
+if (isset($_SERVER['HTTP_REFERER'])) {
 ?>
 <div class="form-group">
 		<label class="col-sm-2 control-label" for="inputRef">Reference Page</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="inputRef" placeholder="Reference" readonly value="<?php echo $_POST['page']; ?>">
+			<input type="text" class="form-control" id="inputRef" placeholder="Reference" readonly value="<?php echo $_SERVER['HTTP_REFERER']; ?>">
 			<p class="help-block">This is the page you were on when you clicked 'flag'.  It is used by the Administrator to help resolve your query/problem.</p>
 		</div>
 	</div>
@@ -37,7 +37,7 @@ if (isset($_POST['page'])) {
 </div>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">
-		<button type="button" class="btn btn-primary" id="submitFormButton">Submit</button>
+		<button type="button" class="btn btn-block btn-primary" id="submitFormButton">Submit</button>
 	</div>
 </div>
 </form>

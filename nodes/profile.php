@@ -19,7 +19,7 @@
 	</div>
 </div>
 <div class="input-append date" id="dp3" data-date="12-02-2012" data-date-format="dd-mm-yyyy">
-  <input class="span2" size="16" type="text" value="12-02-2012">
+  </<input class="span2" size="16" type="text" value="12-02-2012">
   <span class="add-on"><i class="fa fa-circle-o-notch fa-spin"></i></span>
 </div>
 

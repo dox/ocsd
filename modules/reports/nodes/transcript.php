@@ -82,7 +82,7 @@ $pdf->Cell(0, 60, "ACADEMIC ADMINISTRATOR", 0, 1);
 $log = new Logs;
 $log->notes			= "Report 'Transcript' Generated for " . $user->fullDisplayName();
 $log->prev_value	= $_GET['n'];
-$log->updated_value	= $user->id();
+$log->student_id	= $user->id();
 $log->type			= "report";
 $log->create();
 ?>

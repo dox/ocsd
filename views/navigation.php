@@ -34,12 +34,7 @@
 			</form>
 			
 			<ul class="nav navbar-nav navbar-right">
-					<li>
-						<form action="index.php?n=contact.php" method="post">
-						<button type="submit" class="btn btn-default"><a href="javascript:;" onclick="parentNode.submit();"><i class="fa fa-flag"></i></a></button>
-						<input type="hidden" name="page" value="<?php echo curPageURL(); ?>"/>
-						</form>
-					</li>
+				<li><a href="index.php?n=contact.php"><i class="fa fa-flag"></i></a></li>
 				<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 					<ul class="dropdown-menu">
@@ -58,26 +53,6 @@
 </div>
 
 <style>
-.tt-query,
-.tt-hint {
-    width: 396px;
-    height: 30px;
-    padding: 8px 12px;
-    font-size: 24px;
-    line-height: 30px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-}
-
-.tt-query {
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
-
-.tt-hint {
-    color: #999
-}
-
 .tt-dropdown-menu {
     width: 422px;
     margin-top: 12px;
@@ -91,19 +66,19 @@
 
 .tt-suggestion {
     padding: 3px 20px;
-    font-size: 18px;
     line-height: 24px;
 }
 
-.tt-suggestion.tt-is-under-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
+.tt-suggestion.tt-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
     color: #fff;
-    background-color: #0097cf;
+    background-color: rgba(0,152,207,0.43);
 
 }
 
 .tt-suggestion p {
     margin: 0;
-}</style>
+}
+</style>
 
 <script>
 var bestPictures = new Bloodhound({
