@@ -4,7 +4,9 @@ $(function() {
 	
 	// load first tab
 	$('#MainTabs a:first').tab('show');
-
+	var contentID  = $('#MainTabs a:first').attr("data-target");
+	var contentURL = $('#MainTabs a:first').attr("href");
+	$(contentID).load(contentURL, function(){ $("#MainTabs").tab(); });
 	
 	// onclick on each tab, show the loading, then load the ajax content
 	$('#MainTabs a').click(function (e) {
