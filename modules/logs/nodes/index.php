@@ -14,6 +14,9 @@ $logs = Logs::find_all();
 	<div class="col-xs-3">
 		<input type="text" class="form-control search-query" id="logs_search_input" placeholder="Quick Filter">
 	</div>
+	<div class="col-xs-9">
+		<button class="btn btn-danger pull-right" id="purgeOldLogsButton">Purge Old Logs</button>
+	</div>
 </div>
 
 <table class="table table-striped">
@@ -81,66 +84,113 @@ $(function() {
 
 <?php
 foreach ($logs AS $log) {
-	$logType = $log->type;
-	$logDate = date('Y-m-d', strtotime($log->date_stamp));
-	
-	$logArray[$logType][$logDate] = $logArray[$logType][$logDate] + 1;
-}
-
-
-foreach ($logArray AS $logTypeName => $logs) {
-	$logType = $logTypeName;
-	
-	foreach ($logs AS $date => $value) {
-		$logType;
-		$logDateString[$logType][] = "[Date.UTC(" . date('Y', strtotime($date)) . ", " . (date('m', strtotime($date)) - 1) . ", "  . date('d', strtotime($date)) . "), " . $value . "]";
-	}
+	$logDate = date('z', strtotime($log->date_stamp));
+	$logsByDay_logon[$logDate] = $logsByDay_logon[$logDate] + 1;
 }
 ?>
 
-<script>
+
+<?php
+// take the array $logsByDay_logon and re order to friendly date names, and only the last 3o days
+$totalDays = 30;
+
+$i = 0;
+do {
+	$date = strtotime("-" . $i . " day");
+	$friendlyDate = "'" . date('M d',$date) . "'";
+	
+	if ($logsByDay_logon[date('z',$date)] <= 0) {
+		$value = 0;
+	} else {
+		$value = $logsByDay_logon[date('z',$date)];
+	}
+	
+	$graphData[$friendlyDate] = $value;
+	$i++;
+} while ($i < $totalDays);
+$graphData = array_reverse($graphData);
+?>
+
+<script type="text/javascript">
 $(function () {
-	$('#container').highcharts({
-		chart: {
-			type: 'spline'
-		},
-		credits: {
-			enabled: false
-		},
-		title: {
-			text: 'Logs History Over Time'
-		},
-		xAxis: {
-			type: 'datetime',
-			dateTimeLabelFormats: { // don't display the dummy year
-			month: '%e. %b',
-			year: '%b'
-		}
-	},
-	yAxis: {
-		title: {
-			text: 'Total Log Events'
-		},
-		min: 0
-	},
-	tooltip: {
-		formatter: function() {
-			return '<b>'+ this.series.name +' events</b><br/>'+
-			Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y;
-		}
-	},
-	series: [
-		<?php
-		foreach ($logDateString AS $name => $logs) {
-			$output  = "{ name: '" . $name . "',";
-			$output .= "data: [" . implode(",", $logs) . "] }";
-			
-			$seriesOutput[] = $output;
-		}
+    var chart;
+    $(document).ready(function() {
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                type: 'column'
+            },
+            title: {
+                text: null
+            },
+            subtitle: {
+                text: null
+            },
+            xAxis: {
+                categories: [<?php echo implode(",", array_keys($graphData)); ?>],
+                title: {
+                    text: null
+                },
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Log Events'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    return ''+
+                        this.series.name +': '+ this.y;
+                }
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend: {
+            	enabled: false
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'Total Log Events',
+                data: [<?php echo implode(",", $graphData);?>]
+            }]
+        });
+    });
+    
+});
+</script>
+
+<script>
+$("#purgeOldLogsButton").click(function() {
+	var r=confirm("Are you sure you want to delete all logs older than 180 days?  This action cannot be undone!");
+	
+	if (r==true) {
+		var thisObject = $(this);
 		
-		echo implode(",", $seriesOutput);
-		?>
-	]
-	});
+		var url = 'modules/logs/actions/purgeOldLogs.php';
+		
+		// perform the post to the action (take the info and submit to database)
+		$.post(url,{
+		}, function(data){
+			alert("Logs older than 180 have been purged from the database.")
+		},'html');
+	} else {
+	}
+	
+	return false;
 });
 </script>

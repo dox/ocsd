@@ -103,5 +103,30 @@ class Logs {
 			//$this->uid = $database->insert_id();
 		}
 	}
+	
+	public function delete() {
+		global $database;
+		
+		$sql  = "DELETE FROM " . self::$table_name . " ";
+		$sql .= "WHERE uid = '" . $database->escape_value($this->uid) . "' ";
+		$sql .= "LIMIT 1";
+		
+		// check if the database entry was successful (by attempting it)
+		if ($database->query($sql)) {
+			//$this->uid = $database->insert_id();
+		}
+	}
+	
+	public function purge_old_logs() {
+		global $database;
+		
+		$sql  = "DELETE FROM " . self::$table_name . " ";
+		$sql .= "WHERE DATE_SUB(CURDATE(),INTERVAL 180 DAY) >= date_stamp ";
+		
+		// check if the database entry was successful (by attempting it)
+		if ($database->query($sql)) {
+			//$this->uid = $database->insert_id();
+		}
+	}
 }
 ?>
