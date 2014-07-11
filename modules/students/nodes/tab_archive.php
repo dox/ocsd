@@ -4,7 +4,7 @@ $archStudents = ArchStudents::find_all();
 ?>
 <script src="js/jquery.fastLiveFilter.js"></script>
 
-<input type="text" class="input-medium search-query" id="arch_search_input" placeholder="Quick Filter">
+<p><input type="text" class="form-control search-query" id="arch_search_input" placeholder="Quick Filter"></p>
 
 <table class="table table-bordered table-striped">
 	<thead>

@@ -10,7 +10,6 @@ $allTutors = Tutors::find_all();
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>
-			<th>BodCard</th>
     		<th>Full Name</th>
     	</tr>
     </thead>
@@ -18,7 +17,6 @@ $allTutors = Tutors::find_all();
     	<?php
 	   	foreach($allTutors AS $user) {
     		echo "<tr>";
-    		echo "<td>" . $user->tutid . "</td>";
 			echo "<td><a href=\"index.php?m=staff&n=staff.php&tutorid=" . $user->tutid . "\">" . $user->fullDisplayName() . "</a> " . $user->identifier . "</td>";
 			echo "</tr>";
 		}
