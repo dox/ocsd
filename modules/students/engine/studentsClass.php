@@ -145,15 +145,15 @@ class Students {
 		
 		if ($link == true) {
 			if ($bodcard == "UNKNOWN") {
-				$labelClass = "";
+				$labelClass = "label label-default";
 				$url = "#";
 			} else {
-				if (date('Y-m-d') < convertToDateString($this->dt_card_exp)) {
+				if (date('U') < date('U', strtotime($this->dt_card_exp))) {
 					$labelClass = "label label-primary";
 					$toolTip = "Expires on " . convertToDateString($this->dt_card_exp);
 				} else {
 					$labelClass = "label label-warning";
-					$toolTip = "Bod Card expired on " . convertToDateString($this->dt_card_exp);
+					$toolTip = "Expired on " . convertToDateString($this->dt_card_exp);
 				}
 				
 				// not used
