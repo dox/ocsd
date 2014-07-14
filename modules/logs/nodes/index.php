@@ -85,7 +85,18 @@ $(function() {
 <?php
 foreach ($logs AS $log) {
 	$logDate = date('z', strtotime($log->date_stamp));
-	$logsByDay_logon[$logDate] = $logsByDay_logon[$logDate] + 1;
+	
+	$logArrayByType[$logDate][$log->type] ++;
+	
+	if ($log->type == "logon") {
+		$logsByDay_logon[$logDate] = $logsByDay_logon[$logDate] + 1;
+	} elseif ($log->type == "create") {
+		$logsByDay_create[$logDate] = $logsByDay_create[$logDate] + 1;
+	} elseif ($log->type == "delete") {
+		$logsByDay_delete[$logDate] = $logsByDay_delete[$logDate] + 1;
+	} elseif ($log->type == "report") {
+		$logsByDay_report[$logDate] = $logsByDay_create[$logDate] + 1;
+	}
 }
 ?>
 
@@ -105,10 +116,59 @@ do {
 		$value = $logsByDay_logon[date('z',$date)];
 	}
 	
-	$graphData[$friendlyDate] = $value;
+	$graphData_logon[$friendlyDate] = $value;
 	$i++;
 } while ($i < $totalDays);
-$graphData = array_reverse($graphData);
+
+$i = 0;
+do {
+	$date = strtotime("-" . $i . " day");
+	$friendlyDate = "'" . date('M d',$date) . "'";
+	
+	if ($logsByDay_create[date('z',$date)] <= 0) {
+		$value = 0;
+	} else {
+		$value = $logsByDay_create[date('z',$date)];
+	}
+	
+	$graphData_create[$friendlyDate] = $value;
+	$i++;
+} while ($i < $totalDays);
+
+$i = 0;
+do {
+	$date = strtotime("-" . $i . " day");
+	$friendlyDate = "'" . date('M d',$date) . "'";
+	
+	if ($logsByDay_delete[date('z',$date)] <= 0) {
+		$value = 0;
+	} else {
+		$value = $logsByDay_delete[date('z',$date)];
+	}
+	
+	$graphData_delete[$friendlyDate] = $value;
+	$i++;
+} while ($i < $totalDays);
+
+$i = 0;
+do {
+	$date = strtotime("-" . $i . " day");
+	$friendlyDate = "'" . date('M d',$date) . "'";
+	
+	if ($logsByDay_report[date('z',$date)] <= 0) {
+		$value = 0;
+	} else {
+		$value = $logsByDay_report[date('z',$date)];
+	}
+	
+	$graphData_report[$friendlyDate] = $value;
+	$i++;
+} while ($i < $totalDays);
+
+$graphData_logon = array_reverse($graphData_logon);
+$graphData_create = array_reverse($graphData_create);
+$graphData_delete = array_reverse($graphData_delete);
+$graphData_report = array_reverse($graphData_report);
 ?>
 
 <script type="text/javascript">
@@ -141,8 +201,11 @@ $(function () {
                 title: {
                     text: 'Log Events'
                 },
-                labels: {
-                    overflow: 'justify'
+               // labels: {
+               //     overflow: 'justify'
+               // }
+                stackLabels: {
+                    enabled: false
                 }
             },
             tooltip: {
@@ -152,21 +215,31 @@ $(function () {
                 }
             },
             plotOptions: {
-                bar: {
+          	  column: {
+                    stacking: 'normal',
                     dataLabels: {
-                        enabled: true
+                        enabled: false
                     }
                 }
             },
             legend: {
-            	enabled: false
+            	enabled: true
             },
             credits: {
                 enabled: false
             },
             series: [{
-                name: 'Total Log Events',
-                data: [<?php echo implode(",", $graphData);?>]
+                name: 'Logon',
+                data: [<?php echo implode(",", $graphData_logon);?>]
+            }, {
+	            name: 'Create',
+                data: [<?php echo implode(",", $graphData_create);?>]
+            }, {
+	            name: 'Delete',
+                data: [<?php echo implode(",", $graphData_delete);?>]
+            }, {
+	            name: 'Report',
+                data: [<?php echo implode(",", $graphData_report);?>]
             }]
         });
     });
