@@ -59,6 +59,7 @@ $awards = Awards::find_all();
 		$output .= "<ul class=\"dropdown-menu\" role=\"menu\">";
 		//$output .= "<li><a href=\"#\">Edit</a></li>";
 		//$output .= "<li><a href=\"#\">Recipients</a></li>";
+		$output .= "<li><a href=\"index.php?m=awards&n=awardsGrantedByAward.php&awdid=" . $award->awdid . "\">View Recievers</a></li>";
 		$output .= "<li class=\"divider\"></li>";
 		$output .= "<li><a id=\"" . $award->awdid . "\" class=\"delete_award\" href=\"#\">Delete</a></li>";
 		$output .= "</ul>";
