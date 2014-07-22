@@ -12,23 +12,6 @@ $subject = QualSubjects::find_by_qsid($degree->qskey);
 $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 ?>
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5A8xxvvZ292FvbVNP7JgUrUGUJ_6x-zI"></script>
-
-<script>
-var map;
-
-function initialize() {
-	var mapOptions = {
-		zoom: 8,
-		center: new google.maps.LatLng(-34.397, 150.644)
-	};
-	map = new google.maps.Map(document.getElementById('map-canvas'),
-	mapOptions);
-}
-
-google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-
 <div class="page-header">
 	<h1><?php echo $user->fullDisplayName(); ?> <small> Cohort: <?php echo $user->yr_cohort; ?></small></h1>
 </div>
@@ -146,49 +129,22 @@ google.maps.event.addDomListener(window, 'load', initialize);
 				?>
 				<p class="lead">Resident Status: <?php echo $resStatus->status; ?></p>
 				<h3>Home Residence</h3>
-				
-				<!--<div id="map-canvas"></div>-->
-				
 				<?php
 				foreach ($addresses AS $address) {
-					echo "<div class=\"row\">";
-					echo "<div class=\"col-md-4\">";
 					echo $address->displayAddress();
-					echo "</div>";
-					echo "<div class=\"col-md-8\">";
-					
-					
-					$googleMapsMode = "place";
-					$googleMapsEmbedAPI = "AIzaSyB5A8xxvvZ292FvbVNP7JgUrUGUJ_6x-zI";
-					
-					$googleFrame  = "<iframe ";
-					$googleFrame .= "width=\"425\" ";
-					$googleFrame .= "height=\"350\" ";
-					$googleFrame .= "frameborder=\"0\" style=\"border:0\" ";
-					//$googleFrame .= "scrolling=\"no\" ";
-					//$googleFrame .= "marginheight=\"0\" ";
-					//$googleFrame .= "marginwidth=\"0\" ";
-					//$googleFrame .= "https://www.google.com/maps/embed/v1/" . $googleMapsMode . "?key=" . $googleMapsEmbedAPI . "&";
-					$googleFrame .= "src=\"https://maps.google.co.uk/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=";
-					$googleFrame .= $address->line1 . " " . $address->county . " " . $address->postcode;
-					//$googleFrame .= "&amp;aq=&amp;sll=53.800651,-4.064941&amp;sspn=6.725398,25.444336&amp;ie=UTF8&amp;hq=&amp;hnear=53+Gwendwr+Rd,+London+W14+9BG,+United+Kingdom";
-					$googleFrame .= "&amp;t=m&amp;z=14&amp;iwloc=A&amp;output=embed\">";
-					$googleFrame .= "</iframe><br />";
-					
-					echo "<p>" . $googleFrame . "</p>";
-					echo "</div>";
-					echo "</div>";
 				}
 				?>
 				
 				<h3>College Residence</h3>
 				<?php
 				foreach ($residences AS $resAddress) {
-					echo "<div class=\"row\">";
-					echo "<div class=\"span9\">";
-					echo $resAddress->displayAddress();
-					echo "</div>";
-					echo "</div>";
+					$output  = "<div class=\"row\">";
+					$output .= "<div class=\"col-md-4\">";
+					$output .= $resAddress->displayAddress();
+					$output .= "</div>";
+					$output .= "</div>";
+					
+					echo $output;
 				}
 				?>
 			</div>

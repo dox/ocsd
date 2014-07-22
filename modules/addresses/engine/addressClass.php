@@ -4,7 +4,6 @@ class Addresses {
 	
 	public $addrid;
 	public $studentkey;		// 'UG','PG','VX'
-	public $type;
 	public $line1;
 	public $line2;
 	public $line3;
@@ -81,33 +80,46 @@ class Addresses {
 	}
 	
 	public function displayAddress() {
-		$output  = "<address class=\"well\">";
-		
-		$output .= "<a href=\"modules/addresses/views/addressDymo.php?uid=" . $this->addrid . "\"><i class=\"fa fa-print pull-right\"></i></a>";
-		
 		if ($this->line1) {
-			$output .= $this->line1 . "<br />";
+			$address .= $this->line1 . "<br />";
 		}
 		if ($this->line2) {
-			$output .= $this->line2 . "<br />";
+			$address .= $this->line2 . "<br />";
 		}
 		if ($this->line3) {
-			$output .= $this->line3 . "<br />";
+			$address .= $this->line3 . "<br />";
 		}
 		if ($this->line4) {
-			$output .= $this->line4 . "<br />";
+			$address .= $this->line4 . "<br />";
 		}
 		if ($this->town) {
-			$output .= $this->town . "<br />";
+			$address .= $this->town . "<br />";
 		}
 		if ($this->county) {
-			$output .= $this->county . "<br />";
+			$address .= $this->county . "<br />";
 		}
 		if ($this->postcode) {
-			$output .= $this->postcode . "<br />";
+			$address .= $this->postcode . "<br />";
 		}
-		$output .= "</address>";
-
+		
+		if ($this->defalt == "Yes") {
+			$title = "Default Address";
+		} else {
+			$title = "";
+		}
+		$output  = "<div class=\"row\">";
+		$output .= "<div class=\"col-sm-6 col-md-4\">";
+		$output .= "<div class=\"thumbnail\">";
+		$output .= "<img src=\"http://maps.googleapis.com/maps/api/staticmap?center=51.7530,-1.2500&zoom=16&size=200x200\">";
+		$output .= "<div class=\"caption\">";
+		$output .= "<h3>" . $title . "</h3>";
+		$output .= "<p>" . $address . "</p>";
+		$output .= "<p><a href=\"http://maps.google.com/?q=" . $this->line1 . "+" . $this->postcode . "\" class=\"btn btn-primary btn-block\" role=\"button\"><i class=\"fa fa-map-marker\"></i> Google Maps</a> <a href=\"modules/addresses/views/addressDymo.php?uid=" . $this->addrid . "\" class=\"btn btn-default btn-block\" role=\"button\"><i class=\"fa fa-print\"></i> Dymo Print</a></p>";
+		$output .= "</div>";
+		$output .= "</div>";
+		$output .= "</div>";
+		$output .= "</div>";
+		
 		return $output;
 	}
 }
