@@ -12,11 +12,11 @@ $issued = student_awardsClass::find_all_by_awdkey($award->awdid);
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th width="25%">Student Name</th>
+			<th width="20%">Student Name</th>
 			<th width="15%">Date Awarded</th>
 			<th width="15%">Date From</th>
 			<th width="15%">Date To</th>
-			<th width="15%">Value</th>
+			<th width="10%">Value</th>
 			<th width="25%">Notes</th>
 		</tr>
 	</thead>
