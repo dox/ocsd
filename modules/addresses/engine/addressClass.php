@@ -85,29 +85,35 @@ class Addresses {
 		
 		if ($this->line1) {
 			$address .= $this->line1 . "<br />";
+			$googleSearchString = $this->line1;
 		}
 		if ($this->line2) {
 			$address .= $this->line2 . "<br />";
+			$googleSearchString = $googleSearchString . "+" . $this->line2;
 		}
 		if ($this->line3) {
 			$address .= $this->line3 . "<br />";
+			$googleSearchString = $googleSearchString . "+" . $this->line3;
 		}
 		if ($this->line4) {
 			$address .= $this->line4 . "<br />";
+			$googleSearchString = $googleSearchString . "+" . $this->line4;
 		}
 		if ($this->town) {
 			$address .= $this->town . "<br />";
+			$googleSearchString = $googleSearchString . "+" . $this->town;
 		}
 		if ($this->county) {
 			$address .= $this->county . "<br />";
+			$googleSearchString = $googleSearchString . "+" . $this->county;
 		}
 		if ($this->postcode) {
 			$address .= $this->postcode . "<br />";
+			$googleSearchString = $googleSearchString . "+" . $this->postcode;
 		}
 		
-		$googleSearchString = $this->line1 . "+" . $this->postcode . "+" . $this->town;
 		$thumb_googleMapsURL = "http://maps.googleapis.com/maps/api/staticmap?center=" . $googleSearchString . "&zoom=15&size=200x200";
-		$googleMapsURL = "http://maps.google.com/?q=" . $this->line1 . "+" . $this->postcode;
+		$googleMapsURL = "http://maps.google.com/?q=" . $googleSearchString;
 		
 		$output  = "<div class=\"col-sm-6 col-md-4\">";
 		$output .= "<div class=\"thumbnail\">";
