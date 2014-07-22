@@ -187,7 +187,7 @@ $(function () {
                 text: null
             },
             xAxis: {
-                categories: [<?php echo implode(",", array_keys($graphData)); ?>],
+                categories: [<?php echo implode(",", array_keys($graphData_logon)); ?>],
                 title: {
                     text: null
                 },
