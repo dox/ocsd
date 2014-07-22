@@ -17,6 +17,7 @@ class Addresses {
 	public $mobile;
 	public $fax;
 	public $defalt;
+	public $atkey;
 	
 	public $radkey;
 	
@@ -80,6 +81,8 @@ class Addresses {
 	}
 	
 	public function displayAddress() {
+		$addressType = AddressTypes::find_by_uid($this->atkey);
+		
 		if ($this->line1) {
 			$address .= $this->line1 . "<br />";
 		}
@@ -102,20 +105,17 @@ class Addresses {
 			$address .= $this->postcode . "<br />";
 		}
 		
-		if ($this->defalt == "Yes") {
-			$title = "Default Address";
-		} else {
-			$title = "";
-		}
-		$output  = "<div class=\"row\">";
-		$output .= "<div class=\"col-sm-6 col-md-4\">";
+		$googleSearchString = $this->line1 . "+" . $this->postcode . "+" . $this->town;
+		$thumb_googleMapsURL = "http://maps.googleapis.com/maps/api/staticmap?center=" . $googleSearchString . "&zoom=15&size=200x200";
+		$googleMapsURL = "http://maps.google.com/?q=" . $this->line1 . "+" . $this->postcode;
+		
+		$output  = "<div class=\"col-sm-6 col-md-4\">";
 		$output .= "<div class=\"thumbnail\">";
-		$output .= "<img src=\"http://maps.googleapis.com/maps/api/staticmap?center=51.7530,-1.2500&zoom=16&size=200x200\">";
+		$output .= "<a href=\"" . $googleMapsURL . "\"><img src=\"" . $thumb_googleMapsURL . "\"></a>";
 		$output .= "<div class=\"caption\">";
-		$output .= "<h3>" . $title . "</h3>";
+		$output .= "<h3>" . $addressType->type . "</h3>";
 		$output .= "<p>" . $address . "</p>";
-		$output .= "<p><a href=\"http://maps.google.com/?q=" . $this->line1 . "+" . $this->postcode . "\" class=\"btn btn-primary btn-block\" role=\"button\"><i class=\"fa fa-map-marker\"></i> Google Maps</a> <a href=\"modules/addresses/views/addressDymo.php?uid=" . $this->addrid . "\" class=\"btn btn-default btn-block\" role=\"button\"><i class=\"fa fa-print\"></i> Dymo Print</a></p>";
-		$output .= "</div>";
+		$output .= "<p><a href=\"" . $googleMapsURL . "\" class=\"btn btn-primary btn-block\" role=\"button\"><i class=\"fa fa-map-marker\"></i> Google Maps</a> <a href=\"modules/addresses/views/addressDymo.php?uid=" . $this->addrid . "\" class=\"btn btn-default btn-block\" role=\"button\"><i class=\"fa fa-print\"></i> Dymo Print</a></p>";
 		$output .= "</div>";
 		$output .= "</div>";
 		$output .= "</div>";
