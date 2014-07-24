@@ -219,7 +219,23 @@ class Students {
 		return $result->studentid + 1;
 	}
 	
-	
+	public function alreadyExistCheck() {
+		// returns true if the user already exists, false if the user doesn't exist
+		global $database;
+		
+		// check if a user already exists with this OSS or OUCS id
+		$sql  = "SELECT * FROM " . self::$table_name  ." ";
+		$sql .= "WHERE oucs_id = '" . $this->oucs_id . "' ";
+		$sql .= "OR oss_pn = '" . $this->oss_pn . "' ";
+		
+		$results = self::find_by_sql($sql);
+		
+		if (count($results) == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 	public function create() {
 		global $database;
@@ -275,14 +291,24 @@ class Students {
 		$sql .= $database->escape_value($this->who_mod) . "', '";
 		$sql .= $database->escape_value($this->photo) . "')";
 		
-		// check if the database entry was successful (by attempting it)
-		if ($database->query($sql)) {
-			$this->uid = $database->insert_id();
-			
+		$check = $this->alreadyExistCheck();
+		
+		// if the user doesn't exist, go ahead and create them
+		if ($check == false) {
+			// check if the database entry was successful (by attempting it)
+			if ($database->query($sql)) {
+				$this->uid = $database->insert_id();
+				
+				$log = new Logs;
+				$log->notes			= "User '". $this->forenames . " " . $this->surname . "' was created";
+				$log->student_id	= $this->uid;
+				$log->type			= "create";
+				$log->create();
+			}
+		} else {
 			$log = new Logs;
-			$log->notes			= "User '". $this->forenames . " " . $this->surname . "' was created";
-			$log->student_id	= $this->uid;
-			$log->type			= "create";
+			$log->notes			= "Unable to create user '". $this->forenames . " " . $this->surname . "' as someone with that OSS/OUSC ID already exists";
+			$log->type			= "error";
 			$log->create();
 		}
 	}
