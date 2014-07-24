@@ -41,6 +41,7 @@
 						<li><a href="index.php?m=reports&n=index.php">Reports</a></li>
 						<li><a href="index.php?m=awards&n=list.php">Awards</a></li>
 						<li><a href="index.php?m=logs&n=index.php">Logs</a></li>
+						<li><a href="index.php?m=import&n=index.php">Import</a></li>
 						<li class="divider"></li>
 						<li><a href="index.php?n=profile.php">My Profile</a></li>
 						<li><a href="index.php?n=contact.php">Report Problem</a></li>

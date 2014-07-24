@@ -206,7 +206,86 @@ class Students {
 		
 		return $output;
 	}
-
+	
+	public function getNextAvailableID() {
+		//rubbish function to get the next ID availble as the current database doesn't use autoincrement
+		global $database;
+		
+		$sql = "SELECT studentid FROM students ORDER BY studentid DESC LIMIT 0, 1";
+		
+		$result = self::find_by_sql($sql);
+		$result = !empty($result) ? array_shift($result) : false;
+		
+		return $result->studentid + 1;
+	}
+	
+	
+	
+	public function create() {
+		global $database;
+		
+		$sql  = "INSERT INTO " . self::$table_name . " (";
+		$sql .= "studentid, st_type, titlekey, initials, forenames, prefname, surname, prev_surname, suffix, marital_status, dt_birth, gender, nationality, birth_cykey, resid_cykey, citiz_cykey, optout, family, eng_lang, occup_bg, disability, ethkey, rskey, cskey, relkey, rckey, SSNref, oss_pn, fee_status, univ_cardno, dt_card_exp, course_yr, notes, email1, email2, mobile, dt_start, dt_end, dt_matric, oucs_id, yr_app, yr_entry, yr_cohort, dt_created, dt_lastmod, who_mod, photo";
+		$sql .= ") VALUES ('";
+		$sql .= $this->getNextAvailableID() . "', '";
+		$sql .= $database->escape_value($this->st_type) . "', '";
+		$sql .= $database->escape_value($this->titlekey) . "', '";
+		$sql .= $database->escape_value($this->initials) . "', '";
+		$sql .= $database->escape_value($this->forenames) . "', '";
+		$sql .= $database->escape_value($this->prefname) . "', '";
+		$sql .= $database->escape_value($this->surname) . "', '";
+		$sql .= $database->escape_value($this->prev_surname) . "', '";
+		$sql .= $database->escape_value($this->suffix) . "', '";
+		$sql .= $database->escape_value($this->marital_status) . "', '";
+		$sql .= $database->escape_value($this->dt_birth) . "', '";
+		$sql .= $database->escape_value($this->gender) . "', '";
+		$sql .= $database->escape_value($this->nationality) . "', '";
+		$sql .= $database->escape_value($this->birth_cykey) . "', '";
+		$sql .= $database->escape_value($this->resid_cykey) . "', '";
+		$sql .= $database->escape_value($this->citiz_cykey) . "', '";
+		$sql .= $database->escape_value($this->optout) . "', '";
+		$sql .= $database->escape_value($this->family) . "', '";
+		$sql .= $database->escape_value($this->eng_lang) . "', '";
+		$sql .= $database->escape_value($this->occup_bg) . "', '";
+		$sql .= $database->escape_value($this->disability) . "', '";
+		$sql .= $database->escape_value($this->ethkey) . "', '";
+		$sql .= $database->escape_value($this->rskey) . "', '";
+		$sql .= $database->escape_value($this->cskey) . "', '";
+		$sql .= $database->escape_value($this->relkey) . "', '";
+		$sql .= $database->escape_value($this->rckey) . "', '";
+		$sql .= $database->escape_value($this->SSNref) . "', '";
+		$sql .= $database->escape_value($this->oss_pn) . "', '";
+		$sql .= $database->escape_value($this->fee_status) . "', '";
+		$sql .= $database->escape_value($this->univ_cardno) . "', '";
+		$sql .= $database->escape_value($this->dt_card_exp) . "', '";
+		$sql .= $database->escape_value($this->course_yr) . "', '";
+		$sql .= $database->escape_value($this->notes) . "', '";
+		$sql .= $database->escape_value($this->email1) . "', '";
+		$sql .= $database->escape_value($this->email2) . "', '";
+		$sql .= $database->escape_value($this->mobile) . "', '";
+		$sql .= $database->escape_value($this->dt_start) . "', '";
+		$sql .= $database->escape_value($this->dt_end) . "', '";
+		$sql .= $database->escape_value($this->dt_matric) . "', '";
+		$sql .= $database->escape_value($this->oucs_id) . "', '";
+		$sql .= $database->escape_value($this->yr_app) . "', '";
+		$sql .= $database->escape_value($this->yr_entry) . "', '";
+		$sql .= $database->escape_value($this->yr_cohort) . "', '";
+		$sql .= $database->escape_value($this->dt_created) . "', '";
+		$sql .= $database->escape_value($this->dt_lastmod) . "', '";
+		$sql .= $database->escape_value($this->who_mod) . "', '";
+		$sql .= $database->escape_value($this->photo) . "')";
+		
+		// check if the database entry was successful (by attempting it)
+		if ($database->query($sql)) {
+			$this->uid = $database->insert_id();
+			
+			$log = new Logs;
+			$log->notes			= "User '". $this->forenames . " " . $this->surname . "' was created";
+			$log->student_id	= $this->uid;
+			$log->type			= "create";
+			$log->create();
+		}
+	}
 }
 ?>
 

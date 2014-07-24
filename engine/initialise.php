@@ -15,6 +15,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/ocsd/modules/arch_qualifications/star
 require_once($_SERVER['DOCUMENT_ROOT'] . '/ocsd/modules/awards/start.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/ocsd/modules/logs/start.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/ocsd/modules/reports/start.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/ocsd/modules/import/start.php');
 require_once(dirname(__FILE__) . '/adLDAP/adLDAP.php');
 
 try {
