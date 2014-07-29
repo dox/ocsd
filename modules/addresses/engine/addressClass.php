@@ -3,7 +3,7 @@ class Addresses {
 	protected static $table_name = "student_address";
 	
 	public $addrid;
-	public $studentkey;		// 'UG','PG','VX'
+	public $studentkey;
 	public $line1;
 	public $line2;
 	public $line3;
@@ -16,11 +16,8 @@ class Addresses {
 	public $email;
 	public $mobile;
 	public $fax;
-	public $defalt;
+	public $defalt;			// yes / no
 	public $atkey;
-	
-	public $radkey;
-	
 	
 	public static function find_by_sql($sql="") {
 		global $database;
@@ -127,6 +124,36 @@ class Addresses {
 		$output .= "</div>";
 		
 		return $output;
+	}
+	
+	public function create() {
+		global $database;
+		
+		$sql  = "INSERT INTO " . self::$table_name . " (";
+		$sql .= "studentkey, line1, line2, line3, line4, town, county, postcode, cykey, phone, email, mobile, fax, defalt, atkey";
+		$sql .= ") VALUES ('";
+		$sql .= $database->escape_value($this->studentkey) . "', '";
+		$sql .= $database->escape_value($this->line1) . "', '";
+		$sql .= $database->escape_value($this->line2) . "', '";
+		$sql .= $database->escape_value($this->line3) . "', '";
+		$sql .= $database->escape_value($this->line4) . "', '";
+		$sql .= $database->escape_value($this->town) . "', '";
+		$sql .= $database->escape_value($this->county) . "', '";
+		$sql .= $database->escape_value($this->postcode) . "', '";
+		$sql .= $database->escape_value($this->cykey) . "', '";
+		$sql .= $database->escape_value($this->phone) . "', '";
+		$sql .= $database->escape_value($this->email) . "', '";
+		$sql .= $database->escape_value($this->mobile) . "', '";
+		$sql .= $database->escape_value($this->fax) . "', '";
+		$sql .= $database->escape_value($this->defalt) . "', '";
+		$sql .= $database->escape_value($this->atkey) . "')";
+		
+		echo $sql;
+		
+		// check if the database entry was successful (by attempting it)
+		if ($database->query($sql)) {
+			//$this->uid = $database->insert_id();
+		}
 	}
 }
 ?>

@@ -122,6 +122,117 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 		<p><button class="btn btn-default btn-xs pull-right disabled" type="button">Last Modified By: <?php echo $user->who_mod . " (" . convertToDateString($user->dt_lastmod) . ")"; ?></button></p>
 			</div>
 			<div class="tab-pane" id="addresses">
+				<div id="contactFormAdd">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<div class="col-sm-10">
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputAdd1">Address 1</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputAdd1">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputAdd2">Address 2</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputAdd2">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputAdd3">Address 3</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputAdd3">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputAdd4">Address 4</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputAdd4">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputAdd1">Town</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputTown">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputAdd1">County</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputCounty">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputAdd1">Postcode</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputPostcode">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputCykey">Country</label>
+									<div class="col-sm-10">
+										<select id="inputCykey" class="form-control">
+										    <?php
+										    $countries = Countries::find_all();
+										    foreach($countries AS $country) {
+										    	$output  = "<option value=\"" . $country->cyid . "\">";
+										    	$output .= $country->formal;
+										    	$output .= "</option>";
+										    	
+										    	echo $output;
+										    }
+										    ?>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputTelephone">Telephone</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputTelephone">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputMobile">Mobile</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputMobile">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputFax">Fax</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputFax">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputEmail">E-Mail</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="inputEmail">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="inputAtkey">Address Type</label>
+									<div class="col-sm-10">
+										<select id="inputAtkey" class="form-control">
+										    <?php
+										    $addressTypes = AddressTypes::find_all();
+										    foreach($addressTypes AS $addressType) {
+										    	$output  = "<option value=\"" . $addressType->atid . "\">";
+										    	$output .= $addressType->type;
+										    	$output .= "</option>";
+										    	
+										    	echo $output;
+										    }
+										    ?>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<button id="addressAddButton" type="button" class="btn btn-primary">Submit</button>
+						<input type="hidden" id="inputStudentkey" value="<?php echo $user->studentid; ?>">
+						<input type="hidden" class="form-control" id="inputDefault" value="No">
+					</form>
+				</div>
 				<?
 				$resStatusClass = new resStatus;
 				$resStatuses = $resStatusClass->find_all();
@@ -144,10 +255,11 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 					$output .= $resAddress->displayAddress();
 					$output .= "</div>";
 					$output .= "</div>";
-					
+
 					echo $output;
 				}
 				?>
+				</div>
 			</div>
 			<div class="tab-pane" id="education">
 				<p>Coming soon</p>
@@ -308,6 +420,7 @@ $(".awardDeleteButton").click(function() {
 });
 
 $("#awardsFormAdd").hide();
+$("#contactFormAdd").hide();
 $("#photoUploadForm").hide();
 $(".awardDeleteButton").hide();
 
@@ -320,6 +433,7 @@ $("#enableEdit").click(function() {
 
 		
 		$("#awardsFormAdd").hide();
+		$("#contactFormAdd").hide();
 		$('#photoUploadForm').hide();
 		$('.awardDeleteButton').hide();
 		
@@ -330,6 +444,7 @@ $("#enableEdit").click(function() {
 		$("#enableEdit").html('Disable Edit Mode');
 		
 		$('#awardsFormAdd').show('slow');
+		$("#contactFormAdd").show('slow');
 		$('#photoUploadForm').show('slow');
 		$('.awardDeleteButton').show();
 		
@@ -388,7 +503,48 @@ $("#awardAddButton").click(function() {
 	return false;
 });
 
-$('#dp3').datepicker();
+$("#addressAddButton").click(function() {
+	var studentkey = $("input#inputStudentkey").val();
+	var line1 = $("input#inputAdd1").val();
+	var line2 = $("input#inputAdd2").val();
+	var line3 = $("input#inputAdd3").val();
+	var line4 = $("input#inputAdd4").val();
+	var town = $("input#inputTown").val();
+	var county = $("input#inputCounty").val();
+	var postcode = $("input#inputPostcode").val();
+	var cykey = $("select#inputCykey").val();
+	var phone = $("input#inputTelephone").val();
+	var mobile = $("input#inputMobile").val();
+	var email = $("input#inputEmail").val();
+	var fax = $("input#inputFax").val();
+	var defalt = $("input#inputDefault").val();
+	var atkey = $("select#inputAtkey").val();
+	
+	var url = 'modules/addresses/actions/addStudentAddress.php';
+	
+	// perform the post to the action (take the info and submit to database)
+	$.post(url,{
+		studentkey: studentkey,
+		line1: line1,
+		line2: line2,
+		line3: line3,
+		line4: line4,
+		town: town,
+		county: county,
+		postcode: postcode,
+		cykey: cykey,
+		phone: phone,
+		mobile: mobile,
+		email: email,
+		fax: fax,
+		defalt: defalt,
+		atkey: atkey
+	}, function(data){
+		alert('Address added - please refresh this page');
+	},'html');
+	
+	return false;
+});
 </script>
 
 <script src="modules/students/js/upload.js"></script>
