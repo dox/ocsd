@@ -240,6 +240,36 @@ class Students {
 	public function create() {
 		global $database;
 		
+
+// this itterates through the available variables and auto-builds the sql statement
+// however, it doesn't take into consideration values that can't be NULL - so generally errors
+/*
+		$sqlUpdate  = "INSERT INTO " . self::$table_name . " (";
+		
+		foreach (get_object_vars($this) AS $dbRow => $value) {
+			$sqlKeys[] = $dbRow;
+			
+			if ($dbRow == "studentid") {
+				$sqlValues[] = $this->getNextAvailableID();
+			} else {
+				if ($value == '') {
+					$sqlValues[] = "NULL";
+				} else {
+					$sqlValues[] = "'" . $value . "'";
+				}
+			}
+		}
+		
+		$sqlUpdate .= implode(", ", $sqlKeys);
+		
+		$sqlUpdate .= ") VALUES (";
+		
+		$sqlUpdate .= implode(", ", $sqlValues);
+		$sqlUpdate .= ")";
+		
+		echo $sqlUpdate;
+*/
+		
 		$sql  = "INSERT INTO " . self::$table_name . " (";
 		$sql .= "studentid, st_type, titlekey, initials, forenames, prefname, surname, prev_surname, suffix, marital_status, dt_birth, gender, nationality, birth_cykey, resid_cykey, citiz_cykey, optout, family, eng_lang, occup_bg, disability, ethkey, rskey, cskey, relkey, rckey, SSNref, oss_pn, fee_status, univ_cardno, dt_card_exp, course_yr, notes, email1, email2, mobile, dt_start, dt_end, dt_matric, oucs_id, yr_app, yr_entry, yr_cohort, dt_created, dt_lastmod, who_mod, photo";
 		$sql .= ") VALUES ('";

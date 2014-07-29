@@ -52,6 +52,22 @@ class Titles {
 		return !empty($results) ? array_shift($results) : false;
 	}
 	
+	public static function find_by_title_name($titleName = NULL) {
+		global $database;
+		
+		$titleName = ucwords($titleName);
+		$titleName = strtr($titleName, array('.' => '', ',' => ''));
+		
+		$sql  = "SELECT * FROM " . self::$table_name . " ";
+		$sql .= "WHERE UPPER(abbrv) = '" . $titleName . "' ";
+		$sql .= "OR UPPER(title) = '" . $titleName . "' ";
+		$sql .= "LIMIT 1";
+		
+		$results = self::find_by_sql($sql);
+		
+		return !empty($results) ? array_shift($results) : false;
+	}
+	
 	public static function find_all() {
 		global $database;
 		
