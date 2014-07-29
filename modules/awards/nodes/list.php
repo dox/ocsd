@@ -45,11 +45,11 @@ $awards = Awards::find_all();
 	<?php
 	foreach ($awards AS $award) {
 		$output  = "<tr>";
-		$output .= "<td>" . $award->name . "</td>";
+		$output .= "<td>" . "<a href=\"#\" id=\"name\" class=\"editable\" data-type=\"text\" data-pk=\"" . $award->awdid . "\" data-url=\"modules/awards/actions/updateAwardType.php\" data-title=\"Enter Award Name\">" . $award->name . "</a></td>";
 		
-		$output .= "<td>" . $award->type . "</td>";
+		$output .= "<td>" . "<a href=\"#\" id=\"type\" class=\"editable\" data-type=\"text\" data-pk=\"" . $award->awdid . "\" data-url=\"modules/awards/actions/updateAwardType.php\" data-title=\"Enter Award Type\">" . $award->type . "</a></td>";
 		
-		$output .= "<td>" . $award->given_by ."</td>";
+		$output .= "<td>" . "<a href=\"#\" id=\"given_by\" class=\"editable\" data-type=\"text\" data-pk=\"" . $award->awdid . "\" data-url=\"modules/awards/actions/updateAwardType.php\" data-title=\"Enter Award Given By\">" . $award->given_by ."</a></td>";
 		
 		$output .= "<td>";
 		$output .= "<div class=\"btn-group\">";
@@ -148,5 +148,11 @@ $('.delete_award').click(function() {
 	}
 	
 	return false;
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.editable').editable();
 });
 </script>

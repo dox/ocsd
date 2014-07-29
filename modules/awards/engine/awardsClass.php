@@ -103,8 +103,23 @@ class Awards {
 			$log->type			= "error";
 			$log->create();
 		}
+	}
 		
+	public function inlineUpdate($awardUID = NULL, $key, $value) {
+		global $database;
 		
+		$sql  = "UPDATE " . self::$table_name . " ";
+		$sql .= "SET " . $database->escape_value($key) . " = '" . $database->escape_value($value) . "' ";
+		$sql .= "WHERE awdid = '" . $database->escape_value($awardUID) . "' ";
+		$sql .= "LIMIT 1";
+		
+		$results = self::find_by_sql($sql);
+		
+		$log = new Logs();
+		$log->type = "success";
+		$log->title = "Award Updated";
+		$log->notes = "Award UID " . $this->awdid . " was updated";
+		$log->create();
 	}
 }
 ?>
