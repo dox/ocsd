@@ -241,11 +241,11 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p class="lead">Resident Status: <?php echo $resStatus->status; ?></p>
 				<h3>Home Residence</h3>
 				<div class="row">
-				<?php
-				foreach ($addresses AS $address) {
-					echo $address->displayAddress();
-				}
-				?>
+					<?php
+					foreach ($addresses AS $address) {
+						echo $address->displayAddress();
+					}
+					?>
 				</div>
 				<h3>College Residence</h3>
 				<?php
@@ -259,7 +259,6 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 					echo $output;
 				}
 				?>
-				</div>
 			</div>
 			<div class="tab-pane" id="education">
 				<p>Coming soon</p>
