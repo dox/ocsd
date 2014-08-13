@@ -95,7 +95,9 @@ foreach ($logs AS $log) {
 	} elseif ($log->type == "delete") {
 		$logsByDay_delete[$logDate] = $logsByDay_delete[$logDate] + 1;
 	} elseif ($log->type == "report") {
-		$logsByDay_report[$logDate] = $logsByDay_create[$logDate] + 1;
+		$logsByDay_report[$logDate] = $logsByDay_report[$logDate] + 1;
+	} elseif ($log->type == "error") {
+		$logsByDay_error[$logDate] = $logsByDay_error[$logDate] + 1;
 	}
 }
 ?>
@@ -165,10 +167,26 @@ do {
 	$i++;
 } while ($i < $totalDays);
 
+$i = 0;
+do {
+	$date = strtotime("-" . $i . " day");
+	$friendlyDate = "'" . date('M d',$date) . "'";
+	
+	if ($logsByDay_error[date('z',$date)] <= 0) {
+		$value = 0;
+	} else {
+		$value = $logsByDay_error[date('z',$date)];
+	}
+	
+	$graphData_error[$friendlyDate] = $value;
+	$i++;
+} while ($i < $totalDays);
+
 $graphData_logon = array_reverse($graphData_logon);
 $graphData_create = array_reverse($graphData_create);
 $graphData_delete = array_reverse($graphData_delete);
 $graphData_report = array_reverse($graphData_report);
+$graphData_error = array_reverse($graphData_error);
 ?>
 
 <script type="text/javascript">
@@ -240,6 +258,9 @@ $(function () {
             }, {
 	            name: 'Report',
                 data: [<?php echo implode(",", $graphData_report);?>]
+            }, {
+	            name: 'Error',
+                data: [<?php echo implode(",", $graphData_error);?>]
             }]
         });
     });
