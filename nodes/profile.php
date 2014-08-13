@@ -1,30 +1,24 @@
-<div class="row">
-	<div class="span12">
-		<div class="page-header">
-			<h1>My Profile <small> LDAP Details</small></h1>
-		</div>
-	</div>
-	<div class="span12">
-		<p>Username: <?php echo $_SESSION['userinfo'][0]['samaccountname'][0]; ?></p>
-		<p>Display Name: <?php echo $_SESSION['userinfo'][0]['displayname'][0]; ?></p>
-		<p>Member Of:
-		<?php
-		foreach ($_SESSION['userinfo'][0]['memberof'] AS $group) {
-			printArray($group);
-		}
-		?></p>
-		<p>Department: <?php echo $_SESSION['userinfo'][0]['department'][0]; ?></p>
-		<p>Primary Group: <?php echo $_SESSION['userinfo'][0]['primarygroupid'][0]; ?></p>
-		<p>Account Status: <?php echo $_SESSION['userinfo'][0]['samaccountname'][0]; ?></p>
-	</div>
-</div>
-<div class="input-append date" id="dp3" data-date="12-02-2012" data-date-format="dd-mm-yyyy">
-  </<input class="span2" size="16" type="text" value="12-02-2012">
-  <span class="add-on"><i class="fa fa-circle-o-notch fa-spin"></i></span>
+<div class="page-header">
+	<h1>My Profile <small> LDAP Details</small></h1>
 </div>
 
+<p>Username: <?php echo $_SESSION['userinfo'][0]['samaccountname'][0]; ?></p>
+<p>Display Name: <?php echo $_SESSION['userinfo'][0]['displayname'][0]; ?></p>
+<p>E-Mail: <a href="mailto:<?php echo $_SESSION['userinfo'][0]['mail'][0]; ?>"><?php echo $_SESSION['userinfo'][0]['mail'][0]; ?></a></p>
+<p>Department: <?php echo $_SESSION['userinfo'][0]['department'][0]; ?></p>
+<p>DN: <?php echo $_SESSION['userinfo'][0]['dn']; ?></p>
 
-<script>
-	// this needs to be in index for some reason
-  $('#dp3').datepicker();
-</script>
+<h2>Member Of</h2>
+<ul class="list-group">
+	<?php					
+	foreach ($_SESSION['userinfo'][0]['memberof'] AS $groupName) {
+		if (substr($groupName, 0, 3) == "CN=") {
+			$firstCommaLoc = strpos($groupName, ",");
+			//echo $firstCommaLoc;
+			echo "<li class=\"list-group-item\">" . substr($groupName, 3, $firstCommaLoc -3) . "</li>";
+			//printArray($groupName);
+		}					
+		//printArray($groupName);
+	}						
+	?>						
+</ul>
