@@ -15,3 +15,14 @@ color: white;
 	<small>The Rolling Stones</small>
 </blockquote>
 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+<?php
+// find out the page the user came from and record this 404 in the logs
+$page = $_SERVER['HTTP_REFERER'];
+
+$log = new Logs;
+$log->notes			= "404: ". $page;
+$log->type			= "error";
+$log->create();
+
+?>
