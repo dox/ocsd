@@ -6,7 +6,12 @@
 <div class="form-group">
 	<label class="col-sm-2 control-label" for="inputEmail">Your E-Mail</label>
 	<div class="col-sm-10">
-		<input type="email" class="form-control" id="inputEmail" placeholder="E-Mail">
+		<?php
+		if (isset($_SESSION['userinfo'][0]['mail'][0]) && ($_SESSION['userinfo'][0]['mail'][0] != ""))  {
+			$emailValue = $_SESSION['userinfo'][0]['mail'][0];
+		}
+		?>
+		<input type="email" class="form-control" id="inputEmail" placeholder="E-Mail" value="<?php echo $emailValue; ?>">
 	</div>
 </div>
 <div class="form-group">
