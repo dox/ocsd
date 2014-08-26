@@ -10,7 +10,7 @@ if (isset($_SESSION['username'])) {
 		//$studArray['description'] = "Description";
 		$studArray['archive'] = "false";
 		$studArray['value'] = $student->studentid;
-		$studArray['tokens'] = array($student->forenames, $student->surname, $student->prefname, $student->bodcard(false), $student->oucs_id, $student->oss_pn);
+		$studArray['tokens'] = array($student->fullDisplayName(true), $student->forenames, $student->surname, $student->prefname, $student->bodcard(false), $student->oucs_id, $student->oss_pn, $student->studentid, $student->univ_cardno);
 		
 		$masterArray[] = $studArray;
 		unset($studArray);

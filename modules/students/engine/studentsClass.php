@@ -118,7 +118,7 @@ class Students {
 		
 	}
 	
-	public function fullDisplayName() {
+	public function fullDisplayName($prefNames = false) {
 		if ($this->initials) {
 			$initials = str_replace(" ", ". ", $this->initials);
 			$initials = $initials . ". ";
@@ -129,6 +129,14 @@ class Students {
 		$firstname = $this->forenames;
 		$familyname = $this->surname;
 		
+		if ($prefNames != false) {
+			if (isset($this->prefname)) {
+				$firstname = $firstname . " (" . $this->prefname . ")";
+			}
+			if (isset($this->prev_surname)) {
+				$familyname = $familyname . " (" . $this->prev_surname . ")";
+			}
+		}
 		return $this->title() . " " . $firstname . " " . $familyname;
 	}
 	
@@ -240,22 +248,20 @@ class Students {
 	public function create() {
 		global $database;
 		
-
-// this itterates through the available variables and auto-builds the sql statement
-// however, it doesn't take into consideration values that can't be NULL - so generally errors
-/*
 		$sqlUpdate  = "INSERT INTO " . self::$table_name . " (";
 		
 		foreach (get_object_vars($this) AS $dbRow => $value) {
-			$sqlKeys[] = $dbRow;
-			
-			if ($dbRow == "studentid") {
-				$sqlValues[] = $this->getNextAvailableID();
-			} else {
-				if ($value == '') {
-					$sqlValues[] = "NULL";
+			if (($value != '' && $value != NULL) || $dbRow == "studentid") {
+				$sqlKeys[] = $dbRow;
+				
+				if ($dbRow == "studentid") {
+					$sqlValues[] = $this->getNextAvailableID();
 				} else {
-					$sqlValues[] = "'" . $value . "'";
+					if ($value == '') {
+						$sqlValues[] = "NULL";
+					} else {
+						$sqlValues[] = "'" . $value . "'";
+					}
 				}
 			}
 		}
@@ -268,7 +274,7 @@ class Students {
 		$sqlUpdate .= ")";
 		
 		echo $sqlUpdate;
-*/
+/*
 		
 		$sql  = "INSERT INTO " . self::$table_name . " (";
 		$sql .= "studentid, st_type, titlekey, initials, forenames, prefname, surname, prev_surname, suffix, marital_status, dt_birth, gender, nationality, birth_cykey, resid_cykey, citiz_cykey, optout, family, eng_lang, occup_bg, disability, ethkey, rskey, cskey, relkey, rckey, SSNref, oss_pn, fee_status, univ_cardno, dt_card_exp, course_yr, notes, email1, email2, mobile, dt_start, dt_end, dt_matric, oucs_id, yr_app, yr_entry, yr_cohort, dt_created, dt_lastmod, who_mod, photo";
@@ -322,11 +328,12 @@ class Students {
 		$sql .= $database->escape_value($this->photo) . "')";
 		
 		$check = $this->alreadyExistCheck();
-		
+		*/
+		$check = false;
 		// if the user doesn't exist, go ahead and create them
 		if ($check == false) {
 			// check if the database entry was successful (by attempting it)
-			if ($database->query($sql)) {
+			if ($database->query($sqlUpdate)) {
 				$this->uid = $database->insert_id();
 				
 				$log = new Logs;

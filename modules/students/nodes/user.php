@@ -13,7 +13,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 ?>
 
 <div class="page-header">
-	<h1><?php echo $user->fullDisplayName(); ?> <small> Cohort: <?php echo $user->yr_cohort; ?></small></h1>
+	<h1><?php echo $user->fullDisplayName(true); ?> <small> Cohort: <?php echo $user->yr_cohort; ?></small></h1>
 </div>
 
 <style>
@@ -264,6 +264,7 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p>Coming soon</p>
 			</div>
 			<div class="tab-pane" id="college">
+				<h3>PostGraduate/Undergraduate</h3>
 				<p>Degree: <?php echo $degree->abbrv; ?></p>
 				<p>Course: <?php echo $degree->course_key; ?></p>
 				<p>Res. Status: </p>
@@ -291,6 +292,9 @@ $studentAwards = student_awardsClass::find_by_studentkey($user->id());
 				<p>IC Pool: <?php echo $degree->ic_pool; ?></p>
 				<p>Entry Year: </p>
 				<p>App. Type: <?php echo $degree->app_type; ?></p>
+				
+				<h3>Tutors/Examinations</h3>
+				<p>Coming soon...</p>
 			</div>
 			<div class="tab-pane" id="awards">
 				<div id="awardsFormAdd">
