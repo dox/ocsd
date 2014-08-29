@@ -67,6 +67,7 @@ if ($_POST['testImport'] != "true") {
     
     foreach ($CSVContents AS $studentImport) {
     	$title = Titles::find_by_title_name($studentImport[$headerRow['cud:cas:title']]);
+    	$nationality = Countries::find_by_name($studentImport[$headerRow['seh:adm:nationality']]);
     	
     	$student = new Students();
     	$student->st_type = $studentImport[$headerRow['cud:cas:university_card_type']];
@@ -96,7 +97,7 @@ if ($_POST['testImport'] != "true") {
     	$student->rckey = NULL;
     	$student->SSNref = NULL;
     	$student->oss_pn = $studentImport[$headerRow['cud:fk:oss_student_number']];
-    	$student->fee_status = NULL;
+    	$student->fee_status = $studentImport[$headerRow['seh:adm:fee_status']];
     	$student->univ_cardno = $studentImport[$headerRow['cud:cas:barcode7']];
     	$student->dt_card_exp = $studentImport[$headerRow['cud:uas:universitycard_comp_date']];
     	$student->course_yr = NULL;

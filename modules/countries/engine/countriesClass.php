@@ -68,6 +68,21 @@ class Countries {
 		return $results;
 	}
 	
+	public static function find_by_name($name = NULL) {
+		global $database;
+		
+		$sql  = "SELECT * FROM " . self::$table_name . " ";
+		$sql .= "WHERE abbrv = '" . $name . "' ";
+		$sql .= "OR short = '" . $name . "' ";
+		$sql .= "OR formal = '" . $name . "' ";
+		$sql .= "OR nationality = '" . $name . "' ";
+		$sql .= "LIMIT 1";
+		
+		$results = self::find_by_sql($sql);
+		
+		return !empty($results) ? array_shift($results) : false;
+	}
+	
 	public function fullDisplayName($googleMaps = false) {
 		$url = "http://maps.google.co.uk/maps?q=" . $this->formal;
 		
