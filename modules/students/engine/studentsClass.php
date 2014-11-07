@@ -100,6 +100,23 @@ class Students {
 		return !empty($results) ? array_shift($results) : false;
 	}
 	
+	public function find_by_official_ids($search = null) {
+		global $database;
+		
+		$sql  = "SELECT * FROM " . self::$table_name . " ";
+		$sql .= "WHERE oss_pn = '" . $search . "' ";
+		$sql .= "OR univ_cardno = '" . $search . "' ";
+		$sql .= "OR ssnref = '" . $search . "' ";
+		$sql .= "OR oucs_id = '" . $search . "' ";
+		$sql .= "OR email1 = '" . $search . "' ";
+		$sql .= "OR email2 = '" . $search . "' ";
+		$sql .= "LIMIT 1";
+		
+		$results = self::find_by_sql($sql);
+		
+		return !empty($results) ? array_shift($results) : false;
+	}
+	
 	public static function find_all() {
 		global $database;
 		
@@ -245,6 +262,31 @@ class Students {
 		}
 	}
 	
+	public function update() {
+		global $database;
+		
+		$sql  = "UPDATE students ";
+		$sql .= "SET ";
+		
+		foreach (get_object_vars($this) AS $dbRow => $value) {
+			if ($value != '' && $value != NULL && $dbRow != "studentid" && $dbRow != "dt_created") {
+				$sqlUpdate[] .= $dbRow . " = '" . $database->escape_value($value) . "' ";
+			}
+		}
+		$sql .= implode(", ", $sqlUpdate);
+		
+		$sql .= "WHERE oss_pn = '" . $database->escape_value($this->oss_pn) . "' ";
+		$sql .= "LIMIT 1";
+		
+		echo $sql . "<br />";
+		if ($database->query($sql)) {
+
+		} else {
+			echo "fail";
+			$database->confirm_query($sql);
+		}
+	}
+	
 	public function create() {
 		global $database;
 		
@@ -260,7 +302,7 @@ class Students {
 					if ($value == '') {
 						$sqlValues[] = "NULL";
 					} else {
-						$sqlValues[] = "'" . $value . "'";
+						$sqlValues[] = "'" . $database->escape_value($value) . "'";
 					}
 				}
 			}

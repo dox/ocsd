@@ -130,6 +130,29 @@ class Addresses {
 		global $database;
 		
 		$sql  = "INSERT INTO " . self::$table_name . " (";
+		
+		foreach (get_object_vars($this) AS $dbRow => $value) {
+			if ($value != '' && $value != NULL) {
+				$sqlKeys[] = $dbRow;
+				
+				if ($value == '') {
+					$sqlValues[] = "NULL";
+				} else {
+					$sqlValues[] = "'" . $value . "'";
+				}
+			}
+		}
+		
+		$sql .= implode(", ", $sqlKeys);
+		
+		$sql .= ") VALUES (";
+		
+		$sql .= implode(", ", $sqlValues);
+		$sql .= ")";
+		
+		echo $sql;
+		
+		/*$sql  = "INSERT INTO " . self::$table_name . " (";
 		$sql .= "studentkey, line1, line2, line3, line4, town, county, postcode, cykey, phone, email, mobile, fax, defalt, atkey";
 		$sql .= ") VALUES ('";
 		$sql .= $database->escape_value($this->studentkey) . "', '";
@@ -149,7 +172,7 @@ class Addresses {
 		$sql .= $database->escape_value($this->atkey) . "')";
 		
 		echo $sql;
-		
+		*/
 		// check if the database entry was successful (by attempting it)
 		if ($database->query($sql)) {
 			//$this->uid = $database->insert_id();

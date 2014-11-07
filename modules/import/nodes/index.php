@@ -1,7 +1,7 @@
 <div class="page-header">
 	<h1>Student Import</h1>
 </div>
-
+<a href="index.php?m=import&n=update.php">Student Batch Update</a>
 <form role="form" action="" method="post" enctype="multipart/form-data">
 <div class="form-group">
 	<label for="inputFile">CUD CSV Student Data</label>
@@ -66,22 +66,25 @@ if ($_POST['testImport'] != "true") {
 	echo "<div class=\"alert alert-info\" role=\"alert\">" . "Importing " . count($CSVContents) . " students</div>";
     
     foreach ($CSVContents AS $studentImport) {
-    	$title = Titles::find_by_title_name($studentImport[$headerRow['cud:cas:title']]);
-    	$nationality = Countries::find_by_name($studentImport[$headerRow['seh:adm:nationality']]);
+    	//$title = Titles::find_by_title_name($studentImport[$headerRow['cud:cas:title']]);
+    	$title = Titles::find_by_title_name($studentImport[$headerRow['seh:adm:title']]);
     	
     	$student = new Students();
-    	$student->st_type = $studentImport[$headerRow['cud:cas:university_card_type']];
+    	//$student->st_type = $studentImport[$headerRow['cud:cas:university_card_type']];
+    	$student->st_type = $studentImport[$headerRow['seh:adm:st_types']];
     	$student->titlekey = $title->titleid;
-    	$student->initials = NULL;
-    	$student->forenames = $studentImport[$headerRow['cud:cas:firstname']];
+    	$student->initials = $studentImport[$headerRow['seh:adm:initials']];
+    	//$student->forenames = $studentImport[$headerRow['cud:cas:firstname']];
+    	$student->forenames = $studentImport[$headerRow['seh:adm:firstname']];
     	$student->prefname = NULL;
-    	$student->surname = $studentImport[$headerRow['cud:cas:lastname']];
+    	//$student->surname = $studentImport[$headerRow['cud:cas:lastname']];
+    	$student->surname = $studentImport[$headerRow['seh:adm:lastname']];
     	$student->prev_surname = NULL;
     	$student->suffix = NULL;
     	$student->marital_status = NULL;
-    	$student->dt_birth = NULL;
-    	$student->gender = NULL;
-    	$student->nationality = NULL;
+    	$student->dt_birth = $studentImport[$headerRow['seh:adm:dob']];
+    	$student->gender = $studentImport[$headerRow['seh:adm:gender']];
+    	$student->nationality = $studentImport[$headerRow['seh:adm:nationality']];
     	$student->birth_cykey = NULL;
     	$student->resid_cykey = NULL;
     	$student->citiz_cykey = NULL;
@@ -96,21 +99,22 @@ if ($_POST['testImport'] != "true") {
     	$student->relkey = NULL;
     	$student->rckey = NULL;
     	$student->SSNref = NULL;
-    	$student->oss_pn = $studentImport[$headerRow['cud:fk:oss_student_number']];
+    	//$student->oss_pn = $studentImport[$headerRow['cud:fk:oss_student_number']];
+    	$student->oss_pn = $studentImport[$headerRow['seh:adm:oss']];
     	$student->fee_status = $studentImport[$headerRow['seh:adm:fee_status']];
     	$student->univ_cardno = $studentImport[$headerRow['cud:cas:barcode7']];
     	$student->dt_card_exp = $studentImport[$headerRow['cud:uas:universitycard_comp_date']];
     	$student->course_yr = NULL;
-    	$student->notes = NULL;
+    	$student->notes = $studentImport[$headerRow['seh:adm:notes']];
     	$student->email1 = $studentImport[$headerRow['cud:cas:oxford_email']];
-    	$student->email2 = NULL;
-    	$student->mobile = NULL;
+    	$student->email2 = $studentImport[$headerRow['seh:adm:email2']];
+    	$student->mobile = $studentImport[$headerRow['seh:adm:mobile']];
     	$student->dt_start = NULL;
     	$student->dt_end = NULL;
     	$student->dt_matric = NULL;
     	$student->oucs_id = $studentImport[$headerRow['cud:cas:sso_username']];
-    	$student->yr_app = NULL;
-    	$student->yr_entry = NULL;
+    	$student->yr_app = $studentImport[$headerRow['seh:adm:yearapplication']];
+    	$student->yr_entry = $studentImport[$headerRow['seh:adm:yearstart']];
     	$student->yr_cohort = NULL;
     	$student->dt_created = date(Ymd);
     	$student->dt_lastmod = date(Ymd);

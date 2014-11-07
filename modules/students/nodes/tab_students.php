@@ -20,7 +20,7 @@ $allStudents = Students::find_all();
     		echo "<tr>";
     		echo "<td>" . $user->bodcard() . "</td>";
     		echo "<td>" . $user->oucs_id . "</td>";
-			echo "<td><a href=\"index.php?m=students&n=user.php&studentid=" . $user->studentid . "\">" . $user->fullDisplayName() . "</a></td>";
+			echo "<td>" . "<a href=\"index.php?m=students&n=user.php&studentid=" . $user->studentid . "\">" . $user->fullDisplayName() . "</a></td>";
 			echo "</tr>";
 		}
 		?>
