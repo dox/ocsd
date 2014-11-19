@@ -17,6 +17,15 @@
 		</div>
 		<div class="clearfix"></div>
 		<div class="btn-group">
+			<a href="report_pdf.php?n=report_deanslist.php&header=false&type=csv" class="btn btn-default">Dean's List</a>
+			<button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li><a href="report_pdf.php?n=report_deanslist.php&header=false&type=csv"><i class="fa fa-file-excel-o"></i> Generate as CSV</a></li>
+				<li><a href="#"><i class="fa fa-wrench"></i> Edit Report</a></li>
+			</ul>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btn-group">
 			<span class="btn btn-default">Photo List</span>
 			<button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 			<ul class="dropdown-menu">

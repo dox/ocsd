@@ -1,9 +1,10 @@
 <?php
-$students = Students::find_by_sql("SELECT * FROM students ORDER BY surname ASC");
+$studentClass = new Students();
+$students = $studentClass->find_by_sql("SELECT * FROM students ORDER BY surname ASC");
 
 if ($_GET['type'] == "csv") {
 	// build header rows for CSV
-	$classVars1 = get_class_vars(get_class($students));
+	$classVars1 = get_class_vars(get_class($studentClass));
 	
 	$n = 0;
 	
