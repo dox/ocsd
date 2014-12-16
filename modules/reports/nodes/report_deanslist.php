@@ -15,7 +15,8 @@ if ($_GET['type'] == "csv") {
 	$outputArray[$n][] = "Surname";
 	$outputArray[$n][] = "Preferred Name";
 	$outputArray[$n][] = "Res. Status";
-	$outputArray[$n][] = "Residence Address";
+	$outputArray[$n][] = "Address";
+	$outputArray[$n][] = "Room";
 	$outputArray[$n][] = "Mobile";
 	$outputArray[$n][] = "Oxford E-Mail";
 	$outputArray[$n][] = "Personal E-Mail";
@@ -38,21 +39,31 @@ if ($_GET['type'] == "csv") {
 	
 		foreach ($addresses AS $address) {
 			$resAddress = ResAddress::find_by_uid($address->radkey);
-			 
-			$addOutput  = "";
+			
+			if ($resAddress->atkey == 1) {
+				//address is a college room
+				$addOutput = $resAddress->line1;
+				$addOutputRoom = $address->roomno;
+			} else {
+				//address is out-of-college
+				$addOutput  = "";
+				$addOutputRoom  = "";
+				
+				
+				if ($address->roomno) {
+					$addOutput .= $address->roomno . " ";
+				}
+				
+				if ($resAddress->line1) {
+					$addOutput .= $resAddress->line1 . " ";
+				}
+				if ($resAddress->line2) {
+					$addOutput .= $resAddress->line2 . " ";
+				}
+			}
+			
+			
 			$phoneOutput  = "";
-			
-			if ($address->roomno) {
-				$addOutput .= $address->roomno . " ";
-			}
-			
-			if ($resAddress->line1) {
-				$addOutput .= $resAddress->line1 . " ";
-			}
-			if ($resAddress->line2) {
-				$addOutput .= $resAddress->line2 . " ";
-			}
-			
 			// phone numbers
 			if ($address->phone) {
 				$phoneOutput .= $address->phone . "  ";
@@ -73,6 +84,7 @@ if ($_GET['type'] == "csv") {
 		$outputArray[$n][] = $student->prefname;
 		$outputArray[$n][] = $resStatus->status;
 		$outputArray[$n][] = $addOutput;
+		$outputArray[$n][] = $addOutputRoom;
 		$outputArray[$n][] = $student->mobile;
 		$outputArray[$n][] = $student->email1;
 		$outputArray[$n][] = $student->email2;
