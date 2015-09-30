@@ -2,29 +2,24 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . '/ocsd/engine/initialise.php');
 
 $address = Addresses::find_by_uid($_GET['uid']);
+$student = Students::find_by_uid($address->studentkey);
 ?>
 
-
 <script type="text/javascript">
-function PrintWindow()
-        {                     
-           window.print();            
-           CheckWindowState(); 
-        }
-        
-        function CheckWindowState()
-        {            
-            if(document.readyState=="complete")
-            {
-                window.close();  
-            }
-            else
-            {            
-                setTimeout("CheckWindowState()", 2000)
-            }
-        }    
-        
-       PrintWindow();
+	function PrintWindow() {
+		window.print();
+		CheckWindowState();
+	}
+	
+	function CheckWindowState() {
+		if(document.readyState=="complete") {
+			window.close();
+		} else {
+			setTimeout("CheckWindowState()", 2000);
+		}
+	}
+	
+	PrintWindow();
 </script>
 
 <!DOCTYPE html>
@@ -37,17 +32,14 @@ function PrintWindow()
     	padding-top: 0px;
     	padding-bottom: 0px;
     }
-    p {
-	    font-family:"Verdana",Georgia,Serif;
-	    font-weight: bold;
-    }
     </style>
 </head>
 
-<p>
+<body>
+
+<h1 id="fittext1">
 <?php
-	$output = "";
-	
+	$output = $student->fullDisplayName() . "<br />";
 	if ($address->line1) {
 		$output .= $address->line1 . "<br />";
     }
@@ -71,7 +63,14 @@ function PrintWindow()
     }
     echo $output;
 ?>
-</p>
-<body>
+</h1>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="../js/jquery.fittext.js"></script>
+
+<script type="text/javascript">
+	$("#fittext1").fitText(1.1, { minFontSize: '5px', maxFontSize: '11px' });
+</script>
+
 </body>
 </html>
