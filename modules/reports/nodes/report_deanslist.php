@@ -43,7 +43,7 @@ if ($_GET['type'] == "csv") {
 			if ($resAddress->atkey == 1) {
 				//address is a college room
 				$addOutput = $resAddress->line1;
-				$addOutputRoom = $address->roomno;
+				$addOutputRoom = $address->roomno . ",";
 			} else {
 				//address is out-of-college
 				$addOutput  = "";
