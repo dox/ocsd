@@ -1,28 +1,10 @@
-<style>
-body {
-background: url('img/404-02.jpg') no-repeat center center fixed;
--webkit-background-size: cover;
--moz-background-size: cover;
--o-background-size: cover;
-background-size: cover;
-color: white;
-}
-</style>
+<div class="bls">
+	<div class="blt">
+		<h6 class="blv">The page '<?php echo $_GET['n']; ?>' doesn't exist</h6>
+		<h2 class="blu">404: Page Not Found!</h2>
+	</div>
+</div>
 
-<h1>Page Not Found</h1>
-<blockquote>
-	<p>You can't always get what you want.</p>
-	<small>The Rolling Stones</small>
-</blockquote>
-<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<hr class="aah">
 
-<?php
-// find out the page the user came from and record this 404 in the logs
-$page = $_SERVER['HTTP_REFERER'];
-
-$log = new Logs;
-$log->notes			= "404: ". $page;
-$log->type			= "error";
-$log->create();
-
-?>
+<img src="../images/wine-glass-spilled.jpg" class="img-fluid" alt="Spilled Wine Glass">

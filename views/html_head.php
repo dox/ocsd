@@ -1,36 +1,38 @@
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title><?php echo SITE_SHORT_NAME . ": " . SITE_SLOGAN; ?></title>
+<?php
+	session_start();
 	
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<style type="text/css">
-	body {
-		padding-top: 60px;
-		padding-bottom: 40px;
+	require_once('config.php');
+	require_once('includes/globalFunctions.php');
+	require_once('database/MysqliDb.php');
+	include_once 'includes/classPerson.php';
+	require_once($_SERVER['DOCUMENT_ROOT'] . '/includes/adLDAP/adLDAP.php');
+	
+	try {
+		$adldap
+		 = new adLDAP();
 	}
-	</style>
-	<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-	<link href="css/style1.css" rel="stylesheet">
+	catch (adLDAPException $e) {
+	    echo $e;
+	    exit();
+	}
 	
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-	<![endif]-->
-	
-	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-	<script src="js/moment.js"></script>
-	<script src="js/ocsd.js"></script>
-	
-	<!-- Le fav and touch icons -->
-	<link rel="shortcut icon" href="ico/favicon.ico">
-	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
-	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
-	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
-	<link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+	$db = new MysqliDb ($db_host, $db_username, $db_password, $db_name);
+?>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="author" content="">
+		
+		<title>St Edmund Hall, SCR Meal Booking System (TEST)</title>
+		
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic" rel="stylesheet">
+		<link href="/css/toolkit-light.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<link href="/css/application.css" rel="stylesheet">
 </head>

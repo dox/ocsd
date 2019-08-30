@@ -1,2 +1,9 @@
+# don't upload passwords
 config.php
+
+# don't upload the photos
+photos/*
+!photos/.gitkeep
+
+# OS files
 .DS_Store

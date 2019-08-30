@@ -1,108 +1,48 @@
-<script src="js/typeahead.bundle.js"></script>
-<script src="js/handlebars.js"></script>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-
-			<a class="navbar-brand" href="index.php"><?php echo SITE_SHORT_NAME; ?></a>
-		</div>
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav">
-				<li class="active"><a href="index.php">Home</a></li>
-				<li><a href="index.php?m=students&n=index.php">Users</a></li>
-				<li><a href="index.php?n=contact.php">Contact</a></li>
-			</ul>
-			<form class="navbar-form navbar-left" role="search">
-				<div class="form-group">
-					<!--<input type="text" class="form-control" placeholder="Search">-->
-					<div id="nav-search">
-					<?php
-					if (isset($_SESSION['username'])) {
-						echo "<input type=\"text\" class=\"form-control typeahead\" placeholder=\"Search\" autocomplete=\"off\" />";
-					}
-					?>
-					</div>
-				</div>
-			</form>
-			
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="index.php?n=contact.php"><i class="fa fa-flag"></i></a></li>
-				<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><a href="index.php?m=reports&n=index.php">Reports</a></li>
-						<li><a href="index.php?m=awards&n=list.php">Awards</a></li>
-						<li><a href="index.php?m=logs&n=index.php">Logs</a></li>
-						<li><a href="index.php?m=import&n=index.php">Import</a></li>
-						<li class="divider"></li>
-						<li><a href="index.php?n=profile.php">My Profile</a></li>
-						<li><a href="index.php?n=contact.php">Report Problem</a></li>
-						<li><a href="index.php?n=logon.php&logout=true">Log Out</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
+<div class="en ble">
+<nav class="bll">
+	<div class="blf">
+		<img src="../images/logo.svg" style="max-width: 130px;" class="rounded mx-auto d-block">
+		<button class="bkb bkd blg" type="button" data-toggle="collapse" data-target="#nav-toggleable-md"><span class="yz">Toggle nav</span></button>
 	</div>
+	<div class="collapse bki" id="nav-toggleable-md">
+		<form action="index.php?n=search_results" method="POST" target="_self" class="blj">
+			<input class="form-control" name="search_term" type="text" placeholder="Search...">
+			<button type="submit" class="ku"><i class="fas fa-search"></i></button>
+		</form>
+		<ul class="nav lq nav-stacked st">
+			<li class="asv">Navigation</li>
+			<li class="lp"><a class="ln active" href="index.php">Home</a></li>
+			<li class="lp"><a class="ln " href="index.php?n=persons_all">Persons</a></li>
+			
+			<li class="asv">Reports</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Photo Report</a>
+				<div class="dropdown-menu">
+					<?php
+						$currentYear = date('Y');
+						$yearOutput = $currentYear;
+						$totalYears = 6;
+						$output = "";
+						
+						$i = 1;
+						do {
+							$output .= "<a class=\"dropdown-item\" href=\"/report.php?n=photo_by_year&cohort=" . $i . "\">" . $yearOutput . "</a>";
+							$yearOutput = $yearOutput - 1;
+							$i++;
+						} while ($i <= $totalYears);
+						
+						echo $output;
+					?>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="/report.php?n=photo_by_year">All</a>
+				</div>
+			</li>
+			
+			<li class="asv">Admin</li>
+			<li class="lp"><a class="ln" href="index.php?n=admin_logs">Logs</a></li>
+			<li class="lp"><a class="ln" href="index.php?n=admin_logon&logout=true">Log Out</a></li>
+		</ul>
+		<hr class="bmi aah">
+	</div>
+</nav>
 </div>
-
-<style>
-.tt-dropdown-menu {
-    width: 422px;
-    margin-top: 12px;
-    padding: 8px 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0,0,0,.2);
-}
-
-.tt-suggestion {
-    padding: 3px 20px;
-    line-height: 24px;
-}
-
-.tt-suggestion.tt-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
-    color: #fff;
-    background-color: rgba(0,152,207,0.43);
-
-}
-
-.tt-suggestion p {
-    margin: 0;
-}
-</style>
-
-<script>
-var bestPictures = new Bloodhound({
-	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-	queryTokenizer: Bloodhound.tokenizers.whitespace,
-	prefetch: './api/studentsAll.php'
-});
-
-bestPictures.initialize();
- 
-$('#nav-search .typeahead').typeahead(null, {
-	hint: true,
-	highlight: true,
-	minLength: 1,
-	name: 'users-current',
-	displayKey: 'value',
-	source: bestPictures.ttAdapter(),
-	templates: {
-		empty: [
-			'<div class="empty-message">',
-			'<p>No students found</p>',
-			'</div>'
-		].join('\n'),
-		suggestion: Handlebars.compile('<p><a href="index.php?m=students&n=user.php&studentid={{value}}">{{name}}</a></p>')
-	}
-});
-</script>
