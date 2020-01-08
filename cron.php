@@ -9,7 +9,7 @@ require_once('config.php');
 require_once('database/MysqliDb.php');
 $db = new MysqliDb ($db_host, $db_username, $db_password, $db_name);
 
-$sqlContents = file_get_contents('https://epayslips.seh.ox.ac.uk/epayslips/generated-sql-out.html');
+$sqlContents = file_get_contents(IMPORT_FILE);
 $sqlContentsArray = preg_split('/;\r\n|;\r|;\n/', $sqlContents);
 
 foreach ($sqlContentsArray AS $sqlCommand) {
