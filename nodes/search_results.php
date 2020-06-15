@@ -1,5 +1,5 @@
 <?php
-$searchTerm = $_POST['search_term'];
+$searchTerm = $_POST['navbar_search'];
 $sql  = "SELECT * FROM Person WHERE ";
 $sql .= "sits_student_code LIKE '%" . $searchTerm . "%' OR ";
 $sql .= "firstname LIKE '%" . $searchTerm . "%' OR ";
@@ -15,27 +15,60 @@ $searchResultsCount = $db->count;
 
 $message = $_SESSION["username"] . " searched for  '" . $searchTerm . "' (" . $searchResultsCount . " " . autoPluralise("result)", "results)", $searchResultsCount);
 if ($searchResultsCount == 1) {
-	$logSQLInsert = Array ("type" => "SEARCH", "cudid" => $searchResults[0]['cudid'], "description" => $message);
-
+	$logInsert = (new Logs)->insert("view","success",$searchResults[0]['cudid'],"Search for <code>" . $searchTerm . "</code> returned " . $searchResultsCount . " result");
 } else {
-	$logSQLInsert = Array ("type" => "SEARCH", "description" => $message);
+	$logInsert = (new Logs)->insert("view","success",null,"Search for <code>" . $searchTerm . "</code> returned " . $searchResultsCount . " results");
 }
-$id = $db->insert ('_logs', $logSQLInsert);
 
 
 ?>
 
-<div class="by aaj">
-	<h6 class="blv">Search / Search Results</h6>
-	<h2 class="blu">Search Results (<?php echo $searchTerm ;?>)</h2>
+<div class="container">
+<div class="row">
 	<?php
-		foreach ($searchResults AS $person) {
-		$output  = "<a class=\"mo od tc ra\" href=\"index.php?n=students_unique&cudid=" . $person['cudid'] . "\">";
-		$output .= "<span>" . $person['firstname'] . " " . $person['lastname'] . "</span>";
-		$output .= "<span>" . "test" . "</span>";
-		$output .= "<span class=\"asd\">" . "test" . "</span>";
-		$output .= "</a>";
-		echo $output;
+	$resultsOutput = "";
+	foreach ($searchResults AS $searchResult) {
+		$person = new Person($searchResult['cudid']);
+		echo "<div class=\"col-sm\">";
+		echo "<p>" . $person->photoAvatar() . "</p>";
+		echo "</div>";
+		
+		$resultsOutput .= $person->tableRow();
 	}
 	?>
+</div>
+</div>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+	<h1 class="h2"><?php echo count($searchResults) . " Search " . autoPluralise("Result", "Results", count($searchResults)) . " for <code>" . $searchTerm . "</code>";?></h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+		<div class="btn-group mr-2">
+			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
+			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
+		</div>
+		
+		<div class="btn-group" role="group">
+			<button id="btnGroupDrop1" type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
+			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
+				<a class="dropdown-item emailParcelButton1" href="#" id="<?php echo $person->cudid; ?>"><strong>Email</strong> "You have a delivery"</a>
+				<a class="dropdown-item" href="#">Dropdown link</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col"></th>
+			<th scope="col">First Name</th>
+			<th scope="col">Last Name</th>
+			<th scope="col">Bodcard</th>
+			<th scope="col">SSO</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php echo $resultsOutput; ?>
+	</tbody>
+</table>
 </div>

@@ -2,8 +2,8 @@
 
 $student = $db->where("cudid", $_GET['cudid']);
 $student = $db->getOne("Student");
-$person = $db->where("cudid", $_GET['cudid']);
-$person = $db->getOne("Person");
+$personSignPass = $db->where("cudid", $_GET['cudid']);
+$personSignPass = $db->getOne("Person");
 
 $applications = $db->where("cudid", $_GET['cudid']);
 $applications = $db->getOne("Applications");
@@ -16,14 +16,10 @@ $contactDetails = $db->get("ContactDetails");
 $addresses = $db->where ("cudid", $_GET['cudid']);
 $addresses = $db->get("Addresses");
 
-$logSQLInsert = Array ("type" => "VIEW", "cudid" => $person["cudid"], "description" => $_SESSION["username"] . " viewed " . $person['FullName']);
-$id = $db->insert ('_logs', $logSQLInsert);
-
-
-if ($person['firstname'] <> $person['known_as']) {
-	$name = $person['FullName'] . " (" . $person['known_as'] . ")";
+if ($personSignPass['firstname'] <> $personSignPass['known_as']) {
+	$name = $personSignPass['FullName'] . " (" . $personSignPass['known_as'] . ")";
 } else {
-	$name = $person['FullName'];
+	$name = $personSignPass['FullName'];
 }
 
 function monthName($num = 1) {
@@ -35,7 +31,7 @@ function monthName($num = 1) {
 {                                                                 
   "formatVersion" : 1,										  
   "passTypeIdentifier" : "pass.seh.ox.ac.uk.testpass",		  
-  "serialNumber" : "<?php echo "bod-" . $person['barcode']; ?>",  
+  "serialNumber" : "<?php echo "bod-" . $personSignPass['barcode']; ?>",  
   "webServiceURL" : "https://www.seh.ox.ac.uk",				  
   "authenticationToken" : "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
   "teamIdentifier" : "24SGZVWX7R",							  
@@ -50,7 +46,7 @@ function monthName($num = 1) {
     }															  
   ],															  
   "barcode" : {												  
-    "message" : "<?php echo "bod-" . $person['barcode']; ?>",		  
+    "message" : "<?php echo $personSignPass['barcode']; ?>",		  
     "format" : "PKBarcodeFormatQR",							  
     "messageEncoding" : "iso-8859-1"						  
   },															  
@@ -63,21 +59,21 @@ function monthName($num = 1) {
     "primaryFields" : [										  
       {															  
         "key" : "member",									  
-        "value" : "<?php echo $person['FullName']; ?>"				  
+        "value" : "<?php echo $personSignPass['FullName']; ?>"				  
       }															  
     ],															  
     "secondaryFields" : [										  
       {															  
         "key" : "subtitle",									  
         "label" : "VALID UNTIL",							 
-        "value" : "<?php echo substr($person['University_Card_End_Dt'], 6, 2) . " " . monthName(substr($person['University_Card_End_Dt'], 4, 2)) . " " . substr($person['University_Card_End_Dt'], 0, 4); ?>"		  
+        "value" : "<?php echo substr($personSignPass['University_Card_End_Dt'], 6, 2) . " " . monthName(substr($personSignPass['University_Card_End_Dt'], 4, 2)) . " " . substr($personSignPass['University_Card_End_Dt'], 0, 4); ?>"		  
       }															  
     ],															  
     "auxiliaryFields" : [										  
       {															  
         "key" : "TYPE",										  
         "label" : "TYPE",									  
-        "value" : "<?php echo $person['university_card_type']; ?>"					  
+        "value" : "<?php echo $personSignPass['university_card_type']; ?>"					  
       },														  
       {															  
         "key" : "college",									  
@@ -89,27 +85,27 @@ function monthName($num = 1) {
       {															  
         "label" : "Full Name",								  
         "key" : "name",										  
-        "value" : "<?php echo $person['FullName']; ?>",				  
+        "value" : "<?php echo $personSignPass['FullName']; ?>",				  
       },														  
       {															  
         "label" : "SSO",									  
         "key" : "sso",										  
-        "value" : "<?php echo $person['sso_username']; ?>"								  
+        "value" : "<?php echo $personSignPass['sso_username']; ?>"								  
       },														  
       {															  
         "label" : "Bodcard",								  
         "key" : "bodcard",									  
-        "value" : "<?php echo $person['barcode']; ?>",								  
+        "value" : "<?php echo $personSignPass['barcode']; ?>",								  
       },														  
       {															  
         "label" : "Telephone Number",						  
         "key" : "telephone",								  
-        "value" : "<?php echo $person['internal_tel']; ?>"							  
+        "value" : "<?php echo $personSignPass['internal_tel']; ?>"							  
       },														  
       {															  
         "label" : "E-Mail Address",							  
         "key" : "email",									  
-        "value" : "<?php echo $person['oxford_email']; ?>",			  
+        "value" : "<?php echo $personSignPass['oxford_email']; ?>",			  
       },														  
       {															  
         "label" : "Card Type",								  
@@ -120,7 +116,7 @@ function monthName($num = 1) {
         "dateStyle" : "PKDateStyleShort",					  
         "label" : "Bodcard Start Date",						  
         "key" : "startdate",								  
-        "value" : "<?php echo substr($person['University_Card_Start_Dt'], 0, 4) . "-" . substr($person['University_Card_Start_Dt'], 4, 2) . "-" . substr($person['University_Card_Start_Dt'], 6, 2) . "T00:00-00:00"; ?>",					  
+        "value" : "<?php echo substr($personSignPass['University_Card_Start_Dt'], 0, 4) . "-" . substr($personSignPass['University_Card_Start_Dt'], 4, 2) . "-" . substr($personSignPass['University_Card_Start_Dt'], 6, 2) . "T00:00-00:00"; ?>",					  
       }														  
     ]															  
   }																  

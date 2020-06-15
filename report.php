@@ -1,28 +1,10 @@
 <?php
-session_start();
+include_once("includes/autoload.php");
+require_once 'vendor/autoload.php';
 
-require_once('config.php');
-require_once('database/MysqliDb.php');
-$db = new MysqliDb ($db_host, $db_username, $db_password, $db_name);
-require_once($_SERVER['DOCUMENT_ROOT'] . '/includes/adLDAP/adLDAP.php');
-require_once('includes/fpdf/fpdf.php');
-
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
-error_reporting(0);
-
-try {
-		$adldap
-		 = new adLDAP();
-	}
-	catch (adLDAPException $e) {
-	    echo $e;
-	    exit();
-	}
-	
-	$pdf = new FPDF();
-	$pdf->AddPage();
-	
+//$pdf = new FPDF();
+$pdf = new \Mpdf\Mpdf();
+$pdf->AddPage();
 
 
 if (isset($_SESSION['username'])) {
@@ -36,6 +18,5 @@ if (isset($_SESSION['username'])) {
 	echo "LOGON!";
 }
 
-$logSQLInsert = Array ("type" => "REPORT", "description" => $_SESSION['username'] . " ran report " . $_GET['n']);
-$id = $db->insert ('_logs', $logSQLInsert);
+$logInsert = (new Logs)->insert("view","success",null,"<code>" . $_GET['n'] . "</code> report run");
 ?>

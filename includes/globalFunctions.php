@@ -43,21 +43,41 @@ function autoPluralise ($singular, $plural, $count = 1) {
 	return ($count == 1)? $singular : $plural;
 } // END function autoPluralise
 
+function makeEmail($address) {
+	$output  = "<a href=\"mailto:" . $address . "\">" . $address . "</a>";
+	return $output;
+}
 
-function sendMail($subject = "No Subject Specified", $recipients = NULL, $body = NULL) {
-	require_once($_SERVER['DOCUMENT_ROOT'] . '/ocsd/engine/PHPMailer/class.phpmailer.php');
+function sendMail($subject = "No Subject Specified", $recipients = NULL, $body = NULL, $senderAddress = NULL, $senderName = NULL) {
+	require_once($_SERVER['DOCUMENT_ROOT'] . '/includes/PHPMailer/class.phpmailer.php');
 	
 	$mail = new PHPMailer;
 	
 	$mail->IsSMTP();
-	$mail->Host = EMAIL_HOST;
+	$mail->Host = smtp_server;
+
+	if (isset($senderAddress)) {
+		$mail->From = $senderAddress;
+		$mail->FromName = $senderName;
+		$mail->AddReplyTo($senderAddress, $senderName);
+	} else {
+		$mail->From = "communications@seh.ox.ac.uk";
+		$mail->FromName = "SEH Communications";
+		$mail->AddReplyTo("communications@seh.ox.ac.uk", "SEH Communications");
+		
+	}
 	
-	$mail->From = EMAIL_FROM;
-	$mail->FromName = SITE_SHORT_NAME;
+	//$recipients = explode(",", $recipients);
 	
-	$mail->AddAddress($recipients, 'OCSD Recipient');
+	//echo $recipients;
 	
-	$mail->AddReplyTo(EMAIL_FROM, SITE_ADMIN_NAME);
+	//$mail->AddAddress("noreply@seh.ox.ac.uk");
+	foreach ($recipients AS $recipient) {
+		$mail->addBCC($recipient);
+	}
+	
+	
+	
 	
 	$mail->WordWrap = 50;                                 // Set word wrap to 50 characters
 	//$mail->AddAttachment('/var/tmp/file.tar.gz');         // Add attachments
@@ -74,7 +94,7 @@ function sendMail($subject = "No Subject Specified", $recipients = NULL, $body =
 	   exit;
 	}
 	
-	echo 'Message has been sent';
+	//echo 'Message has been sent';
 }
 
 function isingroup($groupname) {
@@ -100,6 +120,22 @@ function isingroup($groupname) {
 		}
 	}
 }
+
+function generateRandomString($string = null) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    
+    $stringLengthMin = floor(strlen($string)/0.5);
+    $stringLengthMax = ceil(strlen($string)*0.5);
+    $stringLength = rand($stringLengthMin,$stringLengthMax);
+    
+    for ($i = 0; $i < $stringLength; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
 function gatekeeper($groupnamecheck = "All Staff") {
 	if (isingroup($groupnamecheck)) {
 	} else {

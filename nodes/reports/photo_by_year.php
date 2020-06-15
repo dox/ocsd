@@ -19,51 +19,75 @@ foreach ($persons AS $person) {
 	$subjectName = str_replace("Visiting Non-Matriculated ", "", $subjectName);
 	$subjectName = str_replace("Visiting Matriculated ", "", $subjectName);
 	if (strlen($subjectName) > 33) {
-		$subjetNameShort = substr($subjectName, 1, 33);
+		//$subjetNameShort = substr($subjectName, 1, 33);
+		$subjetNameShort = $subjectName;
 	} else {
 		$subjetNameShort = $subjectName;
 	}
 	
 	$studentArray[] = array('studentPhoto' => $photo, 'studentName' => $person['FullName'], 'studentDegree' => $subjetNameShort, 'studentSubject' => "");
-	
-	
 }
 
+function ordinalSuffix( $n ) {
+	return date('S',mktime(1,1,1,1,( (($n>=10)+($n>=20)+($n==0))*10 + $n%10) ));
+}
+$heading = "Photo Report: " . $_GET['cohort'] . ordinalSuffix($_GET['cohort']) . " Year";
+
+$pdf->WriteHTML('<h1>' . $heading . '</h1>');
+	
 $rowCounter = 0;
 $sets = array_chunk($studentArray, 3);
+
+
+$pdf->WriteHTML('<table width="100%" border="1">');
 foreach ($sets as $set) {
+
+	$pdf->WriteHTML('<tr>');
+	$pdf->WriteHTML('<td align="center">');
 	if (file_exists($set[0]['studentPhoto'])) {
-		$pdf->Cell(65, 50, $pdf->Image($set[0]['studentPhoto'], $pdf->GetX()+ 15, $pdf->GetY(), 38), 0, 0, 'C', false );
+		$photo = $set[0]['studentPhoto'];
 	} else {
-		$pdf->Cell(65, 50, "", 0, 0, 'C', false);
+		$photo = "images/photo_blank.jpg";
 	}
-	if (file_exists($set[1]['studentPhoto'])) {
-		$pdf->Cell(65, 50, $pdf->Image($set[1]['studentPhoto'], $pdf->GetX()+ 15, $pdf->GetY(), 38), 0, 0, 'C', false );
-	} else {
-		$pdf->Cell(65, 50, "", 0, 0, 'C', false);
-	}
-	if (file_exists($set[2]['studentPhoto'])) {
-		$pdf->Cell(65, 50, $pdf->Image($set[2]['studentPhoto'], $pdf->GetX()+ 15, $pdf->GetY(), 38), 0, 1, 'C', false );
-	} else {
-		$pdf->Cell(65, 50, "", 0, 1, 'C', false);
-	}
-	$pdf->Cell(65, 5, $set[0]['studentName'], 0, 0, 'C', false);
-	$pdf->Cell(65, 5, $set[1]['studentName'], 0, 0, 'C', false);
-	$pdf->Cell(65, 5, $set[2]['studentName'], 0, 1, 'C', false);
-	$pdf->Cell(65, 5, $set[0]['studentDegree'], 0, 0, 'C', false);
-	$pdf->Cell(65, 5, $set[1]['studentDegree'], 0, 0, 'C', false);
-	$pdf->Cell(65, 5, $set[2]['studentDegree'], 0, 1, 'C', false);
-	$pdf->Cell(65, 5, $set[0]['studentSubject'], 0, 0, 'C', false);
-	$pdf->Cell(65, 5, $set[1]['studentSubject'], 0, 0, 'C', false);
-	$pdf->Cell(65, 5, $set[2]['studentSubject'], 0, 1, 'C', false);
-	$pdf->Ln();
+	$pdf->WriteHTML('<img src="' . $photo . '" width="140" height="182"><br />');
+	$pdf->WriteHTML(str_replace("'", "'", $set[0]['studentName']) . "<br />");
+	$pdf->WriteHTML(str_replace("'", "'", $set[0]['studentDegree']) . "<br />");
+	$pdf->WriteHTML(str_replace("'", "'", $set[0]['studentSubject']));
+	$pdf->WriteHTML('</td>');
 	
+	$pdf->WriteHTML('<td align="center">');
+	if (file_exists($set[1]['studentPhoto'])) {
+		$photo = $set[1]['studentPhoto'];
+	} else {
+		$photo = "images/photo_blank.jpg";
+	}
+	$pdf->WriteHTML('<img src="' . $photo . '" width="140" height="182"><br />');
+	$pdf->WriteHTML(str_replace("'", "'", $set[1]['studentName']) . "<br />");
+	$pdf->WriteHTML(str_replace("'", "'", $set[1]['studentDegree']) . "<br />");
+	$pdf->WriteHTML(str_replace("'", "'", $set[1]['studentSubject']));
+	$pdf->WriteHTML('</td>');
+	
+	$pdf->WriteHTML('<td align="center">');
+	if (file_exists($set[2]['studentPhoto'])) {
+		$photo = $set[2]['studentPhoto'];
+	} else {
+		$photo = "images/photo_blank.jpg";
+	}
+	$pdf->WriteHTML('<img src="' . $photo . '" width="140" height="182"><br />');
+	$pdf->WriteHTML(str_replace("'", "'", $set[2]['studentName']) . "<br />");
+	$pdf->WriteHTML(str_replace("'", "'", $set[2]['studentDegree']) . "<br />");
+	$pdf->WriteHTML(str_replace("'", "'", $set[2]['studentSubject']));
+	$pdf->WriteHTML('</td>');
+	$pdf->WriteHTML('</tr>');
+
 	$rowCounter = $rowCounter + 1;
 	
 	if ($rowCounter >= '4') {
-		$pdf->AddPage();
+		$pdf->WriteHTML('</table>');
+		$pdf->WriteHTML('<table table width="100%" border="1">');
 		$rowCounter = 0;
 	}
 }
+$pdf->WriteHTML('</table>');
 
 ?>
