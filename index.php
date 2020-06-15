@@ -20,10 +20,6 @@ $allowedUsers[] = "NJOKI";
 $allowedUsers[] = "BRICKELL";
 $allowedUsers[] = "ALDEN";
 
-?>
-
-
-<?php
 //you should look into using PECL filter or some form of filtering here for POST variables
 if (isset($_POST["username"])) {
 	$username = strtoupper($_POST["username"]); //remove case sensitivity on the username
@@ -36,18 +32,18 @@ if (isset($_POST["oldform"])) { //prevent null bind
 		    $adldap = new adLDAP();
         }
         catch (adLDAPException $e) {
-            echo $e; 
-            exit();   
+            echo $e;
+            exit();
         }
-        
+
 		//authenticate the user
 		if ($adldap->authenticate($username, $password)){
 			//establish your session and redirect
-			
+
 			$_SESSION["username"] = $username;
             $_SESSION["userinfo"] = $adldap->user()->info($username);
 			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
-			
+
 			$logInsert = (new Logs)->insert("logon","success",null,"LDAP logon success");
 			header($redir);
 			exit;
@@ -55,7 +51,7 @@ if (isset($_POST["oldform"])) { //prevent null bind
 			$logInsert = (new Logs)->insert("logon","error",null,"<code>" . $username . "</code>LDAP logon failed");
 		}
 	}
-	
+
 	$message = "<div class=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>Warning!</strong> Login attempt failed.</div>";
 }
 
@@ -67,7 +63,7 @@ if (isset($_POST["oldform"])) { //prevent null bind
 <div class="container-fluid">
 	<div class="row">
 		<?php include_once("views/navbar_side.php"); ?>
-		
+
 		<?php
 		if (isset($_SESSION['username'])) {
 			if (!in_array(strtoupper($_SESSION["username"]), $allowedUsers) ) {
@@ -76,7 +72,7 @@ if (isset($_POST["oldform"])) { //prevent null bind
 			}
 			if (isset($_GET['n'])) {
 				$node = "nodes/" . $_GET['n'] . ".php";
-				
+
 				if (!file_exists($node)) {
 					$node = "nodes/404.php";
 				}
@@ -88,7 +84,7 @@ if (isset($_POST["oldform"])) { //prevent null bind
 		} else {
 			$node = "nodes/admin_logon.php";
 		}
-		
+
 		if ($node == "nodes/admin_logon.php" || $_GET['n'] == "admin_logon") {
 			include_once($node);
 		} else {

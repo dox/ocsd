@@ -11,11 +11,11 @@ $logsCount = $db->count;
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 		</div>
-		
+
 		<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"><span data-feather="calendar"></span>void</button>
 	</div>
 </div>
-
+<p>Logs older than <?php echo logs_retention . autoPluralise(" day", " days", logs_retention);?> are automatically deleted.</p>
 <table class="table table-sm table-striped">
 	<thead>
 		<tr>

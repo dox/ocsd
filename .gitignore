@@ -11,3 +11,4 @@ composer.lock
 composer.json
 includes/composer 2.json
 includes/database/composer 3.json
+.remote-sync.json
