@@ -21,6 +21,7 @@ require_once($root . '/includes/classLog.php');
 require_once($root . '/includes/classPersons.php');
 require_once($root . '/includes/classPerson.php');
 require_once($root . '/includes/adLDAP/adLDAP.php');
+require_once($root . '/includes/ldapFunctions.php');
 
 try {
 	$adldap

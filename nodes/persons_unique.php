@@ -29,7 +29,7 @@ if (isset($person->cudid)) {
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 		</div>
-		
+
 		<div class="btn-group" role="group">
 			<button id="btnGroupDrop1" type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
 			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
@@ -49,6 +49,7 @@ if (isset($person->cudid)) {
 		<a class="nav-item nav-link" id="nav-supervisors-tab" data-toggle="tab" href="#nav-supervisors" role="tab" aria-controls="nav-supervisors" aria-selected="false">Supervisors</a>
 		<a class="nav-item nav-link" id="nav-signpass-tab" data-toggle="tab" href="#nav-signpass" role="tab" aria-controls="nav-contact" aria-selected="false">Signpass (Beta)</a>
 		<a class="nav-item nav-link" id="nav-datadump-tab" data-toggle="tab" href="#nav-datadump" role="tab" aria-controls="nav-contact" aria-selected="false">Data Dump</a>
+		<?php if (LDAP_ENABLE == true) { ?><a class="nav-item nav-link" id="nav-ldap-tab" data-toggle="tab" href="#nav-ldap" role="tab" aria-controls="nav-contact" aria-selected="false">LDAP</a><?php } ?>
 	</div>
 </nav>
 <br />
@@ -71,7 +72,7 @@ if (isset($person->cudid)) {
 						$output = "<td>" . $key . "</td>";
 						$output .= "<td>" . $value . "</td>";
 						$output .= "</tr>";
-						
+
 						echo $output;
 					}
 				}
@@ -87,8 +88,8 @@ if (isset($person->cudid)) {
 				echo "<p>Chorus Telephone Number: " . $person->internal_tel . "</p>";
 			}
 		?>
-		
-		
+
+
 
 
 			</div>
@@ -100,10 +101,10 @@ if (isset($person->cudid)) {
 				$output .= "<strong>" . $contact['SubType'] . "</strong> " . $contact['Value'];
 			$output .= "</div>";
 			$output .= "</div>";
-			
+
 			echo $output;
 		}
-		
+
 		foreach ($addresses AS $address) {
 			if ($address["AddressTyp"] == "T") {
 				$addressType = "Term-Time";
@@ -139,7 +140,7 @@ if (isset($person->cudid)) {
 			$output .= "<a href=\"https://www.google.co.uk/maps?q=" . $address["Line1"] . "," . $address["Line2"] . "," . $address["PostCode"] . "," . $address["County"] . "\" class=\"card-link\"><i class=\"fas fa-map-marker-alt\"></i> Google Maps</a>";
 			$output .= "</div>";
 			$output .= "</div>";
-			
+
 			echo $output;
 		}
 		?>
@@ -147,7 +148,7 @@ if (isset($person->cudid)) {
 	<div class="tab-pane fade" id="nav-datadump" role="tabpanel" aria-labelledby="nav-datadump-tab">
 		<h2>Student Table:</h2>
 		<pre><?php print_r($student); ?></pre>
-		
+
 		<h2>Person Table:</h2>
 		<pre><?php print_r($person); ?></pre>
 	</div>
@@ -172,7 +173,8 @@ if (isset($person->cudid)) {
 
 
 	</div>
+	<div class="tab-pane fade" id="nav-ldap" role="tabpanel" aria-labelledby="nav-ldap-tab">
+		<?php include_once("persons_unique-ldap.php"); ?>
+	</div>
 </div>
 </div>
-
-
