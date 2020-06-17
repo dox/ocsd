@@ -1,5 +1,5 @@
 <?php
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['username']) && !isset($_GET['logout'])) {
 ?>
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
 	<!--<img src="../images/logo.svg" style="max-height:45px;" class="rounded mx-auto d-block">-->

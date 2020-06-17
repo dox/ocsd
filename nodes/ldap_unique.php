@@ -3,7 +3,7 @@ $ou = "DC=SEH,DC=ox,DC=ac,DC=uk";
 $ldapClass = new LDAP();
 
 if ($ldapClass) {
-	$filter = "(|(sAMAccountName=" . $person->sso_username . ")(mail=" . $person->oxford_email . "))";
+	$filter = "(sAMAccountName=" . $_GET['samaccountname'] . ")";
 
 	// BIND
 	$admin_bind = $ldapClass->ldap_bind();

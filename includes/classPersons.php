@@ -55,47 +55,47 @@ class Persons {
 	public $universitycard_isoiec_14443_uid;
 	public $bodleian_mifare_id;
 	public $bodleian_isoiec_14443_uid;
-	
+
 	function __construct() {
 	}
-	
+
 	public function test() {
 		return $this->cudid;
 	}
-	
+
 	function allPersonsCount() {
 		global $db;
-		
+
 		$persons = $db->get(self::$table_name);
 		$personsCount = $db->count;
-		
+
 		return $personsCount;
 	}
-	
+
 	public function all() {
 		global $db;
-		
+
 		$persons = $db->orderBy('lastname', "ASC");
 		$persons = $db->get(self::$table_name);
-		
 		return $persons;
 	}
-	
+
 	public function search($searchTerm = null, $limit = null) {
 		global $db;
-		
+
 		$persons = $db->orderBy('lastname', "ASC");
 		$persons = $db->where('fullname', "%" . $searchTerm . "%", 'like');
 		$persons = $db->orWhere('sso_username', "%" . $searchTerm . "%", 'like');
 		$persons = $db->orWhere('barcode7', "%" . $searchTerm . "%", 'like');
-		
+		$persons = $db->orWhere('oxford_email', "%" . $searchTerm . "%", 'like');
+
 		if (!$limit == null) {
 			$persons = $db->get(self::$table_name, $limit);
 		} else {
 			$persons = $db->get(self::$table_name);
 		}
-		
-		
+
+
 		return $persons;
 	}
 } //end of class Persons

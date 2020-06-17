@@ -1,6 +1,6 @@
 <?php
 $persons = new Persons();
-	
+
 $personsAll = $persons->all();
 
 $studentArrayTypes = array('GT', 'GR', 'UG', 'VR', 'PT', 'VD', 'VV', 'VC');
@@ -29,7 +29,7 @@ foreach ($personsAll AS $person2) {
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 		</div>
-		
+
 		<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"><span data-feather="calendar"></span>void</button>
 	</div>
 </div>

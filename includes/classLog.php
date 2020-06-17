@@ -2,20 +2,22 @@
 class Log extends Logs {
 	function __construct($uid) {
 		global $db;
-		
+
 		$result = $db->where("uid", $uid);
 		$result = $db->getOne(self::$table_name);
-		
+
 		foreach ($result AS $key => $value) {
 			$this->$key = $value;
 		}
 	}
-	
+
 	public function tableRow () {
 		$logDate = date('Y-m-d H:i:s', strtotime($this->date_created));
-	
+
 		if ($this->result == "success") {
 			$class = "table-success";
+		} else if ($this->result == "warning") {
+			$class = "table-warning";
 		} else if ($this->result == "error") {
 			$class = "table-danger";
 		} else if ($this->result == "info") {
@@ -25,7 +27,7 @@ class Log extends Logs {
 		} else {
 			$class = "";
 		}
-		
+
 		if (in_array($_SESSION['username'], admin_usernames)) {
 			$output  = "<tr class=\"" . $class . "\">";
 			$output .= "<td>" . $logDate . " </td>";
