@@ -22,7 +22,9 @@ if (isset($_SESSION['username']) && !isset($_GET['logout'])) {
 				</div>
 				<div id="collapseLDAP" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionLDAP">
 						<a class="nav-link" href="report.php?n=ad_mifare">- AD miFare (PaperCut)</a>
-						<a class="nav-link" href="index.php?n=report_ldap-status">- LDAP Status</a>
+						<a class="nav-link" href="index.php?n=report_ldap-all">- LDAP all</a>
+						<a class="nav-link" href="index.php?n=report_ldap-no-cud">- LDAP no CUD</a>
+						<a class="nav-link" href="index.php?n=report_cud-no-ldap">- CUD no LDAP</a>
 				</div>
 			</li>
 			<li class="nav-item">

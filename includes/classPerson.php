@@ -4,6 +4,7 @@ class Person extends Persons {
 		global $db;
 
 		$result = $db->where("cudid", $cudid);
+		$result = $db->orWhere("sso_username", $cudid);
 		$result = $db->getOne(self::$table_name);
 
 		foreach ($result AS $key => $value) {
@@ -90,21 +91,52 @@ class Person extends Persons {
 
 		return $bodcardOutput;
 	}
-	public function cardTypeBadge() {
-		if ($this->university_card_type == "GT" || $this->university_card_type == "GR" || $this->university_card_type == "PT") {
-			$class = "primary";
-		} else if ($this->university_card_type == "UG" ) {
-			$class = "success";
-		} else if ($this->university_card_type == "VR" || $this->university_card_type == "VD" || $this->university_card_type == "VV" || $this->university_card_type == "VC") {
-			$class = "warning";
-		} else if ($this->university_card_type == "CS") {
-			$class = "info";
-		} else {
-			$class = "secondary";
+
+	public function bodcardTypes() {
+		$bodcardTypeArray = array(
+			"MC" => "Congregation (from Register of Congregation)",
+			"US" => "University Staff (on payroll)",
+			"FS" => "Retiree (on University Pension) approved by a dept or college",
+			"FR" => "Retiree (on University pension) approved by Pensions",
+			"FB" => "Retiree (on University pension) approved by Pensions (no service entitlements)",
+			"AV" => "Academic Visitor",
+			"DS" => "Departmental Staff",
+			"CS" => "College Staff",
+			"GT" => "Postgraduate (from SITS)",
+			"GR" => "Postgraduate (from SITS)",
+			"UG" => "Undergraduate (from SITS)",
+			"VR" => "Visiting/Recognized Student (from SITS)",
+			"PT" => "Part Time (Continuing Education - unmatriculated)",
+			"VD" => "Departmental Visiting Student (@dept.ox.ac.uk email address)",
+			"VV" => "Departmental Visiting Student (@visiting.ox.ac.uk email address)",
+			"VC (1)" => "College Visiting Student (@college.ox.ac.uk email address)",
+			"CL" => "Cardholder (unit member, not a University member)",
+			"CB" => "Cardholder (unit member, not a University member)",
+			"VA" => "Virtual Access (neither unit nor University member)",
+			"VX" => "Virtual Access (neither unit nor University member)",
+			"leaver" => "Non-card status: leaver	Students in the 11 months after their University Card has expired (neither unit nor University member)"
+		);
+
+		return $bodcardTypeArray;
+	}
+
+	public function cardTypeBadge($cardType = null) {
+		if ($cardType == null) {
+			$cardType = $this->university_card_type;
 		}
-		$output  = "<span class=\"badge badge-" . $class . "\">";
-		$output .= $this->university_card_type;
-		$output .= "</span>";
+		if ($cardType == "GT" || $cardType == "GR" || $cardType == "PT") {
+			$class = "badge-primary";
+		} else if ($cardType == "UG" ) {
+			$class = "badge-success";
+		} else if ($cardType == "VR" || $cardType == "VD" || $cardType == "VV" || $cardType == "VC") {
+			$class = "badge-warning";
+		} else if ($cardType == "CS") {
+			$class = "badge-info";
+		} else {
+			$class = "badge-secondary";
+		}
+
+		$output  = "<a href=\"index.php?n=card_types\" class=\"badge " . $class . "\">" . $cardType . "</a>";
 
 		return $output;
 	}

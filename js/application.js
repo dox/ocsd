@@ -26,7 +26,7 @@ $(".ldap_disable_user").click(function() {
 	$.post(url,{
 		samaccountname: samaccountname
 	}, function(data){
-		alert("Disable User:" + samaccountname);
+		alert("Disable User: " + samaccountname);
 	},'html');
 
 	return false;
@@ -41,7 +41,22 @@ $(".ldap_enable_user").click(function() {
 	$.post(url,{
 		samaccountname: samaccountname
 	}, function(data){
-		alert("Disable User:" + samaccountname);
+		alert("Enable User: " + samaccountname);
+	},'html');
+
+	return false;
+});
+
+$(".ldap_provision_user").click(function() {
+	$(this).parent().dropdown('toggle');
+
+	var samaccountname = $(this).attr('id');
+	var url = 'actions/ldap_provision_user.php';
+
+	$.post(url,{
+		samaccountname: samaccountname
+	}, function(data){
+		alert("Provision User: " + samaccountname);
 	},'html');
 
 	return false;

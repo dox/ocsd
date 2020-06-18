@@ -64,6 +64,30 @@ class LDAP {
   	return $ldapsearch;
   }
 
+  public function ldap_list($ldap_search_ou, $ldap_search_filter) {
+  	$ldapsearch = ldap_list($this->ldapconn, $ldap_search_ou, $ldap_search_filter, LDAP_VALUES);
+
+  	if ($ldapsearch) {
+  		if (debug) {
+  			echo "<div class=\"alert alert-success\" role=\"alert\">";
+  			echo "<kbd>ldap_list</kbd> in <code>" . $ldap_search_ou . "</code> with filter <code>" . $ldap_search_filter . "</code> and values <code>" . implode(LDAP_VALUES,", ") . "</code> is <code>" . $ldapsearch . "</code>";
+  			echo "</div>";
+
+  			echo "<div class=\"alert alert-success\" role=\"alert\">";
+  			echo "<kbd>ldap_list</kbd> returned  <code>" . ldap_count_entries($this->ldapconn, $ldapsearch)  . "</code> entries";
+  			echo "</div>";
+  		}
+  	} else {
+  		if (debug) {
+  			echo "<div class=\"alert alert-danger\" role=\"alert\">";
+  			echo "<kbd>ldap_search</kbd> in <code>" . $ldap_search_ou . "</code> with filter <code>" . $ldap_search_filter . "</code> is <code>" . $ldapsearch . "</code>";
+  			echo "</div>";
+  		}
+  	}
+
+  	return $ldapsearch;
+  }
+
   public function ldap_get_entries($ldap_search_results) {
   	$ldapentries = ldap_get_entries($this->ldapconn, $ldap_search_results);
 
@@ -95,12 +119,17 @@ class LDAP {
     return $ouArray;
   }
 
-  public function all_users($baseDN = LDAP_BASE_DN) {
+  public function all_users($baseDN = LDAP_BASE_DN, $includeDisabled = false) {
     $ous = $this->list_ou();
 
     foreach ($ous AS $ou) {
-      $allByOUFilter = "(sAMAccountName=*)";
-      $all_by_ou_search_results = $this->ldap_search($ou, $allByOUFilter);
+      if ($includeDisabled == true) {
+        $allByOUFilter = "(sAMAccountName=*)";
+      } else {
+        $allByOUFilter = "(&(sAMAccountName=*)(useraccountcontrol=512))";
+      }
+
+      $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
       $all_by_ou_entries = $this->ldap_get_entries($all_by_ou_search_results);
 
       //printArray($all_by_ou_entries);
@@ -126,8 +155,8 @@ class LDAP {
   	return implode($pass); //turn the array into a string
   }
 
-  public function useraccountcontrolbadge ($flagValue = null) {
-  	$userAccountControlFlags = array(
+  public function userAccountControlFlags() {
+    $userAccountControlFlags = array(
   		16777216 => "TRUSTED_TO_AUTH_FOR_DELEGATION",
   		8388608 => "PASSWORD_EXPIRED",
   		4194304 => "DONT_REQ_PREAUTH",
@@ -154,21 +183,18 @@ class LDAP {
   		1 => "SCRIPT"
   	);
 
-  	if (array_key_exists($flagValue, $userAccountControlFlags)) {
-  		if ($flagValue == 512 ) {
-  			$badgeClass = "badge-success";
-  		} elseif ($flagValue == 514 ) {
-  			$badgeClass = "badge-danger";
-  		} else {
-  			$badgeClass = "badge-secondary";
-  		}
-  		$flagName = $userAccountControlFlags[$flagValue];
+    return $userAccountControlFlags;
+  }
+  public function useraccountcontrolbadge ($flagValue = null) {
+  	if (in_array($flagValue, array("512", "544"))) {
+  		$badgeClass = "badge-success";
+  	} elseif (in_array($flagValue, array("2", "16", "514", "546", "8388608"))) {
+  		$badgeClass = "badge-danger";
   	} else {
   		$badgeClass = "badge-secondary";
-  		$flagName = "unknown " . $flagValue;
   	}
 
-  	$output = "<span class=\"badge " . $badgeClass . "\">" . $flagName . "</span>";
+    $output  = "<a href=\"index.php?n=card_types\" class=\"badge " . $badgeClass . "\">" . $flagValue . "</a>";
 
   	return $output;
   }
@@ -208,7 +234,7 @@ class LDAP {
   }
 
   public function ldap_mod_replace($userDN, $actionsArray) {
-  	$ldapmodreplace = ldap_mod_replace($this->ldapconn, $userDN, $actionsArray) or die(ldap_error($ldap_conn));
+  	$ldapmodreplace = ldap_mod_replace($this->ldapconn, $userDN, $actionsArray) or die(ldap_error($ldapconn));
 
   	if (debug) {
   		if ($ldapmodreplace) {
@@ -224,6 +250,23 @@ class LDAP {
   	return $ldapmodreplace;
   }
 
+  public function ldap_add($userDN, $actionsArray) {
+  	$ldapadd = ldap_add($this->ldapconn, $userDN, $actionsArray) or die(ldap_error($ldapconn));
+
+  	if (debug) {
+  		if ($ldapadd) {
+  			echo "<div class=\"alert alert-success\" role=\"alert\">";
+  			echo "<kbd>ldap_add</kbd> for user <code>" . $userDN . "</code> with values <code>" . implode(", ",array_keys($actionsArray)) . "</code>";
+  			echo "</div>";
+  		} else {
+  			echo "<div class=\"alert alert-danger\" role=\"alert\">";
+  			echo "<kbd>ldap_add</kbd> for user <code>" . $userDN . "</code> with values <code>" . implode(", ",array_keys($actionsArray)) . "</code>";
+  			echo "</div>";
+  		}
+  	}
+  	return $ldapadd;
+  }
+
   public function actionsButton($samaccountname = null) {
     $output  = "<div class=\"dropdown\">";
     $output .= "<button class=\"btn btn-sm btn-secondary dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">LDAP Actions</button>";
@@ -232,6 +275,7 @@ class LDAP {
     if (in_array($_SESSION['username'], admin_usernames)){
       $output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $samaccountname . "\" href=\"#\">Enable Account</a>";
       $output .= "<a class=\"dropdown-item ldap_disable_user\" id=\"" . $samaccountname . "\" href=\"#\">Disable Account</a>";
+      $output .= "<a class=\"dropdown-item ldap_provision_user\" id=\"" . $samaccountname . "\" href=\"#\">Provison Account</a>";
     }
 
     $output .= "</div>";
