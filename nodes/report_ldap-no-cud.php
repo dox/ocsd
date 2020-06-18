@@ -29,7 +29,7 @@ foreach ($allLDAPUsers AS $ldapUser) {
       $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser['samaccountname'][0] . "\">" . $ldapUser['samaccountname'][0] . "</a>" . "</td>";
       $output .= "<td>" . $ldapClass->useraccountcontrolbadge($ldapUser['useraccountcontrol'][0]) . "</td>";
       $output .= "<td>" . $ldapClass->pwdlastsetbadge($ldapUser['pwdlastset'][0]) . "</td>";
-      $output .= "<td>" . $ldapUser['mail'][0] . "</td>";
+      $output .= "<td>" . makeEmail($ldapUser['mail'][0]) . "</td>";
       $output .= "<td>" . $ldapClass->actionsButton($ldapUser['samaccountname'][0]) . "</td>";
       $output .= "</tr>";
 

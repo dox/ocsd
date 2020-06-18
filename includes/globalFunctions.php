@@ -5,6 +5,13 @@ function printArray($array) {
 	echo ("</pre>");
 }
 
+function win_time_to_unix_time($win_time) {
+	//round the win timestamp down to seconds and remove the seconds between 1601-01-01 and 1970-01-01
+	$unix_time = round($win_time / 10000000) - 11644477200;
+
+	return $unix_time;
+}
+
 function convertToDateString($dateString, $time = false) {
 	if ($time == "true") {
 		$dateFormat = "d F Y H:i:s";

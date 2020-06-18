@@ -25,6 +25,7 @@ if (isset($_SESSION['username']) && !isset($_GET['logout'])) {
 						<a class="nav-link" href="index.php?n=report_ldap-all">- LDAP all</a>
 						<a class="nav-link" href="index.php?n=report_ldap-no-cud">- LDAP no CUD</a>
 						<a class="nav-link" href="index.php?n=report_cud-no-ldap">- CUD no LDAP</a>
+						<a class="nav-link" href="index.php?n=report_ldap-stale">- LDAP Stale</a>
 				</div>
 			</li>
 			<li class="nav-item">

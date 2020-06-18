@@ -20,11 +20,13 @@ if ($ldapClass) {
 	$userdata["displayname"] = $person->firstname();
 	$userdata["sn"] = $person->lastname();
 	$userdata["objectclass"] = "User";
+	//$userdata["useraccountcontrol"] = "512";  // stops script from running?!
+	//$userdata["homeDrive"] = 'S:';
+	//$userdata["homeDirectory"] = '\\\\helium\students$\Other\%username%';
 
 	if (isset($person->oxford_email)) {
 		$userdata["mail"] = $person->oxford_email;
 	}
-	//$userdata["useraccountcontrol"] = "512";
 /*
 	$adduserAD["instancetype"][0] =
 	$adduserAD["name"][0] =
@@ -33,7 +35,6 @@ if ($ldapClass) {
 	$adduserAD["title"][0] =
 	$adduserAD["description"][0] =
 	$adduserAD["initials"][0] =
-	$adduserAD["profilepath"][0] =
 */
 
 	// add data to directoryCN=Aisi Li,OU=Other,OU=SEH Students,DC=SEH,DC=ox,DC=ac,DC=uk

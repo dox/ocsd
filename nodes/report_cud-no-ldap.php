@@ -34,7 +34,7 @@ foreach ($personsAll AS $person) {
     $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $admin_entries[0]['samaccountname'][0] . "\">" . $admin_entries[0]['samaccountname'][0] . "</a> " . "</td>";
     $output .= "<td>" . $ldapClass->useraccountcontrolbadge($admin_entries[0]['useraccountcontrol'][0]) . "</td>";
     $output .= "<td>" . $ldapPWDLastSet . "</td>";
-    $output .= "<td>" . $person['oxford_email'] . "</td>";
+    $output .= "<td>" . makeEmail($person['oxford_email']) . "</td>";
     $output .= "<td>" . $ldapClass->actionsButton($person['sso_username']) . "</td>";
     $output .= "</tr>";
 

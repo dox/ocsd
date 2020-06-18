@@ -17,7 +17,7 @@ if ($ldapClass) {
     echo "<p>Description: " . $admin_entries[0]['description'][0] . "</p>";
     echo "<p>CN: " . $admin_entries[0]['cn'][0] . " <i>(" . $admin_entries[0]['givenname'][0] . " " . $admin_entries[0]['sn'][0] . ")</i></p>";
     echo "<p>pwdlastset: " . $ldapClass->pwdlastsetbadge($admin_entries[0]['pwdlastset'][0]) . "</p>";
-    echo "<p>mail: <a href=\"mailto:" . $admin_entries[0]['mail'][0] . "\">" . $admin_entries[0]['mail'][0] . "</a></p>";
+    echo "<p>mail: " . makeEmail($admin_entries[0]['mail'][0]. "</p>";
 
     echo "<h2>Member Of:</h2>";
     echo "<ul>";
