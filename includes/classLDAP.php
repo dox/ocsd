@@ -217,7 +217,7 @@ class LDAP {
   		$flagName = "Password OK aged " . $pwdlastsetAgeInDays . " days";
   	} elseif ($pwdlastsetAgeInDays > pwd_warn_age && $pwdlastsetAgeInDays < pwd_max_age) {
   		$badgeClass = "badge-warning";
-  		$flagName = "Password expiring in " . $pwdlastsetAgeInDays . " days";
+  		$flagName = "Password expiring in " . (pwd_max_age - $pwdlastsetAgeInDays) . " days";
   	} elseif ($pwdlastsetAgeInDays > pwd_max_age) {
   		$badgeClass = "badge-danger";
   		$flagName = "Password EXPIRED aged " . $pwdlastsetAgeInDays . " days";
