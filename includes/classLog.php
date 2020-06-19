@@ -33,7 +33,7 @@ class Log extends Logs {
 			$output .= "<td>" . $logDate . " </td>";
 			$output .= "<td>" . $this->description . " <span class=\"badge badge-info float-right\">" . $this->type . "</span></td>";
 			$output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $this->cudid . "\">" . $this->cudid . "</a></td>";
-			$output .= "<td>" . $this->username . "</td>";
+			$output .= "<td>" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $this->username . "\">" . $this->username . "</a></td>";
 			$output .= "<td>" . $this->ip . "</td>";
 			$output .= "</tr>";
 		} else {
