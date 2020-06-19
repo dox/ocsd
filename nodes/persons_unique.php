@@ -48,8 +48,8 @@ if (isset($person->cudid)) {
 		<a class="nav-item nav-link" id="nav-course-tab" data-toggle="tab" href="#nav-course" role="tab" aria-controls="nav-course" aria-selected="false">Course</a>
 		<a class="nav-item nav-link" id="nav-supervisors-tab" data-toggle="tab" href="#nav-supervisors" role="tab" aria-controls="nav-supervisors" aria-selected="false">Supervisors</a>
 		<a class="nav-item nav-link" id="nav-signpass-tab" data-toggle="tab" href="#nav-signpass" role="tab" aria-controls="nav-contact" aria-selected="false">Signpass (Beta)</a>
-		<a class="nav-item nav-link" id="nav-datadump-tab" data-toggle="tab" href="#nav-datadump" role="tab" aria-controls="nav-contact" aria-selected="false">Data Dump</a>
 		<?php if (LDAP_ENABLE == true) { ?><a class="nav-item nav-link" id="nav-ldap-tab" data-toggle="tab" href="#nav-ldap" role="tab" aria-controls="nav-contact" aria-selected="false">LDAP</a><?php } ?>
+		<a class="nav-item nav-link" id="nav-logs-tab" data-toggle="tab" href="#nav-logs" role="tab" aria-controls="nav-logs" aria-selected="false">Logs</a>
 	</div>
 </nav>
 <br />
@@ -145,13 +145,6 @@ if (isset($person->cudid)) {
 		}
 		?>
 	</div>
-	<div class="tab-pane fade" id="nav-datadump" role="tabpanel" aria-labelledby="nav-datadump-tab">
-		<h2>Student Table:</h2>
-		<pre><?php print_r($student); ?></pre>
-
-		<h2>Person Table:</h2>
-		<pre><?php print_r($person); ?></pre>
-	</div>
 	<div class="tab-pane fade" id="nav-supervisors" role="tabpanel" aria-labelledby="nav-supervisors-tab">
 		<pre><?php print_r($supervisors); ?></pre>
 	</div>
@@ -175,6 +168,32 @@ if (isset($person->cudid)) {
 	</div>
 	<div class="tab-pane fade" id="nav-ldap" role="tabpanel" aria-labelledby="nav-ldap-tab">
 		<?php include_once("persons_unique-ldap.php"); ?>
+	</div>
+	<div class="tab-pane fade" id="nav-logs" role="tabpanel" aria-labelledby="nav-logs-tab">
+		<?php
+		$logs = new Logs();
+		$logsUser = $logs->all_by_user($person->cudid, $admin_entries[0]['samaccountname'][0]);
+		?>
+
+		<table class="table table-sm table-striped">
+			<thead>
+				<tr>
+					<th scope="col" style="width: 180px">Date</th>
+					<th scope="col">Description</th>
+					<th scope="col" style="width: 330px">CUDID</th>
+					<th scope="col" style="width: 140px">Username</th>
+					<th scope="col" style="width: 140px">ip</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				foreach ($logsUser AS $log) {
+					$log = new Log($log['uid']);
+					echo $log->tableRow();
+				}
+				?>
+			</tbody>
+		</table>
 	</div>
 </div>
 </div>
