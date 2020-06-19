@@ -38,12 +38,18 @@ class Logs {
 		return $persons;
 	}
 
+	public function insert($type, $result, $cudid, $description, $username = null) {
+		global $db;
+
+		if ($username == null) {
+			$username = $_SESSION["username"];
+		}
 		$logSQLInsert = Array (
 			"type" => $type,
 			"result" => $result,
 			"cudid" => $cudid,
 			"description" => $description,
-			"username" => $_SESSION["username"],
+			"username" => $username,
 			"ip" => $_SERVER['REMOTE_ADDR']
 		);
 		$db->insert ('_logs', $logSQLInsert);

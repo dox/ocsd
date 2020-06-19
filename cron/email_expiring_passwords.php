@@ -26,13 +26,13 @@ foreach ($allLDAPUsers AS $ldapUser) {
 
       if ($password_expiry_in_days == 30) {
         sendMail("Subject", array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
-        $logInsert = (new Logs)->insert("email","success",null,"Sending password expiry email (" . $password_expiry_in_days . " days) to <code>" . $ldapUser['mail'][0] . "</code>");
+        $logInsert = (new Logs)->insert("email","success",null,"Sending password expiry email (" . $password_expiry_in_days . " days) to <code>" . $ldapUser['mail'][0] . "</code>", $ldapUser['samaccountname'][0]);
       } elseif ($password_expiry_in_days == 7) {
         sendMail("Subject", array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
-        $logInsert = (new Logs)->insert("email","success",null,"Sending password expiry email (" . $password_expiry_in_days . " days) to <code>" . $ldapUser['mail'][0] . "</code>");
+        $logInsert = (new Logs)->insert("email","success",null,"Sending password expiry email (" . $password_expiry_in_days . " days) to <code>" . $ldapUser['mail'][0] . "</code>", $ldapUser['samaccountname'][0]);
       } elseif ($password_expiry_in_days == 2) {
         sendMail("Subject", array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
-        $logInsert = (new Logs)->insert("email","success",null,"Sending password expiry email (" . $password_expiry_in_days . " day) to <code>" . $ldapUser['mail'][0] . "</code>");
+        $logInsert = (new Logs)->insert("email","success",null,"Sending password expiry email (" . $password_expiry_in_days . " day) to <code>" . $ldapUser['mail'][0] . "</code>", $ldapUser['samaccountname'][0]);
       }
   	} elseif ($pwdlastsetInDays > pwd_max_age) {
   		//password expired
