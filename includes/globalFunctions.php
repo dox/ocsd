@@ -96,10 +96,13 @@ function sendMail($subject = "No Subject Specified", $recipients = NULL, $body =
 	$mail->Body    = $body;
 	//$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
-	if(!$mail->Send()) {
-	   echo 'Message could not be sent.';
-	   echo 'Mailer Error: ' . $mail->ErrorInfo;
-	   exit;
+	if($mail->Send()) {
+		$logInsert = (new Logs)->insert("email","success",null,"Email message sent to " . implode(", ",$recipients) . " <code>Subject: " . $subject . "</code>");
+	} else {
+		$logInsert = (new Logs)->insert("email","error",null,"Email message could not be sent to " . implode(", ",$recipients) . " <code>" . $mail->ErrorInfo . "</code>");
+		echo 'Message could not be sent.';
+		echo 'Mailer Error: ' . $mail->ErrorInfo;
+		exit;
 	}
 
 	//echo 'Message has been sent';
