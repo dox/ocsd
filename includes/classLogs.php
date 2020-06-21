@@ -65,12 +65,13 @@ class Logs {
 		if (empty($lastPurge)) {
 			$db->where("UNIX_TIMESTAMP(date_created) < " . strtotime('-' . logs_retention . ' days'));
 			$logsDeletedCount = count($db->get(self::$table_name));
-			$db->where("UNIX_TIMESTAMP(date_created) < " . strtotime('-' . logs_retention . ' days'));
-			$db->delete(self::$table_name);
 
-			$logInsert = (new Logs)->insert("purge","success",null,$logsDeletedCount . " logs purged");
-		} else {
-			// logs already purged today
+			if ($logsDeletedCount > 0) {
+				$db->where("UNIX_TIMESTAMP(date_created) < " . strtotime('-' . logs_retention . ' days'));
+				$db->delete(self::$table_name);
+
+				$logInsert = (new Logs)->insert("purge","success",null,$logsDeletedCount . " logs purged");
+			}
 		}
 	}
 } //end of class Person
