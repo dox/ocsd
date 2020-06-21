@@ -10,6 +10,7 @@ foreach ($files AS $file) {
   $extension = end(explode('.', $file));
 
   if ($extension == "php") {
+    echo "<p><strong>Executing " . $file . "</strong></p>";
     include_once($dir . "/" . $file);
   }
 }
