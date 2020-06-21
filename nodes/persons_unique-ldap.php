@@ -13,7 +13,8 @@ if ($ldapClass) {
 	if ($admin_entries['count'] == 1) {
 		echo "<div class=\"alert alert-dark\" role=\"alert\">" . $admin_entries[0]['dn'] . "</div>";
     echo "<h1 class=\"float-right\">" . $ldapClass->useraccountcontrolbadge($admin_entries[0]['useraccountcontrol'][0]) . "</h1>";
-    echo "<p>Username: <kbd>" . $admin_entries[0]['samaccountname'][0] . "</kbd></p>";
+		echo "<p>Username: <kbd>" . $admin_entries[0]['samaccountname'][0] . "</kbd></p>";
+		echo "<p>Given Name: <kbd>" . $admin_entries[0]['givenname'][0] . "</kbd></p>";
     echo "<p>Description: " . $admin_entries[0]['description'][0] . "</p>";
     echo "<p>CN: " . $admin_entries[0]['cn'][0] . " <i>(" . $admin_entries[0]['givenname'][0] . " " . $admin_entries[0]['sn'][0] . ")</i></p>";
     echo "<p>pwdlastset: " . $ldapClass->pwdlastsetbadge($admin_entries[0]['pwdlastset'][0]) . "</p>";

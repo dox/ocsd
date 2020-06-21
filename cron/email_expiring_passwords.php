@@ -21,7 +21,7 @@ foreach ($allLDAPUsers AS $ldapUser) {
       $emailMessageBody = file_get_contents("cron/email_expiring_password.template");
       $emailMessageBody = str_replace("{{firstname}}", $ldapUser['givenname'][0], $emailMessageBody);
       $emailMessageBody = str_replace("{{username}}", strtolower($ldapUser['samaccountname'][0]), $emailMessageBody);
-      $emailMessageBody = str_replace("{{password_expiry_in_days}}", $password_expiry_in_days, $emailMessageBody);
+      $emailMessageBody = str_replace("{{password_expiry_duration}}", autoPluralise($password_expiry_in_days . " day", $password_expiry_in_days . " days", $password_expiry_in_days), $emailMessageBody);
 
       $sendMail = false;
       $sendMailSubject = "Your SEH IT Password is due to expire in " . $password_expiry_in_days . autoPluralise(" day", " days", $password_expiry_in_days);
