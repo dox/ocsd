@@ -8,20 +8,29 @@ if ($ldapClass) {
 $dateNow = date('Y-m-d');
 
 foreach ($allLDAPUsers AS $ldapUser) {
-  # update pager (miFare)
+  $userdata = null;
+  $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0]);
 
-  # update email address
+  $person = new Person($ldapPerson->samaccountname);
+  if (!isset($person->cudid)) {
+    $person = new Person($ldapPerson->mail);
+  }
 
-  # update names?
+  if (isset($person->cudid)) {
+    if ($ldapPerson->pager != $person->MiFareID) {
+      $userdata["pager"] = $person->MiFareID;
+    }
+    if ($ldapPerson->mail != $person->oxford_email) {
+      $userdata["mail"] = $person->oxford_email;
+    }
+    # update names?
 
-  # disable accounts that don't exist in CUD
-  //$output  = "\$found= Get-ADUser -Filter \"SamAccountName -eq '" . $person['sso_username'] . "' -or mail -eq '" . $person['oxford_email'] . "'\" <br />";
-  //$output .= "if(\$found){<br />";
-  //$output .= "\$found|Set-ADUser -Replace @{pager = '" . $person['MiFareID'] . "'; mail = '" . $person['oxford_email'] . "'} -Verbose <br />";
-  //$output .= "}<br/><br/>";
-
-  //$userdata["useraccountcontrol"] = "514";
-  //$userdata["description"] = $ldapUser['description'][0] . " (NO CUD RECORD " . $dateNow . ")";
-  //$ldapClass->ldap_mod_replace($ldapUser['dn'], $userdata);
+    if (count($userdata) > 0){
+      echo $ldapPerson->samaccountname;
+      printArray($userdata);
+      $ldapClass->ldap_mod_replace($ldapPerson->dn, $userdata);
+      echo "<hr />";
+    }
+  }
 }
 ?>
