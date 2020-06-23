@@ -18,11 +18,11 @@ if ($ldapClass) {
     $userdata["useraccountcontrol"] = "512";
 
     $ldapClass->ldap_mod_replace($admin_entries[0]['dn'], $userdata);
-    $logInsert = (new Logs)->insert("ldap","warning",null,"Disable user account <code>" . $ldapUsername . "</code>");
+    $logInsert = (new Logs)->insert("ldap","warning",null,"Enabled user account <code>" . $ldapUsername . "</code>");
   } else {
-    $logInsert = (new Logs)->insert("ldap","error",null,"Failed to disable user account <code>" . $ldapUsername . "</code>.  " . $admin_entries['count'] . " entries found");
+    $logInsert = (new Logs)->insert("ldap","error",null,"Failed to enable user account <code>" . $ldapUsername . "</code>.  " . $admin_entries['count'] . " entries found");
   }
 } else {
-  $logInsert = (new Logs)->insert("ldap","error",null,"Failed to disable user account <code>" . $ldapUsername . "</code>.  LDAP Connection failed");
+  $logInsert = (new Logs)->insert("ldap","error",null,"Failed to enable user account <code>" . $ldapUsername . "</code>.  LDAP Connection failed");
 }
 ?>
