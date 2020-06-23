@@ -62,4 +62,11 @@
 	<input type="password" class="form-control" placeholder="Password" name="password" id="password" required>
 	<button type="submit" name="submit" value="submit" class="btn btn-block btn-large btn-primary" >Sign in</button>
 	<input type='hidden' name='oldform' value='1'>
+
+	<?php
+	if (pwd_reset_url) {
+		echo "<hr />";
+		echo "<p>Forgot your password? " . "<a href=\"" . pwd_reset_url . "\">" . "Click here" . "</a></p>";
+	}
+	?>
 </form>
