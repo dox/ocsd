@@ -48,11 +48,11 @@ if (isset($_POST["oldform"])) { //prevent null bind
 			header($redir);
 			exit;
 		} else {
-			$logInsert = (new Logs)->insert("logon","error",null,"<code>" . $username . "</code>LDAP logon failed");
+			$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.</div>";
+			$logInsert = (new Logs)->insert("logon","error",null,"LDAP logon failed for <code>" . $username . "</code>");
 		}
 	}
 
-	$message = "<div class=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>Warning!</strong> Login attempt failed.</div>";
 }
 
 ?>
