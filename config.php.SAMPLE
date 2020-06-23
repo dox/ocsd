@@ -1,0 +1,35 @@
+<?php
+define("db_host", "localhost");
+define("db_name", "database_name");
+define("db_username", "database_username");
+define("db_password", "database_password");
+
+define("cron_import_file", false); // URL to SQL import
+define("pwd_reset_url", false); // URL to password reset
+
+define("debug", false);
+define("logs_retention", 60); //days
+
+define(admin_usernames, array("LDAP_USERNAME1", "LDAP_USERNAME2"));
+
+define("smtp_server", "smtp.example.com");
+define("smtp_sender_address", "noreply@exmaple.com");
+define("smtp_sender_name", "OCSD");
+
+define("LDAP_ENABLE", true);
+define("LDAP_SERVER", "ldaps://server:port");
+define("LDAP_STARTTLS", true);
+define("LDAP_BIND_DN", "CN=Some User,DC=exmaple,DC=com");
+define("LDAP_BASE_DN", "DC=example,DC=come");
+define("LDAP_BIND_PASSWORD", "ldap_bind_passsword");
+
+# LDAP OPTIONS
+define("LDAP_FILTER", "(&(objectClass=person)(objectCategory=person))");
+define("LDAP_VALUES",  array("ou", "sn", "cn", "dn", "description", "samaccountname", "givenname", "mail", "lastlogon", "pwdlastset", "useraccountcontrol", "memberof"));
+define("LDAP_ADMIN_BASE_DN", "OU=Admin Users,DC=example,DC=com");
+define("LDAP_ACCOUNT_SUFFIX", "@example.com");
+# EMAIL TRIGGER OPTIONS
+define ("pwd_warn_age", "365"); // in days
+define ("pwd_disable_age", "30"); // in days
+define ("pwd_max_age", pwd_warn_age + pwd_disable_age);
+?>
