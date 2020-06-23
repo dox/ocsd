@@ -1,6 +1,18 @@
 <?php
 class LDAP {
   public $ldapconn;
+  public $ou;
+  public $sn;
+  public $cn;
+  public $dn;
+  public $description;
+  public $samaccountname;
+  public $givenname;
+  public $mail;
+  public $lastlogon;
+  public $pwdlastset;
+  public $useraccountcontrol;
+  public $memberof;
 
 	function __construct() {
     $this->ldapconn = ldap_connect(LDAP_SERVER);
@@ -185,53 +197,6 @@ class LDAP {
 
     return $userAccountControlFlags;
   }
-  public function useraccountcontrolbadge ($flagValue = null) {
-  	if (in_array($flagValue, array("512", "544"))) {
-  		$badgeClass = "badge-success";
-  	} elseif (in_array($flagValue, array("2", "16", "514", "546", "8388608"))) {
-  		$badgeClass = "badge-danger";
-  	} else {
-  		$badgeClass = "badge-secondary";
-  	}
-
-    $output  = "<a href=\"index.php?n=card_types\" class=\"badge " . $badgeClass . "\">" . $flagValue . "</a>";
-
-  	return $output;
-  }
-
-  public function pwdlastsetage ($pwdlastset = null) {
-  	$winSecs       = (int)($pwdlastset / 10000000); // divide by 10 000 000 to get seconds
-  	$unixTimestamp = ($winSecs - 11644473600); // 1.1.1600 -> 1.1.1970 difference in seconds
-  	$pwdlastsetDate = date('U', $unixTimestamp);
-  	$dateToday = date('U');
-  	$pwdlastsetAgeInDays = round(($dateToday - $pwdlastsetDate)/60/60/24,0);
-
-  	return $pwdlastsetAgeInDays;
-  }
-
-  public function pwdlastsetbadge ($pwdlastset = null) {
-  	$pwdlastsetAgeInDays = $this->pwdlastsetage($pwdlastset);
-
-  	if ($pwdlastsetAgeInDays <= pwd_warn_age) {
-  		$badgeClass = "badge-success";
-  		$flagName = "Password OK aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
-  	} elseif ($pwdlastsetAgeInDays > pwd_warn_age && $pwdlastsetAgeInDays < pwd_max_age) {
-  		$badgeClass = "badge-warning";
-  		$flagName = "Password expiring in " . (pwd_max_age - $pwdlastsetAgeInDays) . autoPluralise(" day", " days", (pwd_max_age - $pwdlastsetAgeInDays));
-  	} elseif ($pwdlastsetAgeInDays > pwd_max_age) {
-  		$badgeClass = "badge-danger";
-  		$flagName = "Password EXPIRED aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
-  	} else {
-  		$badgeClass = "badge-secondary";
-  		$flagName = "Password UNKNOWN aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
-  	}
-
-
-
-  	$output = "<span class=\"badge " . $badgeClass . "\">" . $flagName . "</span>";
-
-  	return $output;
-  }
 
   public function ldap_mod_replace($userDN, $actionsArray) {
   	$ldapmodreplace = ldap_mod_replace($this->ldapconn, $userDN, $actionsArray) or die(ldap_error($ldapconn));
@@ -265,23 +230,6 @@ class LDAP {
   		}
   	}
   	return $ldapadd;
-  }
-
-  public function actionsButton($samaccountname = null) {
-    $output  = "<div class=\"dropdown\">";
-    $output .= "<button class=\"btn btn-sm btn-secondary dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">LDAP Actions</button>";
-    $output .= "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">";
-
-    if (in_array($_SESSION['username'], admin_usernames)){
-      $output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $samaccountname . "\" href=\"#\">Enable Account</a>";
-      $output .= "<a class=\"dropdown-item ldap_disable_user\" id=\"" . $samaccountname . "\" href=\"#\">Disable Account</a>";
-      $output .= "<a class=\"dropdown-item ldap_provision_user\" id=\"" . $samaccountname . "\" href=\"#\">Provison Account</a>";
-    }
-
-    $output .= "</div>";
-    $output .= "</div>";
-
-    return $output;
   }
 } //end of class LDAP
 ?>

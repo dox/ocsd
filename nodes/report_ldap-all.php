@@ -15,23 +15,24 @@ foreach ($allLDAPUsers AS $ldapUser) {
   if (isset($ldapUser['samaccountname'][0]) && isset($ldapUser['mail'][0])) {
     //$personSearch = $person->search($ldapUser['mail'][0]);
     $personSearch = new Person($ldapUser['samaccountname'][0]);
+    $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0]);
 
-    if (strtolower($personSearch->sso_username) == strtolower($ldapUser['samaccountname'][0])) {
+    if (strtolower($personSearch->sso_username) == strtolower($ldapPerson->samaccountname)) {
       $tdClass = "";
     } else {
       $tdClass = "table-warning";
     }
     $output  = "<tr>";
-    $output .= "<td>" . $ldapUser['cn'][0] . "</td>";
+    $output .= "<td>" . $ldapPerson->cn . "</td>";
     $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=persons_unique&cudid=" . $personSearch->cudid . "\">" . $personSearch->sso_username . "</a>" . "</td>";
-    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser['samaccountname'][0] . "\">" . $ldapUser['samaccountname'][0] . "</a>" . "</td>";
-    $output .= "<td>" . $ldapClass->useraccountcontrolbadge($ldapUser['useraccountcontrol'][0]) . "</td>";
-    $output .= "<td>" . $ldapClass->pwdlastsetbadge($ldapUser['pwdlastset'][0]) . "</td>";
-    $output .= "<td>" . makeEmail($ldapUser['mail'][0]) . "</td>";
-    $output .= "<td>" . $ldapClass->actionsButton($ldapUser['samaccountname'][0]) . "</td>";
+    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapPerson->samaccountname . "\">" . $ldapPerson->samaccountname . "</a>" . "</td>";
+    $output .= "<td>" . $ldapPerson->useraccountcontrolbadge() . "</td>";
+    $output .= "<td>" . $ldapPerson->pwdlastsetbadge() . "</td>";
+    $output .= "<td>" . makeEmail($ldapPerson->mail) . "</td>";
+    $output .= "<td>" . $ldapPerson->actionsButton() . "</td>";
     $output .= "</tr>";
 
-    if ($ldapUser['useraccountcontrol'][0] == "512" || $ldapUser['useraccountcontrol'][0] == "544") {
+    if ($ldapPerson->useraccountcontrol == "512" || $ldapPerson->useraccountcontrol == "544") {
       $tableOutput_enabled[] = $output;
     } else {
       $tableOutput_disabled[] = $output;

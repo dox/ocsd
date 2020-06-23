@@ -22,6 +22,7 @@ require_once($root . '/includes/classPersons.php');
 require_once($root . '/includes/classPerson.php');
 require_once($root . '/includes/adLDAP/adLDAP.php');
 require_once($root . '/includes/classLDAP.php');
+require_once($root . '/includes/classLDAPPerson.php');
 
 try {
 	$adldap
@@ -33,4 +34,5 @@ catch (adLDAPException $e) {
 }
 
 $db = new MysqliDb (db_host, db_username, db_password, db_name);
+$ldap_connection = new LDAP();
 ?>

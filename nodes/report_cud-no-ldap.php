@@ -5,42 +5,33 @@ $ldapClass = new LDAP();
 $persons = new Persons();
 $personsAll = $persons->all();
 
-if ($ldapClass) {
-  $admin_bind = $ldapClass->ldap_bind();
-  $username_filter = "(sAMAccountName=*)";
-  $all_search_results = $ldapClass->ldap_search($ou, $username_filter);
-  $all_entries = $ldapClass->ldap_get_entries($all_search_results);
-  $allLDAPUsers = $ldapClass->all_users(LDAP_BASE_DN, true);
-}
-
 foreach ($personsAll AS $person) {
-  	$filter = "(|(sAMAccountName=" . $person['sso_username'] . ")(mail=" . $person['oxford_email'] . "))";
-  	$admin_search_results = $ldapClass->ldap_search($ou, $filter);
-  	$admin_entries = $ldapClass->ldap_get_entries($admin_search_results);
+  $ldapPerson = new LDAPPerson($person['sso_username'], $person['oxford_email']);
 
-  	if ($admin_entries['count'] == 1) {
-      if (strtolower($person['sso_username']) == strtolower($admin_entries[0]['samaccountname'][0])) {
-        $tdClass = "";
-      } else {
-        $tdClass = "table-warning";
-      }
+  if (isset($ldapPerson->samaccountname)) {
+    if (strtolower($person['sso_username']) == strtolower($ldapPerson->samaccountname)) {
+      $tdClass = "";
     } else {
+      $tdClass = "table-warning";
     }
+  } else {
+    $tdClass = "";
+  }
 
-    $output  = "<tr>";
-    $output .= "<td>" . $person['FullName'] . "</td>";
-    $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $person['cudid'] . "\">" . $person['sso_username'] . "</a>" . "</td>";
+  $output  =  "<tr>";
+  $output .= "<td>" . $person['FullName'] . "</td>";
+  $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $person['cudid'] . "\">" . $person['sso_username'] . "</a>" . "</td>";
 
-    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $admin_entries[0]['samaccountname'][0] . "\">" . $admin_entries[0]['samaccountname'][0] . "</a> " . "</td>";
-    $output .= "<td>" . $ldapClass->useraccountcontrolbadge($admin_entries[0]['useraccountcontrol'][0]) . "</td>";
-    $output .= "<td>" . $ldapPWDLastSet . "</td>";
-    $output .= "<td>" . makeEmail($person['oxford_email']) . "</td>";
-    $output .= "<td>" . $ldapClass->actionsButton($person['sso_username']) . "</td>";
-    $output .= "</tr>";
+  $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapPerson->samaccountname . "\">" . $ldapPerson->samaccountname . "</a> " . "</td>";
+  $output .= "<td>" . $ldapPerson->useraccountcontrolbadge($ldapPerson->useraccountcontrol) . "</td>";
+  $output .= "<td>" . $ldapPWDLastSet . "</td>";
+  $output .= "<td>" . makeEmail($person['oxford_email']) . "</td>";
+  $output .= "<td>" . $ldapPerson->actionsButton($person['sso_username']) . "</td>";
+  $output .= "</tr>";
 
-    if ($admin_entries['count'] != 1) {
-      $tableOutput[] = $output;
-    }
+  if (!isset($ldapPerson->samaccountname)) {
+    $tableOutput[] = $output;
+  }
 }
 ?>
 

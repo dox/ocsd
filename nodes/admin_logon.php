@@ -42,9 +42,9 @@
 </style>
 
 <?php
-	$message = "";
 	if (isset($_GET['logout'])) {
 	if ($_GET['logout'] == "true" && isset($_SESSION["username"])) { //destroy the session
+		$message = "<div class=\"alert alert-success\" role=\"alert\"><strong>Success!</strong> You have been logged out.</div>";
 		$logInsert = (new Logs)->insert("logoff","success",null,"Logoff success");
 
 		$_SESSION = array();
@@ -54,9 +54,11 @@
 }
 ?>
 
-<?php echo $message; ?>
+
 <form class="form-signin text-center" id="loginForm" method="post" role="form">
 	<h2 class="form-signin-heading">Logon Required</h2>
+
+	<?php echo $message; ?>
 
 	<input type="text" class="form-control" placeholder="Username" id="username" name="username" value="<?php if (isset($_POST['username'])) { echo $username; } ?>" required autofocus>
 	<input type="password" class="form-control" placeholder="Password" name="password" id="password" required>

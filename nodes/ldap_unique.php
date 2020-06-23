@@ -1,47 +1,36 @@
 <?php
-$ou = "DC=SEH,DC=ox,DC=ac,DC=uk";
-$ldapClass = new LDAP();
+$ldapPerson = new LDAPPerson($_GET['samaccountname']);
 
-if ($ldapClass) {
-	$filter = "(sAMAccountName=" . $_GET['samaccountname'] . ")";
+if (isset($ldapPerson->samaccountname)) {
+    echo "<div class=\"alert alert-dark\" role=\"alert\">" . $ldapPerson->dn . "</div>";
+    echo "<h1 class=\"float-right\">" . $ldapPerson->useraccountcontrolbadge() . "</h1>";
+		echo "<p>Username: <kbd>" . $ldapPerson->samaccountname . "</kbd></p>";
+		echo "<p>Given Name: <kbd>" . $ldapPerson->givenname . "</kbd></p>";
+    echo "<p>Description: " . $ldapPerson->description . "</p>";
+    echo "<p>CN: " . $ldapPerson->cn . " <i>(" . $ldapPerson->givenname . " " . $ldapPerson0>sn . ")</i></p>";
+    echo "<p>pwdlastset: " . $ldapPerson->pwdlastsetbadge() . "</p>";
+    echo "<p>mail: " . makeEmail($ldapPerson->mail) . "</p>";
 
-	// BIND
-	$admin_bind = $ldapClass->ldap_bind();
-	$admin_search_results = $ldapClass->ldap_search($ou, $filter);
-	$admin_entries = $ldapClass->ldap_get_entries($admin_search_results);
-
-	if ($admin_entries['count'] == 1) {
-    echo "<div class=\"alert alert-dark\" role=\"alert\">" . $admin_entries[0]['dn'] . "</div>";
-    echo "<h1 class=\"float-right\">" . $ldapClass->useraccountcontrolbadge($admin_entries[0]['useraccountcontrol'][0]) . "</h1>";
-		echo "<p>Username: <kbd>" . $admin_entries[0]['samaccountname'][0] . "</kbd></p>";
-		echo "<p>Given Name: <kbd>" . $admin_entries[0]['givenname'][0] . "</kbd></p>";
-    echo "<p>Description: " . $admin_entries[0]['description'][0] . "</p>";
-    echo "<p>CN: " . $admin_entries[0]['cn'][0] . " <i>(" . $admin_entries[0]['givenname'][0] . " " . $admin_entries[0]['sn'][0] . ")</i></p>";
-    echo "<p>pwdlastset: " . $ldapClass->pwdlastsetbadge($admin_entries[0]['pwdlastset'][0]) . "</p>";
-    echo "<p>mail: " . makeEmail($admin_entries[0]['mail'][0]) . "</p>";
-
-		printArray($admin_entries);
 		// Last logon
-		$getLastLogon = $admin_entries[0]["lastlogon"][0];
+		$getLastLogon = $ldapPerson->lastlogon;
 		$getLastLogon = win_time_to_unix_time($getLastLogon);
 		echo "Lastlogon: " . date("d-m-Y H:i", $getLastLogon) . "<br />";
 
     echo "<h2>Member Of:</h2>";
     echo "<ul>";
-    foreach ($admin_entries[0]['memberof'] AS $memberOf) {
+    foreach ($ldapPerson->memberof AS $memberOf) {
       echo "<li>" . "<div class=\"alert alert-dark\" role=\"alert\">" . $memberOf . "</div>" . "</li>";
     }
     echo "</ul>";
 	} else {
 		if (debug == true) {
 			echo "<div class=\"alert alert-warning\" role=\"alert\">";
-			echo "<kbd>ldap_count_entries</kbd> as user <code>" . $user_dn . "</code> is <code>" . $admin_entries['count'] . "</code>";
+			echo "<kbd>ldap_count_entries</kbd> as user <code>" . $user_dn . "</code> is <code>" . $ldapPerson->count . "</code>";
 			echo "</div>";
 		}
     echo "<div class=\"alert alert-warning\" role=\"alert\"><strong>Warning!</strong> More than 1 user found!</div>";
     echo "<pre>";
-    print_r($admin_entries);
+    print_r($ldapPerson);
     echo "</pre>";
 	}
-}
 ?>
