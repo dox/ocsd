@@ -9,7 +9,7 @@ if (isset($ldapPerson->samaccountname)) {
     echo "<p>Description: " . $ldapPerson->description . "</p>";
     echo "<p>CN: " . $ldapPerson->cn . " <i>(" . $ldapPerson->givenname . " " . $ldapPerson0>sn . ")</i></p>";
     echo "<p>pwdlastset: " . $ldapPerson->pwdlastsetbadge() . "</p>";
-    echo "<p>mail: " . makeEmail($ldapPerson->mail) . "</p>";
+    echo "<p>mail: " . $ldapPerson->emailAddress() . "</p>";
 
 		// Last logon
 		$getLastLogon = $ldapPerson->lastlogon;

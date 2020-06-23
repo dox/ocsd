@@ -5,6 +5,7 @@ class Person extends Persons {
 
 		$result = $db->where("cudid", $cudid);
 		$result = $db->orWhere("sso_username", $cudid);
+		$result = $db->orWhere("oxford_email", $cudid);
 		$result = $db->getOne(self::$table_name);
 
 		foreach ($result AS $key => $value) {

@@ -22,21 +22,25 @@ class LDAPPerson extends LDAP {
         //printArray($value);
         if (!is_numeric($key)) {
           if ($key == "dn") {
-            $this->$key = $ldapUser[$key];
-          } else {
-            if ($ldapUser[$key][count] > 1) {
-                $this->$key = $ldapUser[$key];
-            } else {
-              $this->$key = $ldapUser[$key][0];
-            }
+						$this->$key = $ldapUser[$key];
+					} elseif ($key == "memberof") {
+						foreach ($ldapUser[$key] AS $ldapKey => $memberOfElement) {
+							if (is_numeric($ldapKey)) {
+								$this->$key[] = $memberOfElement;
+							}
+						}
+					} else {
+            $this->$key = $ldapUser[$key][0];
           }
         }
       }
     }
   }
 
-  function test() {
-    return "test123";
+  function emailAddress() {
+    if (isset($this->mail)) {
+      return makeEmail($this->mail);
+    }
   }
 
   public function pwdlastsetage () {

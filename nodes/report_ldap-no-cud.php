@@ -31,7 +31,7 @@ foreach ($allLDAPUsers AS $ldapUser) {
       $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapPerson->samaccountname . "\">" . $ldapPerson->samaccountname . "</a>" . "</td>";
       $output .= "<td>" . $ldapPerson->useraccountcontrolbadge() . "</td>";
       $output .= "<td>" . $ldapPerson->pwdlastsetbadge() . "</td>";
-      $output .= "<td>" . makeEmail($ldapPerson->mail) . "</td>";
+      $output .= "<td>" . $ldapPerson->emailAddress() . "</td>";
       $output .= "<td>" . $ldapPerson->actionsButton() . "</td>";
       $output .= "</tr>";
 

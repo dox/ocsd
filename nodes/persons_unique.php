@@ -16,7 +16,7 @@ $addresses = $db->where ("cudid", $_GET['cudid']);
 $addresses = $db->get("Addresses");
 
 if (isset($person->cudid)) {
-	//$logInsert = (new Logs)->insert("view","success",$person->cudid,$person->FullName . " record viewed");
+	$logInsert = (new Logs)->insert("view","success",$person->cudid,$person->FullName . " record viewed");
 } else {
 	$logInsert = (new Logs)->insert("view","error",null,"<code>" . $_GET['cudid'] . "</code> record viewed but doesn't exist");
 }
@@ -172,7 +172,7 @@ if (isset($person->cudid)) {
 	<div class="tab-pane fade" id="nav-logs" role="tabpanel" aria-labelledby="nav-logs-tab">
 		<?php
 		$logs = new Logs();
-		$logsUser = $logs->all_by_user($person->cudid, $admin_entries[0]['samaccountname'][0]);
+		$logsUser = $logs->all_by_user($person->cudid, $ldapPerson->samaccountname);
 		?>
 
 		<table class="table table-sm table-striped">

@@ -138,7 +138,7 @@ class LDAP {
       if ($includeDisabled == true) {
         $allByOUFilter = "(sAMAccountName=*)";
       } else {
-        $allByOUFilter = "(&(sAMAccountName=*)(useraccountcontrol=512))";
+        $allByOUFilter = "(|(useraccountcontrol=512)(useraccountcontrol=544))";
       }
 
       $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
@@ -200,9 +200,11 @@ class LDAP {
 
   public function ldap_mod_replace($userDN, $actionsArray) {
   	$ldapmodreplace = ldap_mod_replace($this->ldapconn, $userDN, $actionsArray) or die(ldap_error($ldapconn));
+    $logInsert = (new Logs)->insert("ldap","warning",null,"LDAP record updated with " . implode(", ",array_keys($actionsArray)) . " for user " . $userDN);
 
   	if (debug) {
   		if ($ldapmodreplace) {
+
   			echo "<div class=\"alert alert-success\" role=\"alert\">";
   			echo "<kbd>ldap_mod_replace</kbd> for user <code>" . $userDN . "</code> with values <code>" . implode(", ",array_keys($actionsArray)) . "</code>";
   			echo "</div>";
