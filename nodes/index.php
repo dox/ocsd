@@ -11,7 +11,7 @@ $personsCount = $db->count;
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 		</div>
-		
+
 		<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"><span data-feather="calendar"></span>void</button>
 	</div>
 </div>
@@ -24,7 +24,7 @@ $personsCount = $db->count;
 			$statsPersonsTotals = $db->where('name', "person_rows_total");
 			$statsPersonsTotals = $db->orderBy('date_created', "ASC");
 			$statsPersonsTotals = $db->get('_stats', '7');
-			
+
 			foreach ($statsPersonsTotals AS $personTotal) {
 				$personTotalArray[] = $personTotal['value'];
 			}
@@ -37,14 +37,14 @@ $personsCount = $db->count;
 			<a href="#" class="btn btn-primary">Go somewhere</a>
 		</div>
 	</div>
-	
+
 	<div class="card" style="width: 18rem;">
 		<?php
 			$statsStudentTotals = $db->where('name', "student_rows_total");
 			$statsStudentTotals = $db->orderBy('date_created', "ASC");
 			$statsStudentTotals = $db->get('_stats', '7');
-			
-			
+
+
 			foreach ($statsStudentTotals AS $studentTotal) {
 				$studentTotalArray[] = $studentTotal['value'];
 			}
@@ -57,13 +57,13 @@ $personsCount = $db->count;
 			<a href="#" class="btn btn-primary">Go somewhere</a>
 		</div>
 	</div>
-	
+
 	<div class="card" style="width: 18rem;">
 		<?php
 			$logonsAll = $db->where('type', "LOGON");
 			$logonsAll = $db->get('_logs', '7');
 			$logonsAllCount = $db->count;
-			
+
 			$logonsByDay = $db->rawQuery("SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs WHERE type = 'LOGON' GROUP BY DATE(date_created) ORDER BY date_created ASC");
 			foreach ($logonsByDay AS $day) {
 				$logonsCountArray[] = $day['cnt'];
@@ -82,7 +82,7 @@ $personsCount = $db->count;
 			$logViewsAll = $db->where('type', "VIEW");
 			$logViewsAll = $db->get('_logs');
 			$logViewsAllCount = $db->count;
-			
+
 			$logViewsByDay = $db->rawQuery("SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs WHERE type = 'VIEW' GROUP BY DATE(date_created) ORDER BY date_created DESC");
 			foreach ($logViewsByDay AS $day) {
 				$logViewsCountArray[] = $day['cnt'];

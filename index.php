@@ -1,25 +1,6 @@
 <?php include_once("views/html_head.php"); ?>
 
 <?php
-$allowedUsers[] = "BREAKSPEAR";
-$allowedUsers[] = "TREHEARNE";
-$allowedUsers[] = "PARFITT";
-$allowedUsers[] = "ESTALL";
-$allowedUsers[] = "WILLIS";
-$allowedUsers[] = "BROOKS";
-$allowedUsers[] = "BROOKS";
-$allowedUsers[] = "MORRISON";
-$allowedUsers[] = "JAMIESON";
-$allowedUsers[] = "HACK";
-$allowedUsers[] = "ABID";
-$allowedUsers[] = "KNIGHT";
-$allowedUsers[] = "BLOSSOM";
-$allowedUsers[] = "COLES";
-$allowedUsers[] = "PAGANI";
-$allowedUsers[] = "NJOKI";
-$allowedUsers[] = "BRICKELL";
-$allowedUsers[] = "ALDEN";
-
 //you should look into using PECL filter or some form of filtering here for POST variables
 if (isset($_POST["username"])) {
 	$username = strtoupper($_POST["username"]); //remove case sensitivity on the username
@@ -66,7 +47,7 @@ if (isset($_POST["oldform"])) { //prevent null bind
 
 		<?php
 		if (isset($_SESSION['username'])) {
-			if (!in_array(strtoupper($_SESSION["username"]), $allowedUsers) ) {
+			if (!in_array(strtoupper($_SESSION["username"]), allowed_usernames) ) {
 				echo "<br /><div class=\"alert alert-danger\" role=\"alert\">You do not have permission to use this system.</div>";
 				die;
 			}

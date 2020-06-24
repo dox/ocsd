@@ -11,6 +11,7 @@ define("debug", false);
 define("logs_retention", 60); //days
 
 define(admin_usernames, array("LDAP_USERNAME1", "LDAP_USERNAME2"));
+define(allowed_usernames, array_merge(admin_usernames, array("LDAP_USERNAME3", "LDAP_USERNAME4")));
 
 define("smtp_server", "smtp.example.com");
 define("smtp_sender_address", "noreply@exmaple.com");
