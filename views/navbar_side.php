@@ -21,7 +21,6 @@ if (isset($_SESSION['username']) && !isset($_GET['logout'])) {
 					<a href="#" class="nav-link" data-toggle="collapse" data-target="#collapseLDAP" aria-expanded="true" aria-controls="collapseLDAP"><i class="fas fa-code"></i> LDAP</a>
 				</div>
 				<div id="collapseLDAP" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionLDAP">
-						<a class="nav-link" href="report.php?n=ad_mifare">- AD miFare (PaperCut)</a>
 						<a class="nav-link" href="index.php?n=report_ldap-all">- LDAP all</a>
 						<a class="nav-link" href="index.php?n=report_ldap-no-cud">- LDAP no CUD</a>
 						<a class="nav-link" href="index.php?n=report_cud-no-ldap">- CUD no LDAP</a>
