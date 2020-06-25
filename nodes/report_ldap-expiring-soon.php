@@ -1,7 +1,6 @@
 <?php
 $ou = "DC=SEH,DC=ox,DC=ac,DC=uk";
 $ldapClass = new LDAP();
-$person = new Person();
 
 if ($ldapClass) {
   $admin_bind = $ldapClass->ldap_bind();
@@ -14,15 +13,14 @@ if ($ldapClass) {
 foreach ($allLDAPUsers AS $ldapUser) {
   $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0]);
   $pwdlastsetAgeInDays = $ldapPerson->pwdlastsetage();
-  
+
   if ($pwdlastsetAgeInDays > pwd_warn_age) {
-    $personSearch = $person->search($ldapUser['mail'][0]);
-    //$personSearch = new Person($ldapUser['samaccountname'][0]);
+    $personSearch = new Person($ldapPerson->mail);
 
     if (isset($ldapUser['cn'][0])) {
       $output  = "<tr>";
       $output .= "<td>" . $ldapUser['cn'][0] . "</td>";
-      $output .= "<td>" . "<a href=\"index.php?n=person_unique&cudid=" . $personSearch->cudid . "\">" . $personSearch->cudid . "</a>" . "</td>";
+      $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $personSearch->cudid . "\">" . $personSearch->sso_username . "</a>" . "</td>";
       $output .= "<td>" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapPerson->samaccountname . "\">" . $ldapPerson->samaccountname . "</a>" . "</td>";
       $output .= "<td>" . $ldapPerson->useraccountcontrolbadge() . "</td>";
       $output .= "<td>" . $ldapPerson->pwdlastsetbadge() . "</td>";
