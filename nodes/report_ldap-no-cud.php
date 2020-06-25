@@ -35,10 +35,8 @@ foreach ($allLDAPUsers AS $ldapUser) {
       $output .= "<td>" . $ldapPerson->actionsButton() . "</td>";
       $output .= "</tr>";
 
-      if ($ldapUser['useraccountcontrol'][0] == "512") {
+      if (in_array($ldapUser['useraccountcontrol'][0], array("512", "544"))) {
         $tableOutput[] = $output;
-      } else {
-        $disabledLDAP_tableArray[] = $output;
       }
     }
   }

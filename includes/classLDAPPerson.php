@@ -95,11 +95,11 @@ class LDAPPerson extends LDAP {
     $output .= "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">";
 
     if (in_array($_SESSION['username'], admin_usernames)){
-      if (isset($this->samaccountname) && $this->useraccountcontrol != "512") {
+      if (isset($this->samaccountname) && !in_array($this->useraccountcontrol, array("512", "544"))) {
         $output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account</a>";
       }
 
-      if (isset($this->samaccountname) && $this->useraccountcontrol == "512") {
+      if (isset($this->samaccountname) && in_array($this->useraccountcontrol, array("512", "544"))) {
         $output .= "<a class=\"dropdown-item ldap_disable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Disable Account</a>";
       }
 
