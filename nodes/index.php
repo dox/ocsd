@@ -22,39 +22,36 @@ $personsCount = $db->count;
 	<div class="card" style="width: 18rem;">
 		<?php
 			$statsPersonsTotals = $db->where('name', "person_rows_total");
-			$statsPersonsTotals = $db->orderBy('date_created', "ASC");
+			$statsPersonsTotals = $db->orderBy('date_created', "DESC");
 			$statsPersonsTotals = $db->get('_stats', '7');
 
 			foreach ($statsPersonsTotals AS $personTotal) {
-				$personTotalArray[] = $personTotal['value'];
+				$personTotalArray["'" . date('Y-m-d', strtotime($personTotal['date_created'])) . "'"] = $personTotal['value'];
 			}
+
 			$personTotalArray = array_reverse($personTotalArray);
 		?>
-		<img src="../images/blank.svg" class="card-img-top" alt="...">
+		<canvas id="personsChart" width="200" height="100"></canvas>
 		<div class="card-body">
 			<h5 class="card-title"><?php echo $personsCount; ?> Persons</h5>
-			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-			<a href="#" class="btn btn-primary">Go somewhere</a>
 		</div>
 	</div>
 
 	<div class="card" style="width: 18rem;">
 		<?php
 			$statsStudentTotals = $db->where('name', "student_rows_total");
-			$statsStudentTotals = $db->orderBy('date_created', "ASC");
+			$statsStudentTotals = $db->orderBy('date_created', "DESC");
 			$statsStudentTotals = $db->get('_stats', '7');
 
-
 			foreach ($statsStudentTotals AS $studentTotal) {
-				$studentTotalArray[] = $studentTotal['value'];
+				$studentTotalArray["'" . date('Y-m-d', strtotime($studentTotal['date_created'])) . "'"] = $studentTotal['value'];
 			}
+
 			$studentTotalArray = array_reverse($studentTotalArray);
 		?>
-		<img src="../images/blank.svg" class="card-img-top" alt="...">
+		<canvas id="studentsChart" width="200" height="100"></canvas>
 		<div class="card-body">
 			<h5 class="card-title"><?php echo $studentsCount; ?> Students</h5>
-			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-			<a href="#" class="btn btn-primary">Go somewhere</a>
 		</div>
 	</div>
 
@@ -64,17 +61,15 @@ $personsCount = $db->count;
 			$logonsAll = $db->get('_logs', '7');
 			$logonsAllCount = $db->count;
 
-			$logonsByDay = $db->rawQuery("SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs WHERE type = 'LOGON' GROUP BY DATE(date_created) ORDER BY date_created ASC");
+			$logonsByDay = $db->rawQuery("SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs WHERE type = 'LOGON' GROUP BY DATE(date_created) ORDER BY date_created DESC");
 			foreach ($logonsByDay AS $day) {
-				$logonsCountArray[] = $day['cnt'];
+				$logonsCountArray["'" . date('Y-m-d', strtotime($day['date_created'])) . "'"] = $day['cnt'];
 			}
 			$logonsCountArray = array_reverse($logonsCountArray);
 		?>
-		<img src="../images/blank.svg" class="card-img-top" alt="...">
+		<canvas id="logonsChart" width="200" height="100"></canvas>
 		<div class="card-body">
 			<h5 class="card-title"><?php echo $logonsAllCount; ?> Logons</h5>
-			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-			<a href="#" class="btn btn-primary">Go somewhere</a>
 		</div>
 	</div>
 	<div class="card" style="width: 18rem;">
@@ -85,15 +80,140 @@ $personsCount = $db->count;
 
 			$logViewsByDay = $db->rawQuery("SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs WHERE type = 'VIEW' GROUP BY DATE(date_created) ORDER BY date_created DESC");
 			foreach ($logViewsByDay AS $day) {
-				$logViewsCountArray[] = $day['cnt'];
+				$logViewsCountArray["'" . date('Y-m-d', strtotime($day['date_created'])) . "'"] = $day['cnt'];
 			}
 			$logViewsCountArray = array_reverse(array_slice($logViewsCountArray, 0, 7));
 		?>
-		<img src="../images/blank.svg" class="card-img-top" alt="...">
+		<canvas id="viewsChart" width="200" height="100"></canvas>
 		<div class="card-body">
 			<h5 class="card-title"><?php echo $logViewsAllCount; ?> Views</h5>
-			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-			<a href="#" class="btn btn-primary">Go somewhere</a>
 		</div>
 	</div>
 </div>
+
+<script>
+var ctx_persons = document.getElementById('personsChart').getContext('2d');
+var ctx_students = document.getElementById('studentsChart').getContext('2d');
+var ctx_logons = document.getElementById('logonsChart').getContext('2d');
+var ctx_views = document.getElementById('viewsChart').getContext('2d');
+
+var personsChart = new Chart(ctx_persons, {
+	type: 'bar',
+	data: {
+		labels: [<?php echo implode(array_keys($personTotalArray), ", "); ?>],
+		datasets: [{
+			label: 'Total',
+			data: [<?php echo implode($personTotalArray, ", "); ?>],
+			backgroundColor: 'rgba(54, 162, 235, 1)',
+			borderColor: 'rgba(54, 162, 235, 1)',
+			borderWidth: 1
+		}]
+	},
+	options: {
+		legend: {
+			display: false
+		},
+		scales: {
+			xAxes: [{
+				display: false
+			}],
+			yAxes: [{
+				display: false,
+				ticks: {
+					min: <?php echo min($personTotalArray)*0.999; ?>
+				}
+			}]
+		}
+	}
+});
+
+var studentsChart = new Chart(ctx_students, {
+	type: 'bar',
+	data: {
+		labels: [<?php echo implode(array_keys($studentTotalArray), ", "); ?>],
+		datasets: [{
+			label: 'Total',
+			data: [<?php echo implode($studentTotalArray, ", "); ?>],
+			backgroundColor: 'rgba(54, 162, 235, 1)',
+			borderColor: 'rgba(54, 162, 235, 1)',
+			borderWidth: 1
+		}]
+	},
+	options: {
+		legend: {
+			display: false
+		},
+		scales: {
+			xAxes: [{
+				display: false
+			}],
+			yAxes: [{
+				display: false,
+				ticks: {
+					min: <?php echo min($studentTotalArray)*0.999; ?>
+				}
+			}]
+		}
+	}
+});
+
+var logonsChart = new Chart(ctx_logons, {
+	type: 'bar',
+	data: {
+		labels: [<?php echo implode(array_keys($logonsCountArray), ", "); ?>],
+		datasets: [{
+			label: 'Total',
+			data: [<?php echo implode($logonsCountArray, ", "); ?>],
+			backgroundColor: 'rgba(54, 162, 235, 1)',
+			borderColor: 'rgba(54, 162, 235, 1)',
+			borderWidth: 1
+		}]
+	},
+	options: {
+		legend: {
+			display: false
+		},
+		scales: {
+			xAxes: [{
+				display: false
+			}],
+			yAxes: [{
+				display: false,
+				ticks: {
+					min: <?php echo min($logonsCountArray)*0.999; ?>
+				}
+			}]
+		}
+	}
+});
+
+var viewsChart = new Chart(ctx_views, {
+	type: 'bar',
+	data: {
+		labels: [<?php echo implode(array_keys($logViewsCountArray), ", "); ?>],
+		datasets: [{
+			label: 'Total',
+			data: [<?php echo implode($logViewsCountArray, ", "); ?>],
+			backgroundColor: 'rgba(54, 162, 235, 1)',
+			borderColor: 'rgba(54, 162, 235, 1)',
+			borderWidth: 1
+		}]
+	},
+	options: {
+		legend: {
+			display: false
+		},
+		scales: {
+			xAxes: [{
+				display: false
+			}],
+			yAxes: [{
+				display: false,
+				ticks: {
+					min: <?php echo min($logViewsCountArray)*0.999; ?>
+				}
+			}]
+		}
+	}
+});
+</script>
