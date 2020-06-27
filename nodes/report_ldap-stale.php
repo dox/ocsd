@@ -5,9 +5,7 @@ $person = new Person();
 
 if ($ldapClass) {
   $admin_bind = $ldapClass->ldap_bind();
-  $username_filter = "(&(sAMAccountName=*)(objectclass=user))";
-  $all_search_results = $ldapClass->ldap_search($ou, $username_filter);
-  $allLDAPUsers = $ldapClass->ldap_get_entries($all_search_results);
+  $allLDAPUsers = $ldapClass->all_users(LDAP_BASE_DN, true);
 }
 
 foreach ($allLDAPUsers AS $ldapUser) {
@@ -16,22 +14,22 @@ foreach ($allLDAPUsers AS $ldapUser) {
 
   //echo $lastlogon . " < " . $ageLimit . "<br />";
   if ($lastlogon < $ageLimit) {
-    //$personSearch = $person->search($ldapUser['mail'][0]);
+    $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0], $ldapUser['mail'][0]);
     $personSearch = new Person($ldapUser['samaccountname'][0]);
 
-    if (strtolower($personSearch->sso_username) == strtolower($ldapUser['samaccountname'][0])) {
+    if (strtolower($personSearch->sso_username) == strtolower($ldapPerson->samaccountname)) {
       $tdClass = "";
     } else {
       $tdClass = "table-warning";
     }
     $output  = "<tr>";
-    $output .= "<td>" . $ldapUser['cn'][0] . "</td>";
+    $output .= "<td>" . $ldapPerson->cn . "</td>";
     $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=persons_unique&cudid=" . $personSearch->cudid . "\">" . $personSearch->sso_username . "</a>" . "</td>";
-    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser['samaccountname'][0] . "\">" . $ldapUser['samaccountname'][0] . "</a>" . "</td>";
-    $output .= "<td>" . $ldapClass->useraccountcontrolbadge($ldapUser['useraccountcontrol'][0]) . "</td>";
-    $output .= "<td>" . $ldapClass->pwdlastsetbadge($ldapUser['pwdlastset'][0]) . "</td>";
-    $output .= "<td>" . makeEmail($ldapUser['mail'][0]) . "</td>";
-    $output .= "<td>" . $ldapClass->actionsButton($ldapUser['samaccountname'][0]) . "</td>";
+    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapPerson->samaccountname . "\">" . $ldapPerson->samaccountname . "</a>" . "</td>";
+    $output .= "<td>" . $ldapPerson->useraccountcontrolbadge() . "</td>";
+    $output .= "<td>" . $ldapPerson->pwdlastsetbadge() . "</td>";
+    $output .= "<td>" . makeEmail($ldapPerson->mail) . "</td>";
+    $output .= "<td>" . $ldapPerson->actionsButton() . "</td>";
     $output .= "</tr>";
 
     $tableOutput_enabled[] = $output;
@@ -54,22 +52,22 @@ foreach ($allLDAPUsers AS $ldapUser) {
 <p>These are  records that exist in the local LDAP.</p>
 
 <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Full Name</th>
-          <th scope="col">SSO</th>
-          <th scope="col">LDAP</th>
-          <th scope="col">Account Control</th>
-          <th scope="col">pwdlastset</th>
-          <th scope="col">Email</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        foreach ($tableOutput_enabled AS $row) {
-          echo $row;
-        }
-        ?>
-      </tbody>
-    </table>
+  <thead>
+    <tr>
+      <th scope="col">Full Name</th>
+      <th scope="col">SSO</th>
+      <th scope="col">LDAP</th>
+      <th scope="col">Account Control</th>
+      <th scope="col">pwdlastset</th>
+      <th scope="col">Email</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php
+    foreach ($tableOutput_enabled AS $row) {
+      echo $row;
+    }
+    ?>
+  </tbody>
+</table>

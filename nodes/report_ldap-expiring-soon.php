@@ -4,9 +4,6 @@ $ldapClass = new LDAP();
 
 if ($ldapClass) {
   $admin_bind = $ldapClass->ldap_bind();
-  $username_filter = "(sAMAccountName=*)";
-  $all_search_results = $ldapClass->ldap_search($ou, $username_filter);
-  $all_entries = $ldapClass->ldap_get_entries($all_search_results);
   $allLDAPUsers = $ldapClass->all_users();
 }
 

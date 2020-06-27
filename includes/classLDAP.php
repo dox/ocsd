@@ -139,9 +139,9 @@ class LDAP {
 
     foreach ($ous AS $ou) {
       if ($includeDisabled == true) {
-        $allByOUFilter = "(sAMAccountName=*)";
+        $allByOUFilter = "(&(sAMAccountName=*)(!(objectclass=computer))(!(objectclass=group)))";
       } else {
-        $allByOUFilter = "(|(useraccountcontrol=512)(useraccountcontrol=544))";
+        $allByOUFilter = "(&(sAMAccountName=*)(!(objectclass=computer))(!(objectclass=group))(|(useraccountcontrol=512)(useraccountcontrol=544)))";
       }
 
       $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
