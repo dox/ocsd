@@ -23,7 +23,7 @@ class LDAPPerson extends LDAP {
         if (!is_numeric($key)) {
           if ($key == "dn") {
 						$this->$key = $ldapUser[$key];
-					} elseif ($key == "memberof") {
+					} elseif ($key == "memberof" || $key == "objectclass") {
 						foreach ($ldapUser[$key] AS $ldapKey => $memberOfElement) {
 							if (is_numeric($ldapKey)) {
 								$this->$key[] = $memberOfElement;

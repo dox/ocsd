@@ -9,10 +9,13 @@ class LDAP {
   public $samaccountname;
   public $givenname;
   public $mail;
+  public $pager;
   public $lastlogon;
   public $pwdlastset;
   public $useraccountcontrol;
   public $memberof;
+  public $objectclass;
+
 
 	function __construct() {
     $this->ldapconn = ldap_connect(LDAP_SERVER);
