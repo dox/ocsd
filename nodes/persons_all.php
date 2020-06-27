@@ -39,7 +39,10 @@ foreach ($personsAll AS $person) {
 		<div class="dropdown">
 			<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-stream"></i> API</button>
 			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				<form action="/api/person/read.php" method="post"><button type="submit" name="api_token" value="<?php echo api_token; ?>" class="dropdown-item">Read</button></form>
+				<form action="/api/person/read.php" method="post">
+					<input type="hidden" name="filter" id="filter" value="all" ?>
+					<button type="submit" name="api_token" value="<?php echo api_token; ?>" class="dropdown-item">Read</button>
+				</form>
 			</div>
 		</div>
 	</div>
