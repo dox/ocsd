@@ -81,10 +81,13 @@ if (isset($_POST["oldform"])) { //prevent null bind
 
 <script>
 $('#navbar_search').autocomplete({
-	serviceUrl: 'api/persons.php',
+	serviceUrl: 'api/person/navbar_search.php',
 	lookupLimit: 5,
 	type: "POST",
 	dataType: "json",
+	params: {
+		"api_token": "<?php echo api_token; ?>",
+  },
 	paramName: "navbar_search",
 	onSelect: function (suggestion) {
 		window.location.href='index.php?n=persons_unique&cudid=' + suggestion.data;
