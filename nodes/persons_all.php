@@ -12,7 +12,7 @@ $otherOutputCount = 0;
 
 foreach ($personsAll AS $person2) {
 	$person = new Person($person2['cudid']);
-	
+
 	if (in_array($person->university_card_type, $studentArrayTypes)) {
 		$studentOutput .= $person->tableRow();
 		$studentOutputCount ++;
@@ -30,7 +30,12 @@ foreach ($personsAll AS $person2) {
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 		</div>
 
-		<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"><span data-feather="calendar"></span>void</button>
+		<div class="dropdown">
+			<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-stream"></i> API</button>
+			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+				<form action="/api/person/read.php" method="post"><button type="submit" name="api_token" value="<?php echo api_token; ?>" class="dropdown-item">Read</button></form>
+			</div>
+		</div>
 	</div>
 </div>
 

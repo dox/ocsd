@@ -12,7 +12,12 @@ $logsCount = $db->count;
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 		</div>
 
-		<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"><span data-feather="calendar"></span>void</button>
+		<div class="dropdown">
+			<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-stream"></i> API</button>
+			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+				<form action="/api/log/read.php" method="post"><button type="submit" name="api_token" value="<?php echo api_token; ?>" class="dropdown-item">Read</button></form>
+			</div>
+		</div>
 	</div>
 </div>
 <p>Logs older than <?php echo logs_retention . autoPluralise(" day", " days", logs_retention);?> are automatically deleted.</p>

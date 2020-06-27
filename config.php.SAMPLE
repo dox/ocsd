@@ -33,4 +33,7 @@ define("LDAP_ACCOUNT_SUFFIX", "@example.com");
 define ("pwd_warn_age", "365"); // in days
 define ("pwd_disable_age", "30"); // in days
 define ("pwd_max_age", pwd_warn_age + pwd_disable_age);
+
+# API OPTIONS
+define("api_token", "some-token-CHANGE_THIS!!!");
 ?>
