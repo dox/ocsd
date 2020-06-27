@@ -1,5 +1,9 @@
 <?php
-$person = new Person($_GET['cudid']);
+$filter = array('api_token' => api_token, 'filter' => 'one', 'cudid' => $_GET['cudid']);
+$personsJSON = api_decode("person", "read", $filter);
+if ($personsJSON->count == 1) {
+	$personJSON = $personsJSON->body[0];
+}
 
 $student = $db->where("cudid", $_GET['cudid']);
 $student = $db->getOne("Student");
@@ -15,15 +19,15 @@ $contactDetails = $db->get("ContactDetails");
 $addresses = $db->where ("cudid", $_GET['cudid']);
 $addresses = $db->get("Addresses");
 
-if (isset($person->cudid)) {
-	$logInsert = (new Logs)->insert("view","success",$person->cudid,$person->FullName . " record viewed");
+if (isset($personJSON->cudid)) {
+	$logInsert = (new Logs)->insert("view","success",$personJSON->cudid,$personJSON->FullName . " record viewed");
 } else {
 	$logInsert = (new Logs)->insert("view","error",null,"<code>" . $_GET['cudid'] . "</code> record viewed but doesn't exist");
 }
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-	<h1 class="h2"><?php echo $person->cardTypeBadge() . " " . $person->fullName(); ?></h1>
+	<h1 class="h2"><?php echo cardTypeBadge($personJSON->university_card_type) . " " . $personJSON->FullName; ?></h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 		<div class="btn-group mr-2">
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
@@ -33,7 +37,7 @@ if (isset($person->cudid)) {
 		<div class="btn-group" role="group">
 			<button id="btnGroupDrop1" type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
 			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
-				<a class="dropdown-item emailParcelButton1" href="#" id="<?php echo $person->cudid; ?>"><strong>Email</strong> "You have a delivery"</a>
+				<a class="dropdown-item emailParcelButton1" href="#" id="<?php echo $personJSON->cudid; ?>"><strong>Email</strong> "You have a delivery"</a>
 				<a class="dropdown-item" href="#">Dropdown link</a>
 			</div>
 		</div>
@@ -56,7 +60,7 @@ if (isset($person->cudid)) {
 
 <div class="tab-content" id="nav-tabContent">
 	<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-		<?php echo $person->photoCard(); ?>
+		<?php echo photoCard($personJSON->university_card_sysis); ?>
 		<table class="table">
 			<thead>
 				<tr>
@@ -66,7 +70,7 @@ if (isset($person->cudid)) {
 			</thead>
 			<tbody>
 				<?php
-				foreach ($person as $key => $value) {
+				foreach ($personJSON as $key => $value) {
 					if (isset($value)) {
 						$output  = "<tr>";
 						$output = "<td>" . $key . "</td>";
@@ -79,13 +83,13 @@ if (isset($person->cudid)) {
 				?>
 			</tbody>
 		</table>
-		<p>Student Number: <?php echo $person->sits_student_code; ?></p>
-		<p>SSO: <?php echo $person->sso_username; ?></p>
-		<p>Oxford Email: <?php echo makeEmail($person->oxford_email); ?></p>
-		<p>Bodcard: <?php echo $person->barcode7; ?></p>
+		<p>Student Number: <?php echo $personJSON->sits_student_code; ?></p>
+		<p>SSO: <?php echo $personJSON->sso_username; ?></p>
+		<p>Oxford Email: <?php echo makeEmail($personJSON->oxford_email); ?></p>
+		<p>Bodcard: <?php echo $personJSON->barcode7; ?></p>
 		<?php
-			if (isset($person->internal_tel)) {
-				echo "<p>Chorus Telephone Number: " . $person->internal_tel . "</p>";
+			if (isset($personJSON->internal_tel)) {
+				echo "<p>Chorus Telephone Number: " . $personJSON->internal_tel . "</p>";
 			}
 		?>
 
@@ -172,7 +176,7 @@ if (isset($person->cudid)) {
 	<div class="tab-pane fade" id="nav-logs" role="tabpanel" aria-labelledby="nav-logs-tab">
 		<?php
 		$logs = new Logs();
-		$logsUser = $logs->all_by_user($person->cudid, $ldapPerson->samaccountname);
+		$logsUser = $logs->all_by_user($personJSON->cudid, $ldapPerson->samaccountname);
 		?>
 
 		<table class="table table-sm table-striped">

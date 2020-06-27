@@ -25,3 +25,19 @@ if (debug == true) {
 <?php
 }
 ?>
+
+<script>
+$('#navbar_search').autocomplete({
+	serviceUrl: 'api/person/navbar_search.php',
+	lookupLimit: 5,
+	type: "POST",
+	dataType: "json",
+	params: {
+		"api_token": "<?php echo api_token; ?>",
+  },
+	paramName: "navbar_search",
+	onSelect: function (suggestion) {
+		window.location.href='index.php?n=persons_unique&cudid=' + suggestion.data;
+	}
+});
+</script>

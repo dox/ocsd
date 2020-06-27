@@ -15,6 +15,7 @@ if ($ldapClass) {
 	$userDN = "CN=" . $person->fullName() . ",OU=Other,OU=SEH Students,DC=SEH,DC=ox,DC=ac,DC=uk";
 	$userdata["sAMAccountName"] = $person->sso_username;
 	$userdata["userprincipalname"] = $person->sso_username . "@seh.ox.ac.uk";
+	$userdata["pager"] = $person->MiFareID;
 	$userdata["cn"] = $person->fullName();
 	$userdata["givenname"] = $person->firstname();
 	$userdata["displayname"] = $person->firstname();

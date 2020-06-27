@@ -1,7 +1,6 @@
 <?php
 $ou = "DC=SEH,DC=ox,DC=ac,DC=uk";
 $ldapClass = new LDAP();
-$person = new Person();
 
 if ($ldapClass) {
   $admin_bind = $ldapClass->ldap_bind();
@@ -12,11 +11,14 @@ foreach ($allLDAPUsers AS $ldapUser) {
   $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0]);
 
   if (isset($ldapUser['samaccountname'][0]) && isset($ldapUser['mail'][0])) {
-    $personSearch = $person->search($ldapUser['mail'][0]);
-    //$personSearch = new Person($ldapUser['samaccountname'][0]);
+    $filter = array('api_token' => api_token, 'filter' => 'one', 'cudid' => $ldapUser['mail'][0]);
+    $personsJSON = api_decode("person", "read", $filter);
+    if ($personsJSON->count == 1) {
+    	$personJSON = $personsJSON->body[0];
+    }
 
     if (count($personSearch) != 1) {
-      if (strtolower($personSearch->sso_username) == strtolower($ldapPerson->samaccountname)) {
+      if (strtolower($personJSON->sso_username) == strtolower($ldapPerson->samaccountname)) {
         $tdClass = "";
       } else {
         $tdClass = "table-warning";
@@ -24,7 +26,7 @@ foreach ($allLDAPUsers AS $ldapUser) {
 
       $output  = "<tr>";
       $output .= "<td>" . $ldapUser['cn'][0] . "</td>";
-      $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=person_unique&cudid=" . $personSearch->cudid . "\">" . $personSearch->cudid . "</a>" . "</td>";
+      $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=person_unique&cudid=" . $personJSON->cudid . "\">" . $personJSON->sso_username . "</a>" . "</td>";
       $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapPerson->samaccountname . "\">" . $ldapPerson->samaccountname . "</a>" . "</td>";
       $output .= "<td>" . $ldapPerson->useraccountcontrolbadge() . "</td>";
       $output .= "<td>" . $ldapPerson->pwdlastsetbadge() . "</td>";

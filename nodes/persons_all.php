@@ -1,7 +1,7 @@
 <?php
-$persons = new Persons();
-
-$personsAll = $persons->all();
+$filter = array('api_token' => api_token, 'filter' => 'all');
+$personsJSON = api_decode("person", "read", $filter);
+$personsAll = $personsJSON->body;
 
 $studentArrayTypes = array('GT', 'GR', 'UG', 'VR', 'PT', 'VD', 'VV', 'VC');
 
@@ -10,14 +10,20 @@ $studentOutputCount = 0;
 $otherOutput = "";
 $otherOutputCount = 0;
 
-foreach ($personsAll AS $person2) {
-	$person = new Person($person2['cudid']);
+foreach ($personsAll AS $person) {
+	$output  = "<tr>";
+	$output .= "<td>" . cardTypeBadge($person->university_card_type) . " </td>";
+	$output .= "<td><a href=\"index.php?n=persons_unique&cudid=" . $person->cudid . "\">" . $person->firstname . "</a></td>";
+	$output .= "<td><a href=\"index.php?n=persons_unique&cudid=" . $person->cudid . "\">" . $person->lastname . "</a></td>";
+	$output .= "<td>" . bodcardBadge($person->barcode7, $person->University_Card_End_Dt, false) . "</td>";
+	$output .= "<td><a href=\"index.php?n=persons_unique&cudid=" . $person->cudid . "\">" . $person->sso_username . "</a></td>";
+	$output .= "</tr>";
 
 	if (in_array($person->university_card_type, $studentArrayTypes)) {
-		$studentOutput .= $person->tableRow();
+		$studentOutput .= $output;
 		$studentOutputCount ++;
 	} else {
-		$otherOutput .= $person->tableRow();
+		$otherOutput .= $output;
 		$otherOutputCount ++;
 	}
 }

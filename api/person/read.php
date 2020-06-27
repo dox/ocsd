@@ -7,13 +7,21 @@ if ($_POST['api_token'] != api_token) {
   exit;
 }
 
-$personsClass = new Persons();
+if (isset($_POST['filter'])) {
+  if ($_POST['filter'] == "all") {
+    $personsClass = new Persons();
+    $persons = $personsClass->all();
+  } elseif($_POST['filter'] == "one") {
+    $personsClass = new Persons();
+    $persons = $personsClass->search($_POST['cudid']);
+  } elseif($_POST['filter'] == "search") {
+    $personsClass = new Persons();
+    $persons = $personsClass->search($_POST['searchterm'], $_POST['searchlimit']);
+  } else {
 
-if (isset($_POST['action'])) {
-
-} else {
-  $persons = $personsClass->all();
+  }
 }
+
 $count = count($persons);
 
 if($count > 0){

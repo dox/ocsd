@@ -12,14 +12,15 @@ if (isset($_POST['navbar_search'])) {
 	$keyword = "andrew";
 }
 
-$persons = new Persons();
-$personsAll = $persons->search($keyword, 5);
+$filter = array('api_token' => api_token, 'filter' => 'search', 'searchterm' => $keyword, 'searchlimit' => '5');
+$personsJSON = api_decode("person", "read", $filter);
+$personsAll = $personsJSON->body;;
 
 $personsArray = array();
 foreach ($personsAll as $person) {
-	$name = str_replace("'", "", $person['FullName']);
+	$name = str_replace("'", "", $person->FullName);
 	$value = $name;
-	$data = $person['cudid'];
+	$data = $person->cudid;
 
   $personsArray[] = array('value'=>$value, 'data'=>$data);
   //$personsArray[] = array('value'=>$_POST['api_token'], 'data'=>$_POST['api_token']);

@@ -1,5 +1,5 @@
 <?php
-$ldapPerson = new LDAPPerson($person->sso_username, $person->oxford_email);
+$ldapPerson = new LDAPPerson($personJSON->sso_username, $personJSON->oxford_email);
 
 if (isset($ldapPerson->samaccountname)) {
 		echo "<div class=\"alert alert-dark\" role=\"alert\">" . $ldapPerson->dn . "</div>";

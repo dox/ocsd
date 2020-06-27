@@ -172,4 +172,30 @@ function curPageURL() {
 
 	return $pageURL;
 }
+
+function api_decode($category = null, $endpoint = null, $filter = null, $username = null, $password = null) {
+	$url = site_url . "/api/" . $category . "/" . $endpoint . ".php";
+
+	$data2 = array(
+		'api_token' => api_token
+	);
+
+	$postdata = http_build_query($filter);
+
+	$opts = array('http' =>
+		array(
+			'method'  => 'POST',
+			'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+			'content' => $postdata
+		)
+	);
+
+	if($username && $password) {
+		$opts['http']['header'] .= ("Authorization: Basic " . base64_encode("$username:$password")); // .= to append to the header array element
+	}
+
+	$context = stream_context_create($opts);
+
+	return json_decode(file_get_contents($url, false, $context));
+}
 ?>

@@ -1,8 +1,6 @@
 <?php
-$logs = new Logs();
-$logs->purge();
-$logsAll = $logs->all();
-$logsCount = $db->count;
+$filter = array('api_token' => api_token, 'filter' => all);
+$logsJSON = api_decode("log", "read", $filter);
 ?>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 	<h1 class="h2"><i class="fas fa-cogs"></i> Logs</h1>
@@ -33,9 +31,42 @@ $logsCount = $db->count;
 	</thead>
 	<tbody>
 		<?php
-		foreach ($logsAll AS $log) {
-			$log = new Log($log['uid']);
-			echo $log->tableRow();
+		foreach ($logsJSON->body AS $log) {
+			$logDate = date('Y-m-d H:i:s', strtotime($log->date_created));
+
+			if ($log->result == "success") {
+				$class = "table-success";
+			} else if ($log->result == "warning") {
+				$class = "table-warning";
+			} else if ($log->result == "error") {
+				$class = "table-danger";
+			} else if ($log->result == "info") {
+				$class = "table-primary";
+			} else if ($log->result == "debug") {
+				$class = "table-info";
+			} else {
+				$class = "";
+			}
+
+			if (in_array($_SESSION['username'], admin_usernames)) {
+				$output  = "<tr class=\"" . $class . "\">";
+				$output .= "<td>" . $logDate . " </td>";
+				$output .= "<td>" . $log->description . " <span class=\"badge badge-info float-right\">" . $log->type . "</span></td>";
+				$output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $log->cudid . "\">" . $log->cudid . "</a></td>";
+				$output .= "<td>" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $log->username . "\">" . $log->username . "</a></td>";
+				$output .= "<td>" . $log->ip . "</td>";
+				$output .= "</tr>";
+			} else {
+				$output  = "<tr class=\"blurry\">";
+				$output .= "<td>" . generateRandomString($logDate) . " </td>";
+				$output .= "<td>" . generateRandomString($log->description) . " <span class=\"badge blurry badge-info float-right\">" . generateRandomString($log->type) . "</span></td>";
+				$output .= "<td>" . generateRandomString($log->cudid) . "</td>";
+				$output .= "<td>" . generateRandomString($log->username) . "</td>";
+				$output .= "<td>" . generateRandomString($log->ip) . "</td>";
+				$output .= "</tr>";
+			}
+
+			echo $output;
 		}
 		?>
 	</tbody>

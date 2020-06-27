@@ -10,7 +10,7 @@ $dateNow = date('Y-m-d');
 foreach ($allLDAPUsers AS $ldapUser) {
   $userdata = null;
   $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0]);
-
+  
   $person = new Person($ldapPerson->samaccountname);
   if (!isset($person->cudid)) {
     $person = new Person($ldapPerson->mail);

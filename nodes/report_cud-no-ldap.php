@@ -2,14 +2,15 @@
 $ou = "DC=SEH,DC=ox,DC=ac,DC=uk";
 $ldapClass = new LDAP();
 
-$persons = new Persons();
-$personsAll = $persons->all();
+$filter = array('api_token' => api_token, 'filter' => 'all');
+$personsJSON = api_decode("person", "read", $filter);
+$personsAll = $personsJSON->body;
 
 foreach ($personsAll AS $person) {
-  $ldapPerson = new LDAPPerson($person['sso_username'], $person['oxford_email']);
+  $ldapPerson = new LDAPPerson($person->sso_username, $person->oxford_email);
 
   if (isset($ldapPerson->samaccountname)) {
-    if (strtolower($person['sso_username']) == strtolower($ldapPerson->samaccountname)) {
+    if (strtolower($person->sso_username) == strtolower($ldapPerson->samaccountname)) {
       $tdClass = "";
     } else {
       $tdClass = "table-warning";
@@ -19,14 +20,14 @@ foreach ($personsAll AS $person) {
   }
 
   $output  =  "<tr>";
-  $output .= "<td>" . $person['FullName'] . "</td>";
-  $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $person['cudid'] . "\">" . $person['sso_username'] . "</a>" . "</td>";
+  $output .= "<td>" . $person->FullName . "</td>";
+  $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $person->cudid . "\">" . $person->sso_username . "</a>" . "</td>";
 
   $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapPerson->samaccountname . "\">" . $ldapPerson->samaccountname . "</a> " . "</td>";
   $output .= "<td>" . $ldapPerson->useraccountcontrolbadge($ldapPerson->useraccountcontrol) . "</td>";
   $output .= "<td>" . $ldapPWDLastSet . "</td>";
-  $output .= "<td>" . makeEmail($person['oxford_email']) . "</td>";
-  $output .= "<td>" . $ldapPerson->actionsButton($person['sso_username']) . "</td>";
+  $output .= "<td>" . makeEmail($person->oxford_email) . "</td>";
+  $output .= "<td>" . $ldapPerson->actionsButton($person->sso_username) . "</td>";
   $output .= "</tr>";
 
   if (!isset($ldapPerson->samaccountname)) {

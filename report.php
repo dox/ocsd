@@ -1,6 +1,6 @@
 <?php
 include_once("includes/autoload.php");
-require_once 'vendor/autoload.php';
+//require_once 'vendor/autoload.php';
 
 //$pdf = new FPDF();
 $pdf = new \Mpdf\Mpdf();

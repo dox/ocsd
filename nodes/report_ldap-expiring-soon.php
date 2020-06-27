@@ -12,12 +12,16 @@ foreach ($allLDAPUsers AS $ldapUser) {
   $pwdlastsetAgeInDays = $ldapPerson->pwdlastsetage();
 
   if ($pwdlastsetAgeInDays > pwd_warn_age) {
-    $personSearch = new Person($ldapPerson->mail);
+    $filter = array('api_token' => api_token, 'filter' => 'one', 'cudid' => $ldapUser['mail'][0]);
+    $personsJSON = api_decode("person", "read", $filter);
+    if ($personsJSON->count == 1) {
+    	$personJSON = $personsJSON->body[0];
+    }
 
     if (isset($ldapUser['cn'][0])) {
       $output  = "<tr>";
       $output .= "<td>" . $ldapUser['cn'][0] . "</td>";
-      $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $personSearch->cudid . "\">" . $personSearch->sso_username . "</a>" . "</td>";
+      $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $personJSON->cudid . "\">" . $personJSON->sso_username . "</a>" . "</td>";
       $output .= "<td>" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapPerson->samaccountname . "\">" . $ldapPerson->samaccountname . "</a>" . "</td>";
       $output .= "<td>" . $ldapPerson->useraccountcontrolbadge() . "</td>";
       $output .= "<td>" . $ldapPerson->pwdlastsetbadge() . "</td>";
