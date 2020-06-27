@@ -9,11 +9,11 @@ if ($ldapClass) {
 }
 
 foreach ($allLDAPUsers AS $ldapUser) {
-  $lastlogon = win_time_to_unix_time($ldapUser['pwdlastset'][0]);
-  $ageLimit = date('U', strtotime("2 years ago"));
+  $lastpwdset = win_time_to_unix_time($ldapUser['pwdlastset'][0]);
+  $ageLimit = date('U', strtotime("4 years ago"));
 
   //echo $lastlogon . " < " . $ageLimit . "<br />";
-  if ($lastlogon < $ageLimit) {
+  if ($lastpwdset < $ageLimit) {
     $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0], $ldapUser['mail'][0]);
     $personSearch = new Person($ldapUser['samaccountname'][0]);
 
