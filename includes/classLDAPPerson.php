@@ -59,7 +59,7 @@ class LDAPPerson extends LDAP {
   	if ($pwdlastsetAgeInDays <= pwd_warn_age) {
   		$badgeClass = "badge-success";
   		$flagName = "Password OK aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
-  	} elseif ($pwdlastsetAgeInDays > pwd_warn_age && $pwdlastsetAgeInDays < pwd_max_age) {
+  	} elseif ($pwdlastsetAgeInDays >= pwd_warn_age && $pwdlastsetAgeInDays <= pwd_max_age) {
   		$badgeClass = "badge-warning";
   		$flagName = "Password expiring in " . (pwd_max_age - $pwdlastsetAgeInDays) . autoPluralise(" day", " days", (pwd_max_age - $pwdlastsetAgeInDays));
   	} elseif ($pwdlastsetAgeInDays > pwd_max_age) {
