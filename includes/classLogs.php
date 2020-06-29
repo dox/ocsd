@@ -17,7 +17,7 @@ class Logs {
 		global $db;
 
 		$persons = $db->orderBy('date_created', "DESC");
-		$persons = $db->get(self::$table_name, 300);
+		$persons = $db->get(self::$table_name);
 
 		return $persons;
 	}
@@ -70,7 +70,7 @@ class Logs {
 				$db->where("UNIX_TIMESTAMP(date_created) < " . strtotime('-' . logs_retention . ' days'));
 				$db->delete(self::$table_name);
 
-				$logInsert = (new Logs)->insert("purge","success",null,$logsDeletedCount . " logs purged");
+				$logInsert = (new Logs)->insert("purge","success",null,$logsDeletedCount . " log(s) purged");
 			}
 		}
 	}
