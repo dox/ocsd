@@ -29,4 +29,6 @@ if (isset($ldapPerson->samaccountname)) {
   print_r($ldapPerson);
   echo "</pre>";
 }
+
+$includeFile = true;
 ?>

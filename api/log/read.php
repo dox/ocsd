@@ -7,8 +7,20 @@ if ($_POST['api_token'] != api_token) {
   exit;
 }
 
-$logsClass = new Logs();
-$logs = $logsClass->all();
+if (isset($_POST['filter'])) {
+  if ($_POST['filter'] == "all") {
+    $logsClass = new Logs();
+    $logs = $logsClass->all();
+  } elseif($_POST['filter'] == "one") {
+
+  } elseif($_POST['filter'] == "user") {
+    $logsClass = new Logs();
+    $logs = $logsClass->all_by_user($_POST['cudid'], $_POST['samaccountname']);
+  } else {
+
+  }
+}
+
 $count = count($logs);
 
 if($count > 0){
@@ -33,7 +45,6 @@ if($count > 0){
 }
 
 else {
-
     echo json_encode(array("body" => array(), "count" => 0));
 }
 ?>
