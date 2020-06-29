@@ -8,10 +8,12 @@ if ($ldapClass) {
 }
 
 foreach ($allLDAPUsers AS $ldapUser) {
-  $filter = array('api_token' => api_token, 'filter' => 'one', 'cudid' => $ldapUser['samaccountname'][0]);
+  $filter = array('api_token' => api_token, 'filter' => 'search', 'searchterm' => $ldapUser['mail'][0], 'searchlimit' => '1');
   $personsJSON = api_decode("person", "read", $filter);
   if ($personsJSON->count == 1) {
   	$personJSON = $personsJSON->body[0];
+  } else {
+    $personJSON = "";
   }
   $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0]);
 

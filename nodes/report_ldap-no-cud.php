@@ -8,17 +8,20 @@ if ($ldapClass) {
 }
 
 foreach ($allLDAPUsers AS $ldapUser) {
-  $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0]);
+
 
   if (isset($ldapUser['samaccountname'][0]) && isset($ldapUser['mail'][0])) {
-    $filter = array('api_token' => api_token, 'filter' => 'one', 'cudid' => $ldapUser['mail'][0]);
+    $filter = array('api_token' => api_token, 'filter' => 'search', 'searchterm' => $ldapUser['mail'][0], 'searchlimit' => '1');
     $personsJSON = api_decode("person", "read", $filter);
+
     if ($personsJSON->count == 1) {
     	$personJSON = $personsJSON->body[0];
+    } else {
+      $personJSON = "";
     }
 
-    if (count($personSearch) != 1) {
-      if (strtolower($personJSON->sso_username) == strtolower($ldapPerson->samaccountname)) {
+    if ($personsJSON->count != 1) {
+      if (strtolower($personJSON->sso_username) == strtolower($ldapUser['samaccountname'][0])) {
         $tdClass = "";
       } else {
         $tdClass = "table-warning";
@@ -27,11 +30,11 @@ foreach ($allLDAPUsers AS $ldapUser) {
       $output  = "<tr>";
       $output .= "<td>" . $ldapUser['cn'][0] . "</td>";
       $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=person_unique&cudid=" . $personJSON->cudid . "\">" . $personJSON->sso_username . "</a>" . "</td>";
-      $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapPerson->samaccountname . "\">" . $ldapPerson->samaccountname . "</a>" . "</td>";
-      $output .= "<td>" . $ldapPerson->useraccountcontrolbadge() . "</td>";
-      $output .= "<td>" . $ldapPerson->pwdlastsetbadge() . "</td>";
-      $output .= "<td>" . $ldapPerson->emailAddress() . "</td>";
-      $output .= "<td>" . $ldapPerson->actionsButton() . "</td>";
+      $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser['samaccountname'][0] . "\">" . $ldapUser['samaccountname'][0] . "</a>" . "</td>";
+      $output .= "<td>" . "useraccountcontrolbadge()" . "</td>";
+      $output .= "<td>" . "pwdlastsetbadge()" . "</td>";
+      $output .= "<td>" . makeEmail($ldapUser['mail'][0]) . "</td>";
+      $output .= "<td>" . "actionsButton()" . "</td>";
       $output .= "</tr>";
 
       if (in_array($ldapUser['useraccountcontrol'][0], array("512", "544"))) {

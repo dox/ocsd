@@ -14,9 +14,12 @@ if (isset($_POST['filter'])) {
   } elseif($_POST['filter'] == "one") {
     $personsClass = new Persons();
     $persons = $personsClass->search($_POST['cudid']);
+  } elseif($_POST['filter'] == "navsearch") {
+    $personsClass = new Persons();
+    $persons = $personsClass->navsearch($_POST['searchterm'], $_POST['searchlimit']);
   } elseif($_POST['filter'] == "search") {
     $personsClass = new Persons();
-    $persons = $personsClass->search($_POST['searchterm'], $_POST['searchlimit']);
+    $persons = $personsClass->search($_POST['searchterm']);
   } else {
 
   }

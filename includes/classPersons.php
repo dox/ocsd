@@ -84,9 +84,27 @@ class Persons {
 		global $db;
 
 		$persons = $db->orderBy('lastname', "ASC");
-		$persons = $db->where('fullname', "%" . $searchTerm . "%", 'like');
-		$persons = $db->orWhere('sso_username', "%" . $searchTerm . "%", 'like');
+		$persons = $db->orWhere('sso_username', $searchTerm);
 		$persons = $db->orWhere('cudid', $searchTerm);
+		$persons = $db->orWhere('barcode7', $searchTerm);
+		$persons = $db->orWhere('oxford_email', $searchTerm);
+
+		if (!$limit == null) {
+			$persons = $db->get(self::$table_name, $limit);
+		} else {
+			$persons = $db->get(self::$table_name);
+		}
+
+		return $persons;
+	}
+
+	public function navsearch($searchTerm = null, $limit = null) {
+		global $db;
+
+		$persons = $db->orderBy('lastname', "ASC");
+		$persons = $db->orWhere('fullname', "%" . $searchTerm . "%", 'like');
+		$persons = $db->orWhere('sso_username', "%" . $searchTerm . "%", 'like');
+		$persons = $db->orWhere('cudid', "%" . $searchTerm . "%", 'like');
 		$persons = $db->orWhere('barcode7', "%" . $searchTerm . "%", 'like');
 		$persons = $db->orWhere('oxford_email', "%" . $searchTerm . "%", 'like');
 

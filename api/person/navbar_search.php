@@ -12,7 +12,7 @@ if (isset($_POST['navbar_search'])) {
 	$keyword = "andrew";
 }
 
-$filter = array('api_token' => api_token, 'filter' => 'search', 'searchterm' => $keyword, 'searchlimit' => '5');
+$filter = array('api_token' => api_token, 'filter' => 'navsearch', 'searchterm' => $keyword, 'searchlimit' => '5');
 $personsJSON = api_decode("person", "read", $filter);
 $personsAll = $personsJSON->body;;
 

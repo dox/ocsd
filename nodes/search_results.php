@@ -1,61 +1,57 @@
 <?php
 $searchTerm = $_POST['navbar_search'];
-$sql  = "SELECT * FROM Person WHERE ";
-$sql .= "sits_student_code LIKE '%" . $searchTerm . "%' OR ";
-$sql .= "firstname LIKE '%" . $searchTerm . "%' OR ";
-$sql .= "lastname LIKE '%" . $searchTerm . "%' OR ";
-$sql .= "alt_email LIKE '%" . $searchTerm . "%' OR ";
-$sql .= "sso_username LIKE '%" . $searchTerm . "%' OR ";
-$sql .= "university_card_sysis LIKE '%" . $searchTerm . "%' OR ";
-$sql .= "barcode7 LIKE '%" . $searchTerm . "%' ";
-//$sql .= "ORDER BY date_created ASC";
+$filter = array('api_token' => api_token, 'filter' => 'navsearch', 'searchterm' => $searchTerm);
+$personsJSON = api_decode("person", "read", $filter);
+$personsAll = $personsJSON->body;
 
-$searchResults = $db->rawQuery($sql);
-$searchResultsCount = $db->count;
-
-$message = $_SESSION["username"] . " searched for  '" . $searchTerm . "' (" . $searchResultsCount . " " . autoPluralise("result)", "results)", $searchResultsCount);
-if ($searchResultsCount == 1) {
-	$logInsert = (new Logs)->insert("view","success",$searchResults[0]['cudid'],"Search for <code>" . $searchTerm . "</code> returned " . $searchResultsCount . " result");
+$message = $_SESSION["username"] . " searched for  '" . $searchTerm . "' (" . $personsJSON->count . " " . autoPluralise("result)", "results)", $personsJSON->count);
+if ($personsJSON->count == 1) {
+	$logInsert = (new Logs)->insert("view","success" . $personsAll[0]['cudid'],"Search for <code>" . $searchTerm . "</code> returned " . $personsJSON->count . " result");
 } else {
-	$logInsert = (new Logs)->insert("view","success",null,"Search for <code>" . $searchTerm . "</code> returned " . $searchResultsCount . " results");
+	$logInsert = (new Logs)->insert("view","success",null,"Search for <code>" . $searchTerm . "</code> returned " . $personsJSON->count . " results");
 }
-
-
 ?>
 
-<div class="container">
-<div class="row">
-	<?php
-	$resultsOutput = "";
-	foreach ($searchResults AS $searchResult) {
-		$person = new Person($searchResult['cudid']);
-		echo "<div class=\"col-sm\">";
-		echo "<p>" . $person->photoAvatar() . "</p>";
-		echo "</div>";
-		
-		$resultsOutput .= $person->tableRow();
-	}
-	?>
-</div>
-</div>
-
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-	<h1 class="h2"><?php echo count($searchResults) . " Search " . autoPluralise("Result", "Results", count($searchResults)) . " for <code>" . $searchTerm . "</code>";?></h1>
+	<h1 class="h2"><i class="fas fa-user-friends"></i> Search for <code><?php echo $searchTerm; ?></code> returned  <?php echo $personsJSON->count . autoPluralise(" result", " results", $personsJSON->count); ?></h1>
+
 	<div class="btn-toolbar mb-2 mb-md-0">
 		<div class="btn-group mr-2">
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 			<button type="button" class="btn btn-sm btn-outline-secondary">void</button>
 		</div>
-		
-		<div class="btn-group" role="group">
-			<button id="btnGroupDrop1" type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
-			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
-				<a class="dropdown-item emailParcelButton1" href="#" id="<?php echo $person->cudid; ?>"><strong>Email</strong> "You have a delivery"</a>
-				<a class="dropdown-item" href="#">Dropdown link</a>
+
+		<div class="dropdown">
+			<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-stream"></i> API</button>
+			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+				<form action="/api/person/read.php" method="post">
+					<input type="hidden" name="filter" id="filter" value="navsearch" ?>
+					<input type="hidden" name="searchterm" id="searchterm" value="<?php echo $searchTerm;?>" ?>
+					<button type="submit" name="api_token" value="<?php echo api_token; ?>" class="dropdown-item">NavSearch</button>
+				</form>
 			</div>
 		</div>
 	</div>
 </div>
+
+<?php
+$resultsOutput = "";
+
+foreach ($personsAll AS $person) {
+	//echo "<div class=\"col-sm\">";
+	//echo "<p>" . $person->photoAvatar() . "</p>";
+	//echo "</div>";
+
+	$output  = "<tr>";
+	$output .= "<td>" . cardTypeBadge($person->university_card_type) . " </td>";
+	$output .= "<td><a href=\"index.php?n=persons_unique&cudid=" . $person->cudid . "\">" . $person->firstname . "</a></td>";
+	$output .= "<td><a href=\"index.php?n=persons_unique&cudid=" . $person->cudid . "\">" . $person->lastname . "</a></td>";
+	$output .= "<td>" . bodcardBadge($person->barcode7, $person->University_Card_End_Dt, false) . "</td>";
+	$output .= "<td><a href=\"index.php?n=persons_unique&cudid=" . $person->cudid . "\">" . $person->sso_username . "</a></td>";
+	$output .= "</tr>";
+	$resultsOutput .= $output;
+}
+?>
 
 <table class="table">
 	<thead>
