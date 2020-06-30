@@ -1,4 +1,4 @@
-s<?php
+<?php
 $filter = array('api_token' => api_token, 'filter' => 'user', 'cudid' => $personJSON->cudid, 'samaccountname' => $ldapPerson->samaccountname);
 $logsJSON = api_decode("log", "read", $filter);
 ?>

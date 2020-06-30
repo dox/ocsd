@@ -72,6 +72,11 @@ if (isset($personJSON->cudid)) {
 
 <br />
 
+<?php
+
+
+?>
+
 <div class="tab-content" id="nav-tabContent">
 	<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 		<?php echo photoCard($personJSON->university_card_sysis); ?>
@@ -101,16 +106,13 @@ if (isset($personJSON->cudid)) {
 		<p>SSO: <?php echo $personJSON->sso_username; ?></p>
 		<p>Oxford Email: <?php echo makeEmail($personJSON->oxford_email); ?></p>
 		<p>Bodcard: <?php echo $personJSON->barcode7; ?></p>
+		<p>Nationality: <?php echo nationality($personJSON->cudid); ?></p>
 		<?php
 			if (isset($personJSON->internal_tel)) {
 				echo "<p>Chorus Telephone Number: " . $personJSON->internal_tel . "</p>";
 			}
 		?>
 			</div>
-
-
-
-
 
 	<?php
 	foreach ($tabs AS $tab) {

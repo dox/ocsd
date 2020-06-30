@@ -118,6 +118,15 @@ class Persons {
 	}
 } //end of class Persons
 
+function nationality($cudid = null) {
+	global $db;
+	
+	$dbOutput = $db->where("cudid", $cudid);
+	$dbOutput = $db->getOne("Nationalities");
+
+	return $dbOutput['NatName'];
+}
+
 function bodcardTypes() {
 	$bodcardTypeArray = array(
 		"MC" => "Congregation (from Register of Congregation)",
