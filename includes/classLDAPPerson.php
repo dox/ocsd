@@ -78,7 +78,7 @@ class LDAPPerson extends LDAP {
   public function useraccountcontrolbadge () {
   	if (in_array($this->useraccountcontrol, array("512", "544"))) {
   		$badgeClass = "badge-success";
-  	} elseif (in_array($flagValue, array("2", "16", "514", "546", "8388608"))) {
+  	} elseif (in_array($this->useraccountcontrol, array("2", "16", "514", "546", "8388608"))) {
   		$badgeClass = "badge-danger";
   	} else {
   		$badgeClass = "badge-secondary";

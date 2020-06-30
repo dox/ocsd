@@ -3,6 +3,9 @@ $ldapPerson = new LDAPPerson($personJSON->sso_username, $personJSON->oxford_emai
 
 if (isset($ldapPerson->samaccountname)) {
 		echo "<div class=\"alert alert-dark\" role=\"alert\">" . $ldapPerson->dn . "</div>";
+
+		echo $ldapPerson->actionsButton();
+		
     echo "<h1 class=\"float-right\">" . $ldapPerson->useraccountcontrolbadge() . "</h1>";
 		echo "<p>Username: <kbd>" . $ldapPerson->samaccountname . "</kbd></p>";
 		echo "<p>Given Name: <kbd>" . $ldapPerson->givenname . "</kbd></p>";

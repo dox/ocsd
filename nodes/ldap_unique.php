@@ -3,11 +3,14 @@ $ldapPerson = new LDAPPerson($_GET['samaccountname']);
 
 if (isset($ldapPerson->samaccountname)) {
     echo "<div class=\"alert alert-dark\" role=\"alert\">" . $ldapPerson->dn . "</div>";
+
+    echo $ldapPerson->actionsButton();
+
     echo "<h1 class=\"float-right\">" . $ldapPerson->useraccountcontrolbadge() . "</h1>";
 		echo "<p>Username: <kbd>" . $ldapPerson->samaccountname . "</kbd></p>";
 		echo "<p>Given Name: " . $ldapPerson->givenname . "</p>";
     echo "<p>Description: " . $ldapPerson->description . "</p>";
-    echo "<p>CN: " . $ldapPerson->cn . " <i>(" . $ldapPerson->givenname . " " . $ldapPerson0>sn . ")</i></p>";
+    echo "<p>CN: " . $ldapPerson->cn . " <i>(" . $ldapPerson->givenname . " " . $ldapPerson->sn . ")</i></p>";
     echo "<p>pwdlastset: " . $ldapPerson->pwdlastsetbadge() . "</p>";
     echo "<p>mail: " . $ldapPerson->emailAddress() . "</p>";
 
