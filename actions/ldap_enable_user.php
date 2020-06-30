@@ -15,7 +15,8 @@ if ($ldapClass) {
 	$admin_entries = $ldapClass->ldap_get_entries($admin_search_results);
 
   if ($admin_entries['count'] == 1) {
-    $userdata["useraccountcontrol"] = "512";
+		$userdata["useraccountcontrol"] = "512";
+		$userdata["description"] = str_replace("PWD EXPIRED", "", $admin_entries[0]['description'][0]);
 
     $ldapClass->ldap_mod_replace($admin_entries[0]['dn'], $userdata);
     $logInsert = (new Logs)->insert("ldap","warning",null,"Enabled user account <code>" . $ldapUsername . "</code>");
