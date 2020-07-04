@@ -16,7 +16,9 @@ if ($ldapClass) {
 
   if ($admin_entries['count'] == 1) {
 		$userdata["useraccountcontrol"] = "512";
-		$userdata["description"] = str_replace("PWD EXPIRED", "", $admin_entries[0]['description'][0]);
+		if (isset($admin_entries[0]['description'][0])) {
+			$userdata["description"] = str_replace("PWD EXPIRED", "", $admin_entries[0]['description'][0]);
+		}
 		$userdata["unicodepwd"] = iconv("UTF-8", "UTF-16LE", "\"". $ldapClass->randomPassword() ."\"");
 
     $ldapClass->ldap_mod_replace($admin_entries[0]['dn'], $userdata);
