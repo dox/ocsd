@@ -1,38 +1,63 @@
 <?php
 $filename = basename(__FILE__, '.php');
 
-$dbOutput = $db->where("cudid", $_GET['cudid']);
-$dbOutput = $db->getOne($filename);
+$sql  = "SELECT * FROM " . $filename;
+$sql .= " WHERE cudid = '" . $person->cudid . "'";
+
+$dbOutput = $db->query($sql, 'test', 'test')->fetchAll();
 ?>
 
-<h2><?php echo ucwords($filename);?>:</h2>
-<?php
-if (count($dbOutput) > 0) {
-  echo "<table class=\"table\">";
-  echo "<thead>";
-  echo "<tr>";
-  echo "<th scope=\"col\">Key</th>";
-  echo "<th scope=\"col\">Value</th>";
-  echo "</tr>";
-  echo "</thead>";
-  echo "<tbody>";
+<?php if ($dbOutput) { ?>
 
-  foreach ($dbOutput as $key => $value) {
-      if (isset($value)) {
-        $output  = "<tr>";
-        $output  .= "<td>" . $key . "</td>";
-        $output .= "<td>" . $value . "</td>";
-        $output .= "</tr>";
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title"><?php echo $filename; ?></h3>
+  </div>
+  <div class="card-body">
+    <?php
+    foreach ($dbOutput AS $output) {
+      $outputCard  = "<div class=\"card\">";
+      $outputCard .= "<div class=\"card-body\">";
+      $outputCard .= "<div class=\"row row-sm align-items-center\">";
+      $outputCard .= "<div class=\"col-auto\">";
+      $outputCard .= "<span class=\"avatar avatar-lg\" style=\"background-image: url(./images/blank_avatar.png)\"></span>";
+      $outputCard .= "</div>";
+      $outputCard .= "<div class=\"col\">";
+      $outputCard .= "<h4 class=\"card-title m-0\">";
+      $outputCard .= "<a href=\"#\">" . $output['SuperFullName'] . "</a>";
+      $outputCard .= "</h4>";
+      $outputCard .= "<div class=\"text-muted\">";
 
-        echo $output;
+      if (isset($output['SuperSrtDt'])) {
+        $startDate = date('Y-m-d', strtotime($output['SuperSrtDt']));
+      } else {
+        $startDate = "";
       }
+
+      if (isset($output['SuperEndDt'])) {
+        $endDate = date('Y-m-d', strtotime($output['SuperEndDt']));
+      } else {
+        $endDate = "";
+      }
+
+
+      $outputCard .= $output['SuperTypeName'] . " <i>(" . $startDate . " - " . $endDate . ")</i>";
+      $outputCard .= "</div>";
+      $outputCard .= "<div class=\"small mt-1\">";
+      $outputCard .= "<span class=\"text-success\">●</span> " . $output['SuperDeptName'];
+      $outputCard .= "</div>";
+      $outputCard .= "</div>";
+      $outputCard .= "<div class=\"col-auto\">";
+      $outputCard .= "<a href=\"mailto:" . $output['SuperEmail'] . "\" class=\"btn btn-sm btn-white d-none d-md-inline-block\">Email</a>";
+      $outputCard .= "</div>";
+      $outputCard .= "</div>";
+      $outputCard .= "</div>";
+      $outputCard .= "</div>";
+
+      echo $outputCard;
     }
+    ?>
+  </div>
+</div>
 
-  echo "</tbody>";
-  echo "</table>";
-
-  $includeFile = true;
-} else {
-  $includeFile = false;
-}
-?>
+<?php } ?>

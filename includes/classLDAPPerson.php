@@ -37,7 +37,7 @@ class LDAPPerson extends LDAP {
     }
   }
 
-  function emailAddress() {
+  public function emailAddress() {
     if (isset($this->mail)) {
       return makeEmail($this->mail);
     }
@@ -57,16 +57,16 @@ class LDAPPerson extends LDAP {
   	$pwdlastsetAgeInDays = $this->pwdlastsetage();
 
   	if ($pwdlastsetAgeInDays <= pwd_warn_age) {
-  		$badgeClass = "badge-success";
+  		$badgeClass = "bg-green";
   		$flagName = "Password OK aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
   	} elseif ($pwdlastsetAgeInDays >= pwd_warn_age && $pwdlastsetAgeInDays <= pwd_max_age) {
-  		$badgeClass = "badge-warning";
+  		$badgeClass = "bg-yellow";
   		$flagName = "Password expiring in " . (pwd_max_age - $pwdlastsetAgeInDays) . autoPluralise(" day", " days", (pwd_max_age - $pwdlastsetAgeInDays));
   	} elseif ($pwdlastsetAgeInDays > pwd_max_age) {
-  		$badgeClass = "badge-danger";
+  		$badgeClass = "bg-red";
   		$flagName = "Password EXPIRED aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
   	} else {
-  		$badgeClass = "badge-secondary";
+  		$badgeClass = "bg-gray";
   		$flagName = "Password UNKNOWN aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
   	}
 
@@ -77,11 +77,11 @@ class LDAPPerson extends LDAP {
 
   public function useraccountcontrolbadge () {
   	if (in_array($this->useraccountcontrol, array("512", "544"))) {
-  		$badgeClass = "badge-success";
+  		$badgeClass = "bg-green";
   	} elseif (in_array($this->useraccountcontrol, array("2", "16", "514", "546", "8388608"))) {
-  		$badgeClass = "badge-danger";
+  		$badgeClass = "bg-red";
   	} else {
-  		$badgeClass = "badge-secondary";
+  		$badgeClass = "bg-gray";
   	}
 
     $output  = "<a href=\"index.php?n=card_types\" class=\"badge " . $badgeClass . "\">" . $this->useraccountcontrol . "</a>";

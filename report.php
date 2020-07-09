@@ -18,5 +18,5 @@ if (isset($_SESSION['username'])) {
 	echo "LOGON!";
 }
 
-$logInsert = (new Logs)->insert("view","success",null,"<code>" . $_GET['n'] . "</code> report run");
+//$logInsert = (new Logs)->insert("view","success",null,"<code>" . $_GET['n'] . "</code> report run");
 ?>

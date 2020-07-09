@@ -1,21 +1,25 @@
 <?php
-//$studentClass = new Students;
-//$students = $studentClass->find_by_sql("SELECT * FROM students WHERE yr_cohort = '" . $_GET['cohort'] . "' ORDER BY surname ASC");
+$personsClass = new Persons();
+
 if (isset($_GET['cohort'])) {
-	$persons = $db->where("unit_set_cd", $_GET['cohort']);
+	//$persons = $db->where("unit_set_cd", $_GET['cohort']);
+	$persons = $personsClass->allStudentsByCohort($_GET['cohort']);
+} else {
+	$prsons = $personsClass->allStudents();
+
 }
-$persons = $db->orderBy ("lastname", "Asc");
-$persons = $db->get ("Person");
 
 $pdf->SetAutoPageBreak(false);
 
 $pdf->SetFont("Times", 'B', 10);
 $studentArray = array();
 
-foreach ($persons AS $person) {
-	$photo = "photos/UAS_UniversityCard-" . $person['university_card_sysis'] . ".jpg";
-	
-	$subjectName = str_replace("Visiting Non-Matriculated - ", "", $person['rout_name']);
+foreach ($persons AS $personUnique) {
+	$person = new Person($personUnique['cudid']);
+
+	$photo = $person->photo();
+
+	$subjectName = str_replace("Visiting Non-Matriculated - ", "", $person->rout_name);
 	$subjectName = str_replace("Visiting Non-Matriculated ", "", $subjectName);
 	$subjectName = str_replace("Visiting Matriculated ", "", $subjectName);
 	if (strlen($subjectName) > 33) {
@@ -24,8 +28,8 @@ foreach ($persons AS $person) {
 	} else {
 		$subjetNameShort = $subjectName;
 	}
-	
-	$studentArray[] = array('studentPhoto' => $photo, 'studentName' => $person['FullName'], 'studentDegree' => $subjetNameShort, 'studentSubject' => "");
+
+	$studentArray[] = array('studentPhoto' => $photo, 'studentName' => $person->FullName, 'studentDegree' => $subjetNameShort, 'studentSubject' => "");
 }
 
 function ordinalSuffix( $n ) {
@@ -34,7 +38,7 @@ function ordinalSuffix( $n ) {
 $heading = "Photo Report: " . $_GET['cohort'] . ordinalSuffix($_GET['cohort']) . " Year";
 
 $pdf->WriteHTML('<h1>' . $heading . '</h1>');
-	
+
 $rowCounter = 0;
 $sets = array_chunk($studentArray, 3);
 
@@ -54,7 +58,7 @@ foreach ($sets as $set) {
 	$pdf->WriteHTML(str_replace("'", "'", $set[0]['studentDegree']) . "<br />");
 	$pdf->WriteHTML(str_replace("'", "'", $set[0]['studentSubject']));
 	$pdf->WriteHTML('</td>');
-	
+
 	$pdf->WriteHTML('<td align="center">');
 	if (file_exists($set[1]['studentPhoto'])) {
 		$photo = $set[1]['studentPhoto'];
@@ -66,7 +70,7 @@ foreach ($sets as $set) {
 	$pdf->WriteHTML(str_replace("'", "'", $set[1]['studentDegree']) . "<br />");
 	$pdf->WriteHTML(str_replace("'", "'", $set[1]['studentSubject']));
 	$pdf->WriteHTML('</td>');
-	
+
 	$pdf->WriteHTML('<td align="center">');
 	if (file_exists($set[2]['studentPhoto'])) {
 		$photo = $set[2]['studentPhoto'];
@@ -81,7 +85,7 @@ foreach ($sets as $set) {
 	$pdf->WriteHTML('</tr>');
 
 	$rowCounter = $rowCounter + 1;
-	
+
 	if ($rowCounter >= '4') {
 		$pdf->WriteHTML('</table>');
 		$pdf->WriteHTML('<table table width="100%" border="1">');

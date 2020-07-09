@@ -16,26 +16,37 @@ class Logs {
 	public function all() {
 		global $db;
 
-		$persons = $db->orderBy('date_created', "DESC");
-		$persons = $db->get(self::$table_name);
+		$sql  = "SELECT * FROM " . self::$table_name;
+		$sql .= " ORDER BY date_created DESC";
 
-		return $persons;
+		$logs = $db->query($sql, 'test', 'test')->fetchAll();
+
+		return $logs;
 	}
 
-	public function all_by_user($cudid = null, $username = null) {
+	// not fixed anything below this line!
+	public function allByUser($cudid = null, $username = null) {
 		global $db;
 
+		$sql  = "SELECT * FROM " . self::$table_name;
+
 		if ($cudid != null) {
-			$persons = $db->where('cudid', $cudid);
-		}
-		if ($username != null) {
-			$persons = $db->orWhere('username', $username);
+			$sql .= " WHERE cudid = '" . $cudid . "'";
+			if ($username != null) {
+				$sql .= " OR username = '" . $username . "'";
+			}
+		} elseif ($username != null) {
+			$sql .= " WHERE username = '" . $username . "'";
+			if ($username != null) {
+				$sql .= " OR cudid = '" . $cudid . "'";
+			}
 		}
 
-		$persons = $db->orderBy('date_created', "DESC");
-		$persons = $db->get(self::$table_name, 300);
+		$sql .= " ORDER BY date_created DESC";
 
-		return $persons;
+		$logs = $db->query($sql, 'test', 'test')->fetchAll();
+
+		return $logs;
 	}
 
 	public function insert($type, $result, $cudid, $description, $username = null) {
@@ -52,25 +63,27 @@ class Logs {
 			"username" => $username,
 			"ip" => $_SERVER['REMOTE_ADDR']
 		);
-		$db->insert ('_logs', $logSQLInsert);
+
+		$sql = "INSERT INTO " . self::$table_name . " (" . implode(", ",array_keys($logSQLInsert)) . ") VALUES ('" . implode("', '", $logSQLInsert) . "')";
+
+		$insert = $db->query($sql);
 	}
 
 	public function purge() {
 		global $db;
 
-		$lastPurge = $db->where("type", "purge");
-		$lastPurge = $db->where("DATE(date_created)", date('Y-m-d'));
-		$lastPurge = $db->getOne(self::$table_name);
+		$sql = "SELECT * FROM " . self::$table_name . " WHERE type = 'purge' AND DATE(date_created) = '" . date('Y-m-d') . "' LIMIT 1";
+		$lastPurge = $db->query($sql)->fetchArray();
 
 		if (empty($lastPurge)) {
-			$db->where("UNIX_TIMESTAMP(date_created) < " . strtotime('-' . logs_retention . ' days'));
-			$logsDeletedCount = count($db->get(self::$table_name));
+			$sql = "SELECT * FROM " . self::$table_name . " WHERE UNIX_TIMESTAMP(date_created) < '" . strtotime('-' . logs_retention . ' days') . "'";
+			$logsToDelete = $db->query($sql)->fetchAll();
 
-			if ($logsDeletedCount > 0) {
-				$db->where("UNIX_TIMESTAMP(date_created) < " . strtotime('-' . logs_retention . ' days'));
-				$db->delete(self::$table_name);
+			if (count($logsToDelete) > 0) {
+				$sql = "DELETE FROM " . self::$table_name . " WHERE UNIX_TIMESTAMP(date_created) < '" . strtotime('-' . logs_retention . ' days') . "'";
+				$logsToDelete = $db->query($sql)->fetchAll();
 
-				$logInsert = (new Logs)->insert("purge","success",null,$logsDeletedCount . " log(s) purged");
+				$logInsert = (new Logs)->insert("purge","success",null,count($logsToDelete) . " log(s) purged");
 			}
 		}
 	}
