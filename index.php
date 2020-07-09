@@ -39,11 +39,13 @@ if (isset($_POST["oldform"])) { //prevent null bind
 ?>
 
 <body>
-<?php include_once("views/navbar_top.php"); ?>
-
-<div class="container-fluid">
-	<div class="row">
-		<?php include_once("views/navbar_side.php"); ?>
+<?php
+if (isset($_SESSION['username'])) {
+	include_once("views/navbar_top.php");
+}
+?>
+<div class="page">
+		<?php //include_once("views/navbar_side.php"); ?>
 
 		<?php
 		if (isset($_SESSION['username'])) {
@@ -69,12 +71,14 @@ if (isset($_POST["oldform"])) { //prevent null bind
 		if ($node == "nodes/admin_logon.php" || $_GET['n'] == "admin_logon") {
 			include_once($node);
 		} else {
-			echo "<main role=\"main\" class=\"col-md-9 ml-sm-auto col-lg-10 px-md-4\">";
+			echo "<div class=\"content\">";
+			echo "<div class=\"container-xl d-flex flex-column justify-content-center\">";
 			include_once($node);
-			echo "</main>";
+			echo "</div>";
+			echo "</div>";
 		}
+		include_once("views/footer.php");
 		?>
-	</div>
 </div>
 </body>
 </html>

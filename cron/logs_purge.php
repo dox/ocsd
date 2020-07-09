@@ -1,3 +1,4 @@
 <?php
-$logsPurge = (new Logs)->purge();
+$logsClass = new Logs();
+$logsPurge = $logsClass->purge();
 ?>

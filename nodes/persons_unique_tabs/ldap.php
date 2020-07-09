@@ -1,37 +1,32 @@
 <?php
-$ldapPerson = new LDAPPerson($personJSON->sso_username, $personJSON->oxford_email);
+$ldapPerson = new LDAPPerson($person->sso_username, $person->oxford_email);
 
 if (isset($ldapPerson->samaccountname)) {
-		echo "<div class=\"alert alert-dark\" role=\"alert\">" . $ldapPerson->dn . "</div>";
+?>
+<div class="card">
+	<div class="card-body">
+		<h3 class="card-title">LDAP Record Match</h3>
+		<?php
+		if (isset($ldapPerson->description)) {
+			echo "<p>Description: " . $ldapPerson->description . "</p>";
+		}
+		?>
 
-		echo $ldapPerson->actionsButton();
-		
-    echo "<h1 class=\"float-right\">" . $ldapPerson->useraccountcontrolbadge() . "</h1>";
-		echo "<p>Username: <kbd>" . $ldapPerson->samaccountname . "</kbd></p>";
-		echo "<p>Given Name: <kbd>" . $ldapPerson->givenname . "</kbd></p>";
-    echo "<p>Description: " . $ldapPerson->description . "</p>";
-    echo "<p>CN: " . $ldapPerson->cn . " <i>(" . $ldapPerson->givenname . " " . $ldapPerson->sn . ")</i></p>";
-    echo "<p>pwdlastset: " . $ldapPerson->pwdlastsetbadge() . "</p>";
-    echo "<p>mail: " . makeEmail($ldapPerson->mail) . "</p>";
+		<?php echo $ldapPerson->pwdlastsetbadge() . " " . $ldapPerson->useraccountcontrolbadge(); ?>
+		<?php echo $ldapPerson->actionsButton(); ?>
 
-    echo "<h2>Member Of:</h2>";
-    echo "<ul>";
-    foreach ($ldapPerson->memberof AS $memberOf) {
-      echo "<li>" . "<div class=\"alert alert-dark\" role=\"alert\">" . $memberOf . "</div>" . "</li>";
-    }
-    echo "</ul>";
-} else {
-	if (debug == true) {
-		echo "<div class=\"alert alert-warning\" role=\"alert\">";
-		echo "<kbd>ldap_count_entries</kbd> as user <code>" . $user_dn . "</code> is <code>" . $ldapPerson['count'] . "</code>";
-		echo "</div>";
-	}
+		</div>
+		<!-- Card footer -->
+		<div class="card-footer">
+			<div class="d-flex">
+				<a href="./index.php?n=ldap_unique&samaccountname=<?php echo $ldapPerson->samaccountname; ?>" class="btn btn-link"><?php echo $ldapPerson->samaccountname; ?></a>
+				<a href="#" class="btn btn-primary ml-auto">Quick Actions</a>
+			</div>
+		</div>
+	</div>
 
-	echo "<div class=\"alert alert-warning\" role=\"alert\"><strong>Warning!</strong> More than 1 user found!</div>";
-  echo "<pre>";
-  print_r($ldapPerson);
-  echo "</pre>";
+
+
+<?php
 }
-
-$includeFile = true;
 ?>

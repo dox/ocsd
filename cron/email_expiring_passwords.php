@@ -45,8 +45,8 @@ foreach ($allLDAPUsers AS $ldapUser) {
       echo "Expiring " . $ldapPerson->samaccountname . "<br />";
       $userdata["useraccountcontrol"] = "514";
       $userdata["description"] = $ldapPerson->description . " PWD EXPIRED";
-      //$ldapClass->ldap_mod_replace($ldapUser['dn'], $userdata);
-      $logInsert = (new Logs)->insert("ldap","warning",null,"Auto disable user account <code>" . $ldapPerson->samaccountname . "</code>");
+      $ldapClass->ldap_mod_replace($ldapUser['dn'], $userdata);
+      $logInsert = (new Logs)->insert("cron","warning",null,"Auto disable user account <code>" . $ldapPerson->samaccountname . "</code>", $ldapPerson->samaccountname);
   	} else {
   		//password expiry unknown
   	}

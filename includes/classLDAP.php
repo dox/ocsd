@@ -157,6 +157,53 @@ class LDAP {
     return $users;
   }
 
+  public function stale_users($baseDN = LDAP_BASE_DN, $includeDisabled = false) {
+    $ous = $this->list_ou();
+
+    $date = (strtotime(pwd_warn_age*2 . " days ago") + 11644473600)*10000000;
+
+    foreach ($ous AS $ou) {
+      if ($includeDisabled == true) {
+        $allByOUFilter = "(&(sAMAccountName=*)(pwdLastSet<=" . $date . ")(!(objectclass=computer))(!(objectclass=group)))";
+      } else {
+        $allByOUFilter = "(&(sAMAccountName=*)(pwdLastSet<=" . $date . ")(!(objectclass=computer))(!(objectclass=group))(|(useraccountcontrol=512)(useraccountcontrol=544)))";
+        //$allByOUFilter = "(pwdLastSet<=132386760880000000)";
+      }
+
+      $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
+      $all_by_ou_entries = $this->ldap_get_entries($all_by_ou_search_results);
+
+      //printArray($all_by_ou_entries);
+
+      foreach ($all_by_ou_entries AS $user) {
+        $users[] = $user;
+      }
+    }
+
+    return $users;
+  }
+
+  public function expiring_users($baseDN = LDAP_BASE_DN) {
+    $ous = $this->list_ou();
+
+    $date = (strtotime(pwd_warn_age . " days ago") + 11644473600)*10000000;
+
+    foreach ($ous AS $ou) {
+      $allByOUFilter = "(&(sAMAccountName=*)(pwdLastSet<=" . $date . ")(!(objectclass=computer))(!(objectclass=group))(|(useraccountcontrol=512)(useraccountcontrol=544)))";
+
+      $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
+      $all_by_ou_entries = $this->ldap_get_entries($all_by_ou_search_results);
+
+      //printArray($all_by_ou_entries);
+
+      foreach ($all_by_ou_entries AS $user) {
+        $users[] = $user;
+      }
+    }
+
+    return $users;
+  }
+
   public function randomPassword() {
   	$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
   	$pass = array(); //remember to declare $pass as an array
@@ -237,4 +284,11 @@ class LDAP {
   	return $ldapadd;
   }
 } //end of class LDAP
+
+function w32timeToTime($inputTime = null) {
+  $winSecs = (int)($inputTime / 10000000); // divide by 10 000 000 to get seconds
+  $unixTimestamp = ($winSecs - 11644473600); // 1.1.1600 -> 1.1.1970 difference in seconds
+
+  return ($unixTimestamp);
+}
 ?>

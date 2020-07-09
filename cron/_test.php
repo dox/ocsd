@@ -1,4 +1,5 @@
 <?php
+/*
 $firstname = "andrew";
 $username = "sedm4218";
 $password_expiry_in_days = "123";
@@ -8,4 +9,5 @@ $test = str_replace("{{firstname}}", $firstname, $test);
 $test = str_replace("{{username}}", $username, $test);
 $test = str_replace("{{password_expiry_in_days}}", $password_expiry_in_days, $test);
 echo $test;
+*/
 ?>
