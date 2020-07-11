@@ -1,5 +1,5 @@
 <?php
-$sql = "SELECT * FROM _stats WHERE name = 'person_rows_total' ORDER BY date_created DESC";
+$sql = "SELECT * FROM _stats WHERE name = 'person_rows_total' ORDER BY date_created DESC LIMIT 7";
 $statsPersonsTotals = $db->query($sql, 'test', 'test')->fetchAll();
 foreach ($statsPersonsTotals AS $personTotal) {
 	$personTotalArray["'" . date('Y-m-d', strtotime($personTotal['date_created'])) . "'"] = $personTotal['value'];
@@ -7,7 +7,7 @@ foreach ($statsPersonsTotals AS $personTotal) {
 $personTotalArray = array_reverse($personTotalArray);
 
 
-$sql = "SELECT * FROM _stats WHERE name = 'student_rows_total' ORDER BY date_created DESC";
+$sql = "SELECT * FROM _stats WHERE name = 'student_rows_total' ORDER BY date_created DESC LIMIT 7";
 $statsStudentTotals = $db->query($sql, 'test', 'test')->fetchAll();
 foreach ($statsStudentTotals AS $studentTotal) {
 	$studentTotalArray["'" . date('Y-m-d', strtotime($studentTotal['date_created'])) . "'"] = $studentTotal['value'];
@@ -15,11 +15,11 @@ foreach ($statsStudentTotals AS $studentTotal) {
 $studentTotalArray = array_reverse($studentTotalArray);
 
 
-$sql = "SELECT * FROM _logs WHERE type = 'LOGON' ORDER BY date_created DESC";
+$sql = "SELECT * FROM _logs WHERE type = 'LOGON' ORDER BY date_created DESC LIMIT 7";
 $logonsAll = $db->query($sql, 'test', 'test')->fetchAll();
 $logonsAllCount = count($logonsAll);
 
-$sql = "SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs WHERE type = 'LOGON' GROUP BY DATE(date_created) ORDER BY date_created DESC";
+$sql = "SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs WHERE type = 'LOGON' GROUP BY DATE(date_created) ORDER BY date_created DESC LIMIT 7";
 $logonsByDay = $db->query($sql, 'test', 'test')->fetchAll();
 foreach ($logonsByDay AS $day) {
 	$logonsCountArray["'" . date('Y-m-d', strtotime($day['date_created'])) . "'"] = $day['cnt'];
@@ -83,32 +83,32 @@ $logViewsCountArray = array_reverse(array_slice($logViewsCountArray, 0, 7));
 				"area_type" => "area",
 				"title" => "Persons Count",
 				"count_total" => end($personTotalArray),
-				"titles" => implode(array_keys($personTotalArray), ", "),
-				"values" => implode($personTotalArray, ", ")
+				"titles" => array_keys($personTotalArray),
+				"values" => $personTotalArray
 			);
 			$otherCard1 = array(
 				"id" => "students_count",
 				"area_type" => "area",
 				"title" => "Students Count",
 				"count_total" => end($studentTotalArray),
-				"titles" => implode(array_keys($studentTotalArray), ", "),
-				"values" => implode($studentTotalArray, ", ")
+				"titles" => array_keys($studentTotalArray),
+				"values" => $studentTotalArray
 			);
 			$otherCard2 = array(
 				"id" => "logons_count",
 				"area_type" => "line",
 				"title" => "Logons Count",
 				"count_total" => array_sum($logonsCountArray),
-				"titles" => implode(array_keys($logonsCountArray), ", "),
-				"values" => implode($logonsCountArray, ", ")
+				"titles" => array_keys($logonsCountArray),
+				"values" => $logonsCountArray
 			);
 			$otherCard3 = array(
 				"id" => "logs_count",
 				"area_type" => "bar",
 				"title" => "Logs Count",
 				"count_total" => array_sum($logViewsAllCount),
-				"titles" => implode(array_keys($logViewsAllCount), ", "),
-				"values" => implode($logViewsAllCount, ", ")
+				"titles" => array_keys($logViewsCountArray),
+				"values" => $logViewsCountArray
 			);
 			echo cardWithGraph($personsCountCard);
 			echo cardWithGraph($otherCard1);
@@ -1064,8 +1064,26 @@ $logViewsCountArray = array_reverse(array_slice($logViewsCountArray, 0, 7));
 							$output .= "<div class=\"d-flex align-items-baseline\">";
 							$output .= "<div class=\"h1 mb-0 mr-2\">" . $data['count_total'] . "</div>";
 							$output .= "<div class=\"mr-auto\">";
-							$output .= "<span class=\"text-green d-inline-flex align-items-center lh-1\">";
-							$output .= "8% <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon ml-1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"/><polyline points=\"3 17 9 11 13 15 21 7\" /><polyline points=\"14 7 21 7 21 14\" /></svg>";
+
+							$currentReading = end($data['values']);
+							$previousReading = prev($data['values']);
+							//printArray($data['values']);
+							//echo "Prev: " . $previousReading . " Current: " . $currentReading;
+
+							$differencePercentage = round((($currentReading/$previousReading)*100) - 100, "2");
+							if ($differencePercentage > 0) {
+								$icon = "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon ml-1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"/><polyline points=\"3 17 9 11 13 15 21 7\" /><polyline points=\"14 7 21 7 21 14\" /></svg>";
+								$class = "text-green";
+							} elseif ($differencePercentage < 0) {
+								$icon = "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon ml-1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><polyline points=\"3 7 9 13 13 9 21 17\"></polyline><polyline points=\"21 10 21 17 14 17\"></polyline></svg>";
+								$class = "text-red";
+							} else {
+								$icon = "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon ml-1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"></line></svg>";
+								$class = "text-orange";
+							}
+
+							$output .= "<span class=\"" . $class . " d-inline-flex align-items-center lh-1\">";
+							$output .= $differencePercentage . "% " . $icon;
 							$output .= "</span>";
 							$output .= "</div>";
 							$output .= "</div>";
@@ -1104,7 +1122,7 @@ $logViewsCountArray = array_reverse(array_slice($logViewsCountArray, 0, 7));
 															$script .= "},";
 															$script .= "series: [{";
 																$script .= "name: \"Count\",";
-																$script .= "data: [" . $data['values'] . "]";
+																$script .= "data: [" . implode($data['values'], ", ") . "]";
 																$script .= "}],";
 																$script .= "grid: {";
 																	$script .= "strokeDashArray: 4,";
@@ -1127,7 +1145,7 @@ $logViewsCountArray = array_reverse(array_slice($logViewsCountArray, 0, 7));
 																							$script .= "},";
 																							$script .= "},";
 																							$script .= "labels: [";
-																							$script .= $data['titles'];
+																							$script .= implode($data['titles'], ", ");
 																							$script .= "],";
 																							$script .= "colors: [\"#206bc4\"],";
 																							$script .= "legend: {";
