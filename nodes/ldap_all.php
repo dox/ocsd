@@ -80,7 +80,7 @@ foreach ($usersForOutput AS $user) {
       $output .= "<td>" . "" . "</td>";
       $output .= "<td>" . "" . "</td>";
       $output .= "<td>" . makeEmail($user['oxford_email']) . "</td>";
-      $output .= "<td>" . "PROVISION" . "</td>";
+      $output .= "<td>" . $ldapUser->actionsButton($user['cudid']) . "</td>";
       $output .= "</tr>";
 
       $tableOutput[] = $output;

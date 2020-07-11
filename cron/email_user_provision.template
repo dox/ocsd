@@ -1,0 +1,37 @@
+<p>Dear {{firstname}}, your College computer account for St Edmund Hall has now been activated, and your details are listed below:</p>
+
+<p>Username: {{username}}</p>
+<p>Password: <code>{{password}}</code> (case sensitive)</p>
+
+<p>This College username is the same as your University username (which you use to access www.office.com [the University email system], SOLO [library catalogue], Webauth [for accessing things such as WebLearn, the virtual learning environment] etc.). For more information on your University username, please see https://help.it.ox.ac.uk/webauth/oxfordusername</p>
+
+<h3>WiFI/Internet</h3>
+<p>Your College username/password will grant you access to the SEH Students WiFi (please 'forget' the SEH Guest WiFi network if you have been using it).</p>
+
+<p>Please note that your Internet access is monitored. Downloading of illegal material (such as films or music) is strictly prohibited and, if caught, will be fined at &pound;110/offence.</p>
+
+<p>You can also use this username/password to log on to the protected sections of the www.seh.ox.ac.uk website.</p>
+
+<h3>Printing</h3>
+<p>You can either print from any of the onsite computers at St Edmund Hall, or you can log on to http://printing.seh.ox.ac.uk from your own computer. From here you can check your printing charges and submit to the JCR, MCR, Library or NSE printers.</p>
+
+<p>Paper is available from the Lodge</p>
+
+<h3>Computers</h3>
+<p>The above username/password will log you on to any computer at St Edmund Hall.</p>
+
+<p>If you wish to change your College password, please log on to any College computer, and then press CTRL-ALT-DEL and click 'Change Password'.</p>
+
+<p>Please note: it is important that you do not share these details with anyone. It is used to track who had access and made changes to specific information. You are responsible for everything done on the system using your username and password.</p>
+
+<h3>Battles/Meals/Dinners</h3>
+<p>With the above username/password, students may book meals, pay battels and book Formal Hall dinners online by visiting https://epos.seh.ox.ac.uk</p>
+
+<p>Please direct any queries regarding your battles payments, meal charges or dinner bookings to accounts@seh.ox.ac.uk.</p>
+
+<p>For any College-IT issues, please email help@seh.ox.ac.uk</p>
+
+<p>Regards,<br /><br />
+
+IT Office<br />
+St Edmund Hall<br /></p>

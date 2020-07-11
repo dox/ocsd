@@ -50,13 +50,20 @@ $(".ldap_enable_user").click(function() {
 $(".ldap_provision_user").click(function() {
 	$(this).parent().dropdown('toggle');
 
-	var samaccountname = $(this).attr('id');
+	var cudid = $(this).attr('id');
 	var url = 'actions/ldap_provision_user.php';
 
+	if ($(this).hasClass("provision_with_email")) {
+		var email = 'true';
+	} else {
+		var email = 'false';
+	}
+
 	$.post(url,{
-		samaccountname: samaccountname
+		cudid: cudid,
+		email: email
 	}, function(data){
-		alert("Provision User: " + samaccountname);
+		alert("Provision User: " + cudid);
 	},'html');
 
 	return false;

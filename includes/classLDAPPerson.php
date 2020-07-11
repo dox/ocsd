@@ -89,7 +89,7 @@ class LDAPPerson extends LDAP {
   	return $output;
   }
 
-  public function actionsButton() {
+  public function actionsButton($cudid = null) {
     $output  = "<div class=\"dropdown\">";
     $output .= "<button class=\"btn btn-sm btn-secondary dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">LDAP Actions</button>";
     $output .= "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">";
@@ -104,8 +104,13 @@ class LDAPPerson extends LDAP {
       }
 
 
-      if (!isset($this->samaccountname)) {
-        $output .= "<a class=\"dropdown-item ldap_provision_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Provison Account</a>";
+      if ($cudid != null) {
+				$person = new Person($cudid);
+
+        $output .= "<a class=\"dropdown-item ldap_provision_user\" id=\"" . $person->cudid . "\" href=\"#\">Provison Silently</a>";
+				if (isset($person->oxford_email)) {
+					$output .= "<a class=\"dropdown-item ldap_provision_user provision_with_email\" id=\"" . $person->cudid . "\" href=\"#\">Provision and Send Welcome Email</a>";
+				}
       }
     }
 
