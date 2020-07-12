@@ -205,7 +205,7 @@ class LDAP {
   }
 
   public function randomPassword($length = 12) {
-  	$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  	$alphabet = 'abcdefghijkmnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ23456789£%@<>?+=,.';
   	$pass = array(); //remember to declare $pass as an array
   	$alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
 
