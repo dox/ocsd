@@ -75,8 +75,8 @@ class LDAPPerson extends LDAP {
   	return $output;
   }
 
-  public function useraccountcontrolbadge () {
-  	if (in_array($this->useraccountcontrol, array("512", "544"))) {
+	public function useraccountcontrolbadge () {
+  	if ($this->isEnabled()) {
   		$badgeClass = "bg-green";
   	} elseif (in_array($this->useraccountcontrol, array("2", "16", "514", "546", "8388608"))) {
   		$badgeClass = "bg-red";
@@ -89,17 +89,27 @@ class LDAPPerson extends LDAP {
   	return $output;
   }
 
+	public function isEnabled () {
+		$enabledValues = array("512", "544");
+
+  	if (in_array($this->useraccountcontrol, $enabledValues)) {
+  		return true;
+  	} else {
+			return false;
+		}
+  }
+
   public function actionsButton($cudid = null) {
     $output  = "<div class=\"dropdown\">";
     $output .= "<button class=\"btn btn-sm btn-secondary dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">LDAP Actions</button>";
     $output .= "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">";
 
     if (in_array($_SESSION['username'], admin_usernames)){
-      if (isset($this->samaccountname) && !in_array($this->useraccountcontrol, array("512", "544"))) {
+      if (isset($this->samaccountname) && !$this->isEnabled()) {
         $output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account</a>";
       }
 
-      if (isset($this->samaccountname) && in_array($this->useraccountcontrol, array("512", "544"))) {
+      if (isset($this->samaccountname) && $this->isEnabled()) {
         $output .= "<a class=\"dropdown-item ldap_disable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Disable Account</a>";
       }
 
