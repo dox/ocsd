@@ -23,6 +23,7 @@ require_once($root . '/includes/classPersons.php');
 require_once($root . '/includes/adLDAP/adLDAP.php');
 require_once($root . '/includes/classLDAP.php');
 require_once($root . '/includes/classLDAPPerson.php');
+require_once($root . '/includes/classTemplates.php');
 
 try {
 	$adldap
