@@ -352,7 +352,7 @@ function bodcardTypes() {
 		"PT" => "Part Time (unmatriculated)",
 		"VD" => "Departmental Visiting Student",
 		"VV" => "Departmental Visiting Student",
-		"VC (1)" => "College Visiting Student",
+		"VC" => "College Visiting Student",
 		"CL" => "Cardholder (not a University member)",
 		"CB" => "Cardholder (not a University member)",
 		"VA" => "Virtual Access",
