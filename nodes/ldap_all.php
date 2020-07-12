@@ -11,13 +11,13 @@ if (isset($_GET['filter'])) {
     foreach ($users AS $user) {
       $personsClass = new Persons;
       //printArray($user);
-      $person = $personsClass->search($user['samaccountname'][0], 1);
+      $person = $personsClass->search($user['mail'][0], 1);
 
-      if (!$person) {
-        $usersForOutput[] = $user;
+      if (count($person) == 1) {
       } else {
-        $person = $personsClass->search($user['mail'][0], 1);
-        if (!$person) {
+        $person = $personsClass->search($user['samaccountname'][0], 1);
+        if (count($person) == 1) {
+        } else {
           $usersForOutput[] = $user;
         }
       }
