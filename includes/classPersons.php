@@ -8,11 +8,18 @@ class Person extends Persons {
 		foreach ($person AS $key => $value) {
 			$this->$key = $value;
 		}
+
+		$ldapPerson = new LDAPPerson($this->sso_username, $this->oxford_email);
+
+		if (count($ldapPerson)) {
+			$this->ldap_samaccountname = $ldapPerson->samaccountname;
+			$this->ldap_isEnabled = $ldapPerson->isEnabled();
+		}
 	}
 
 	public function makeListItem() {
 		$cudURL = "./index.php?n=persons_unique&cudid=" . $this->cudid;
-		$ldapURL = "./index.php?n=ldap_unique&samaccountname=" . $this->sso_username;
+		$ldapURL = "./index.php?n=ldap_unique&samaccountname=" . $this->ldap_samaccountname;
 
 		$output  = "<div class=\"card\">";
 		$output .= "<div class=\"card-body\">";
@@ -23,12 +30,13 @@ class Person extends Persons {
 		$output .= "<div class=\"col\">";
 		$output .= "<h3 class=\"mb-0 text-truncate\"><a href=\"" . $cudURL . "\">" . $this->FullName . "</a></h3>";
 		$output .= "<div class=\"text-muted text-h5\">" . $this->bodcardType() . "</div>";
+		$output .= "<div class=\"text-muted text-h5\">SSO: " . $this->sso_username . "</div>";
 		$output .= "</div>";
-		$output .= "<div class=\"col-auto lh-1 align-self-start\">";
-		$output .= "<span class=\"badge bg-gray-lt\">";
-		$output .= $this->sso_username;
-		$output .= "</span>";
-		$output .= "</div>";
+		//$output .= "<div class=\"col-auto lh-1 align-self-start\">";
+		//$output .= "<span class=\"badge bg-gray-lt\">";
+		//$output .= $this->sso_username;
+		//$output .= "</span>";
+		//$output .= "</div>";
 		$output .= "</div>";
 		$output .= "<div class=\"row align-items-center mt-4\">";
 		$output .= "<div class=\"col\">";
@@ -55,7 +63,7 @@ class Person extends Persons {
 		}
 
 		$output .= "<div class=\"d-flex mb-1 align-items-center lh-1\">";
-		$output .= "<div class=\"text-h5 font-weight-bolder m-0\">Bodcard: " . $this->barcode7 . "</div>";
+		$output .= "<div class=\"text-h5 font-weight-bolder m-0\">" . $this->barcode7 . "</div>";
 		$output .= "<span class=\"ml-auto text-h6 strong\">" . $datediff . " days left</span>";
 		$output .= "</div>";
 		$output .= "<div class=\"progress progress-sm\">";
@@ -114,7 +122,16 @@ class Person extends Persons {
 		$imgSrc = $this->photo();
 
 		$output  = "<a href=\"index.php?n=persons_unique&cudid=" . $this->cudid . "\" class=\"circle\">";
-		$output .= "<div class=\"media-object avatar avatar-md mr-4\" style=\"background-image: url(" . $imgSrc . ")\"></div>";
+		$output .= "<span class=\"avatar rounded-lg avatar-lg\" style=\"background-image: url(" . $imgSrc . ")\">";
+
+		if ($this->ldap_isEnabled == true) {
+			$class = "bg-success";
+		} else {
+			$class = "bg-danger";
+		}
+		$output .= "<span class=\"badge " . $class . "\"></span>";
+
+		$output .="</span>";
 		$output .= "</a>";
 
 		return $output;
@@ -266,6 +283,8 @@ class Persons {
 	public $bodleian_mifare_id;
 	public $bodleian_isoiec_14443_uid;
 
+	public $ldap_samaccountname;
+
 	private $studentArrayTypes = array('GT', 'GR', 'UG', 'VR', 'PT', 'VD', 'VV', 'VC');
 
 	public function all() {
@@ -352,7 +371,7 @@ function bodcardTypes() {
 		"PT" => "Part Time (unmatriculated)",
 		"VD" => "Departmental Visiting Student",
 		"VV" => "Departmental Visiting Student",
-		"VC (1)" => "College Visiting Student",
+		"VC" => "College Visiting Student",
 		"CL" => "Cardholder (not a University member)",
 		"CB" => "Cardholder (not a University member)",
 		"VA" => "Virtual Access",

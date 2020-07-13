@@ -21,7 +21,7 @@ if ($ldapClass && $person) {
 	$userdata["sn"] = $person->lastname;
 	$userdata["displayname"] = $person->FullName;
 	$userdata["objectclass"] = "User";
-	//$userdata["description"][0] = "test;
+	$userdata["description"][0] = "\\\\helium\students$\Entry " . date('Y') . "\%username%";
 	//$userdata["instancetype"][0] = "";
 	//$userdata["name"][0] = "";
 	//$userdata["company"][0] = "";
@@ -47,16 +47,17 @@ if ($ldapClass && $person) {
 		$emailMessageBody = str_replace("{{password}}", $randomPassword, $emailMessageBody);
 
 		$sendMailSubject = "Your SEH IT account has been provisioned";
-
-		sendMail($sendMailSubject, array($person->firstname->oxford_email), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
+		//sendMail($sendMailSubject, array($person->oxford_email, "andrew.breakspear@seh.ox.ac.uk"), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
 	}
 
-//CREATE LDAP Account
-//$admin_add = $ldapClass->ldap_add($userDN, $userdata);
+	//CREATE LDAP Account
+	$admin_add = $ldapClass->ldap_add($userDN, $userdata);
 
 	if ($admin_add) {
+		echo "Success";
 		$logInsert = (new Logs)->insert("ldap","success",null,"Created user account <code>" . $userdata["sAMAccountName"] . "</code>");
 	} else {
+		echo "Error";
 		$logInsert = (new Logs)->insert("ldap","error",null,"Failed to create user account for CUDID <code>" . $_POST["cudid"] . "</code>");
 	}
 }
