@@ -1,3 +1,94 @@
+<?php
+
+$navbarArray['home'] = array(
+	"title" => "Home",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"/><polyline points=\"5 12 3 12 12 3 21 12 19 12\" /><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\" /><path d=\"M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6\" /></svg>",
+	"link" => "./index.php"
+);
+
+$navbarArray['persons_all'] = array(
+	"title" => "Persons",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><circle cx=\"12\" cy=\"7\" r=\"4\"></circle><path d=\"M5.5 21v-2a4 4 0 0 1 4 -4h5a4 4 0 0 1 4 4v2\"></path></svg>",
+	"sublinks" => array(
+		array(
+			"title" => "Students",
+			"link" => "./index.php?n=persons_all&filter=students"
+		),
+		array(
+			"title" => "Staff",
+			"link" => "./index.php?n=persons_all&filter=staff"
+		),
+		array(
+			"title" => "All",
+			"link" => "./index.php?n=persons_all&filter=all"
+		)
+	)
+);
+
+$navbarArray['photos'] = array(
+	"title" => "Photo Reports",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><line x1=\"15\" y1=\"8\" x2=\"15.01\" y2=\"8\"></line><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"></rect><path d=\"M4 15l4 -4a3 5 0 0 1 3 0l 5 5\"></path><path d=\"M14 14l1 -1a3 5 0 0 1 3 0l 2 2\"></path></svg>",
+	"sublinks" => array(
+		array(
+			"title" => "All",
+			"link" => "./report.php?n=photo_by_year"
+		)
+	)
+);
+
+$currentYear = date('Y');
+$yearOutput = $currentYear;
+$totalYears = 6;
+$i = 1;
+do {
+	$navbarArray['photos']['sublinks'][] = array(
+		"title" => " - " . $yearOutput,
+		"link" => "./report.php?n=photo_by_year&cohort=" . $i
+	);
+
+	$yearOutput = $yearOutput - 1;
+	$i++;
+} while ($i <= $totalYears);
+
+$navbarArray['ldap_all'] = array(
+	"title" => "LDAP",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"></rect><circle cx=\"12\" cy=\"16\" r=\"1\"></circle><path d=\"M8 11v-4a4 4 0 0 1 8 0v4\"></path></svg>",
+	"sublinks" => array(
+		array(
+			"title" => "LDAP no CUD",
+			"link" => "./index.php?n=ldap_all&filter=ldap-no-cud"
+		),
+		array(
+			"title" => "CUD no LDAP",
+			"link" => "./index.php?n=ldap_all&filter=cud-no-ldap"
+		),
+		array(
+			"title" => "Expiring Soon",
+			"link" => "./index.php?n=ldap_all&filter=expiring"
+		),
+		array(
+			"title" => "Stale",
+			"link" => "./index.php?n=ldap_all&filter=stale"
+		),
+		array(
+			"title" => "All",
+			"link" => "./index.php?n=ldap_all&filter=all"
+		)
+	)
+);
+
+$navbarArray['emergency_email'] = array(
+	"title" => "Email",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"></rect><polyline points=\"3 7 12 13 21 7\"></polyline></svg>",
+	"link" => "./index.php?n=emergency_email"
+);
+
+$navbarArray['admin_logs'] = array(
+	"title" => "Logs",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><circle cx=\"12\" cy=\"12\" r=\"9\"></circle><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"></line><polyline points=\"11 12 12 12 12 16 13 16\"></polyline></svg>",
+	"link" => "./index.php?n=admin_logs"
+);
+?>
 <header class="navbar navbar-expand-md navbar-light">
 		<div class="container-xl">
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu">
@@ -56,113 +147,48 @@
 			<div class="navbar navbar-light">
 				<div class="container-xl">
 					<ul class="navbar-nav">
-						<li class="nav-item active">
-							<a class="nav-link" href="./index.php" >
-								<span class="nav-link-icon d-md-none d-lg-inline-block"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
-								</span>
-								<span class="nav-link-title">
-									Home
-								</span>
-							</a>
-						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#navbar-base" data-toggle="dropdown" role="button" aria-expanded="false" >
-								<span class="nav-link-icon d-md-none d-lg-inline-block"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21v-2a4 4 0 0 1 4 -4h5a4 4 0 0 1 4 4v2"></path></svg>
-								</span>
-								<span class="nav-link-title">
-									Persons
-								</span>
-							</a>
-							<ul class="dropdown-menu dropdown-menu">
-								<li >
-									<a class="dropdown-item" href="./index.php?n=persons_all&filter=students" >
-										Students
-									</a>
-								</li>
-								<li >
-									<a class="dropdown-item" href="./index.php?n=persons_all&filter=staff" >
-										Staff
-									</a>
-								</li>
-								<li >
-									<a class="dropdown-item" href="./index.php?n=persons_all" >
-										All
-									</a>
-								</li>
-							</ul>
-						</li>
-						<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#navbar-base" data-toggle="dropdown" role="button" aria-expanded="false" >
-										<span class="nav-link-icon d-md-none d-lg-inline-block"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><line x1="15" y1="8" x2="15.01" y2="8"></line><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5"></path><path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2"></path></svg>
-										</span>
-										<span class="nav-link-title">
-											Photo Reports
-										</span>
-									</a>
-									<ul class="dropdown-menu">
-										<li>
-											<a class="dropdown-item" href="./report.php?n=photo_by_year" >All</a>
-										</li>
-									<?php
-									$currentYear = date('Y');
-									$yearOutput = $currentYear;
-									$totalYears = 6;
-									$output = "";
+						<?php
+						foreach ($navbarArray AS $key => $navBarLink) {
+							if ($key == $_GET['n']) {
+								$active = " active";
+							} else {
+								if (!isset($_GET['n']) && $key == "home") {
+									$active = " active";
+								} else {
+									$active = "";
+								}
+							}
 
+							if (is_array($navBarLink['sublinks'])) {
+								$output  = "<li class=\"nav-item dropdown " . $active . "\">";
+								$output .= "<a class=\"nav-link dropdown-toggle\" href=\"#navbar-base\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\" >";
+							} else {
+								$output  = "<li class=\"nav-item " . $active . "\">";
+								$output .= "<a class=\"nav-link\" href=\"" . $navBarLink['link'] . "\" role=\"button\" aria-expanded=\"false\" >";
+							}
+							$output .= "<span class=\"nav-link-icon d-md-none d-lg-inline-block\">";
+							$output .= $navBarLink['icon'];
+							$output .= "</span>";
+							$output .= "<span class=\"nav-link-title\">" . $navBarLink['title'] . "</span>";
+							$output .= "</a>";
 
-									$i = 1;
-									do {
-										$output .= "<li><a href=\"./report.php?n=photo_by_year&cohort=" . $i . "\" class=\"dropdown-item\">- " . $yearOutput . "</a></li>";
-										$yearOutput = $yearOutput - 1;
-										$i++;
-									} while ($i <= $totalYears);
+							if (isset($navBarLink['sublinks'])) {
+								$output .= "<ul class=\"dropdown-menu dropdown-menu\">";
 
-									echo $output;
-									?>
-									</ul>
-							</li>
-						<li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#navbar-base" data-toggle="dropdown" role="button" aria-expanded="false" >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><rect x="5" y="11" width="14" height="10" rx="2"></rect><circle cx="12" cy="16" r="1"></circle><path d="M8 11v-4a4 4 0 0 1 8 0v4"></path></svg>
-                    </span>
-                    <span class="nav-link-title">
-                      LDAP
-                    </span>
-                  </a>
-                  <ul class="dropdown-menu ">
-										<li>
-											<a class="dropdown-item" href="./index.php?n=ldap_all&filter=all" >All</a>
-										</li>
-										<li>
-                      <a class="dropdown-item" href="./index.php?n=ldap_all&filter=ldap-no-cud" >LDAP no CUD</a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="./index.php?n=ldap_all&filter=cud-no-ldap" >CUD no LDAP</a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="./index.php?n=ldap_all&filter=expiring" >Expiring Soon</a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="./index.php?n=ldap_all&filter=stale" >Stale</a>
-                    </li>
-                	</ul>
-              </li>
-						<li class="nav-item">
-							<a class="nav-link" href="./index.php?n=emergency_email" >
-								<span class="nav-link-icon d-md-none d-lg-inline-block"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><rect x="3" y="5" width="18" height="14" rx="2"></rect><polyline points="3 7 12 13 21 7"></polyline></svg></span>
-								<span class="nav-link-title">
-									Emergency Email
-								</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="./index.php?n=admin_logs" >
-								<span class="nav-link-icon d-md-none d-lg-inline-block"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="12" cy="12" r="9"></circle><line x1="12" y1="8" x2="12.01" y2="8"></line><polyline points="11 12 12 12 12 16 13 16"></polyline></svg></span>
-								<span class="nav-link-title">
-									Logs
-								</span>
-							</a>
-						</li>
+								foreach ($navBarLink['sublinks'] AS $sublink) {
+									$output .= "<li >";
+									$output .= "<a class=\"dropdown-item\" href=\"" . $sublink['link'] . "\" >" . $sublink['title'] . "</a>";
+									$output .= "</li>";
+								}
+								$output .= "</ul>";
+							}
+
+							$output .= "</li>";
+
+							echo $output;
+						}
+
+						?>
 					</ul>
 					<div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
 						<form action="./index.php?n=persons_all&filter=search" method="POST" target="_self">
