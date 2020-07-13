@@ -49,6 +49,18 @@ class Logs {
 		return $logs;
 	}
 
+	public function allByType($type = null, $ageLimitDay = 7) {
+		global $db;
+
+		$sql  = "SELECT * FROM " . self::$table_name;
+		$sql .= " WHERE type = '" . $type . "'";
+		$sql .= " AND date_created BETWEEN CURDATE() - INTERVAL " . $ageLimitDay . " DAY AND CURDATE()";
+		$sql .= " ORDER BY date_created DESC";
+		$logs = $db->query($sql)->fetchAll();
+
+		return $logs;
+	}
+
 	public function insert($type, $result, $cudid, $description, $username = null) {
 		global $db;
 

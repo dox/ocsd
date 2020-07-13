@@ -18,6 +18,10 @@ if (!in_array(strtoupper($_SESSION["username"]), $emailAllowedUsers) ) {
 $templatesClass = new Templates();
 $templatesAll = $templatesClass->all();
 
+$logsClass = new Logs();
+$ageLimitDays = 7;
+$logs = $logsClass->allByType("email", $ageLimitDays);
+
 ?>
 
 <?php
@@ -27,16 +31,11 @@ if (isset($_POST['emailRecipients']) && isset($_POST['emailSubject']) && isset($
 		$recipients[] = str_replace(' ', '', $recipient);
 	}
 
-	$message = htmlspecialchars($_POST['emailMessage']);
-	$message = preg_replace('/\n/', '<br />', $message);
-	$message = mb_convert_encoding($message, "HTML-ENTITIES", 'UTF-8');
+	//$message = htmlspecialchars($_POST['emailMessage']);
+	//$message = preg_replace('/\n/', '<br />', $message);
+	//$message = mb_convert_encoding($message, "HTML-ENTITIES", 'UTF-8');
 
-	$headers[] = 'MIME-Version: 1.0';
-	$headers[] = 'Content-type: text/html; charset=iso-8859-1';
-	$headers[] = 'To: Mary <mary@example.com>, Kelly <kelly@example.com>';
-	$headers[] = 'From: Birthday Reminder <' . $_POST['emailSender'] . '>';
-
-	sendMail($_POST['emailSubject'], $recipients, $message, $_POST['emailSender'], $_POST['emailSenderName']);
+	sendMail($_POST['emailSubject'], $recipients, $_POST['emailMessage'], $_POST['emailSender'], $_POST['emailSenderName']);
 	//mail(implode(",", $recipients), $_POST['emailSubject'], $message, implode("\r\n", $headers));
 
 	$logInsert = (new Logs)->insert("email","success",null,"Email sent to <code>" . $_POST['emailRecipients'] . "</code>");
@@ -57,7 +56,7 @@ if (isset($_POST['emailRecipients']) && isset($_POST['emailSubject']) && isset($
 				<hr />
 				<a href="index.php?n=emergency_email&tab=sent" class="list-group-item list-group-item-action d-flex align-items-center <?php if ($_GET['tab'] == "sent") { echo "active"; } ?>">
 					<span class="icon mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><line x1="10" y1="14" x2="21" y2="3"></line><path d="M21 3L14.5 21a.55 .55 0 0 1 -1 0L10 14L3 10.5a.55 .55 0 0 1 0 -1L21 3"></path></svg>
-					</span>Sent Mail
+					</span>Sent Mail <span class="ml-auto badge bg-grey"><?php echo count($logs); ?></span>
 				</a>
 				<a href="index.php?n=emergency_email&tab=drafts" class="list-group-item list-group-item-action d-flex align-items-center <?php if ($_GET['tab'] == "drafts") { echo "active"; } ?>">
 					<span class="icon mr-3"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><polyline points="14 3 14 8 19 8"></polyline><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path></svg>
