@@ -21,8 +21,21 @@ if (isset($_POST["oldform"])) { //prevent null bind
 		if ($adldap->authenticate($username, $password)){
 			//establish your session and redirect
 
-			$_SESSION["username"] = $username;
-            $_SESSION["userinfo"] = $adldap->user()->info($username);
+			$ldapArray = $adldap->user()->info($username);
+	    $ldapArray = $ldapArray[0];
+
+			$personsClass = new Persons;
+		  $CUDPerson = $personsClass->search($ldapArray['samaccountname'][0]);
+		  if (!count($CUDperson) == 1) {
+		    $CUDPerson = $personsClass->search($ldapArray['mail'][0], 2);
+		  }
+
+			$_SESSION["cudid"] = $CUDPerson[0]['cudid'];
+			$_SESSION["bodcard"] = $CUDPerson[0]['barcode7'];
+			$_SESSION["username"] = strtoupper($ldapArray['samaccountname'][0]);
+			$_SESSION["avatar_url"] = "photos/UAS_UniversityCard-" . $CUDPerson[0]['university_card_sysis'] . ".jpg";
+			$_SESSION["email"] = $ldapArray['mail'][0];
+      $_SESSION["userinfo"] = $adldap->user()->info($username);
 			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
 
 			$logInsert = (new Logs)->insert("logon","success",null,"LDAP logon success");
