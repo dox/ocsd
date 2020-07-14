@@ -127,11 +127,11 @@ $navbarArray['admin_logs'] = array(
 					<div class="dropdown-menu dropdown-menu-right">
 						<a class="dropdown-item" href="./index.php?n=persons_unique&cudid=<?php echo $_SESSION['cudid'];?>">
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21v-2a4 4 0 0 1 4 -4h5a4 4 0 0 1 4 4v2"></path></svg>
-							My CUD Record
+							My CUD Profile
 						</a>
 						<a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>">
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><rect x="5" y="11" width="14" height="10" rx="2"></rect><circle cx="12" cy="16" r="1"></circle><path d="M8 11v-4a4 4 0 0 1 8 0v4"></path></svg>
-							My LDAP Record action
+							My LDAP Record
 						</a>
 						<div class="dropdown-divider"></div>
 						<a class="dropdown-item" href="./index.php?n=admin_logon&logout=true">
