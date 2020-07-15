@@ -1,12 +1,11 @@
 <?php
-	if (isset($_GET['logout'])) {
+if (isset($_GET['logout'])) {
 	if ($_GET['logout'] == "true" && isset($_SESSION["username"])) { //destroy the session
 		$message = "<div class=\"alert alert-success\" role=\"alert\"><strong>Success!</strong> You have been logged out.</div>";
 		$logInsert = (new Logs)->insert("logoff","success",null,"Logoff success");
 
 		$_SESSION = array();
 		session_destroy();
-
 	}
 }
 ?>
@@ -18,16 +17,15 @@
 		</div>
 		<form class="card card-md" id="loginForm" method="post" role="form">
 			<div class="card-body">
-				<h2 class="mb-5 text-center">Login Required</h2>
+				<h1 class="mb-5 text-center">Login Required</h1>
 				<?php echo $message; ?>
 				<div class="mb-3">
-					<label class="form-label">Username</label>
+					<label for="username" class="sr-only">Username</label>
 					<input type="text" class="form-control" placeholder="Username" id="username" name="username" value="<?php if (isset($_POST['username'])) { echo $username; } ?>" required autocomplete="off" autofocus>
 
 				</div>
-				<div class="mb-2">
+				<div class="mb-3">
 					<label class="form-label">
-						Password
 						<?php
 						if (pwd_reset_url) {
 						echo "<span class=\"form-label-description\">";
@@ -36,13 +34,8 @@
 						}
 						?>
 					</label>
-					<div class="input-group input-group-flat">
-						<input type="password" class="form-control" placeholder="Password" name="password" id="password" required>
-						<span class="input-group-text">
-							<a href="#" class="link-secondary" title="Show password" data-toggle="tooltip"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="2" /><path d="M2 12l1.5 2a11 11 0 0 0 17 0l1.5 -2" /><path d="M2 12l1.5 -2a11 11 0 0 1 17 0l1.5 2" /></svg>
-							</a>
-						</span>
-					</div>
+					<label for="password" class="sr-only">Password</label>
+					<input type="password" class="form-control" placeholder="Password" id="password" name="password" required>
 				</div>
 				<div class="mb-2">
 					<label class="form-check">

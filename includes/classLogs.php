@@ -13,13 +13,17 @@ class Logs {
 	function __construct() {
 	}
 
-	public function all() {
+	public function all($limit = null) {
 		global $db;
 
 		$sql  = "SELECT * FROM " . self::$table_name;
 		$sql .= " ORDER BY date_created DESC";
 
-		$logs = $db->query($sql, 'test', 'test')->fetchAll();
+		if ($limit != null) {
+			$sql .= " LIMIT " . $limit;
+		}
+
+		$logs = $db->query($sql)->fetchAll();
 
 		return $logs;
 	}

@@ -122,7 +122,7 @@ class Person extends Persons {
 		$imgSrc = $this->photo();
 
 		$output  = "<a href=\"index.php?n=persons_unique&cudid=" . $this->cudid . "\" class=\"circle\">";
-		$output .= "<span class=\"avatar rounded-lg avatar-lg\" style=\"background-image: url(" . $imgSrc . ")\">";
+		$output .= "<span alt=\"this is a test\" class=\"avatar rounded-lg avatar-lg\" style=\"background-image: url(" . $imgSrc . ")\">";
 
 		if ($this->ldap_isEnabled == true) {
 			$class = "bg-success";

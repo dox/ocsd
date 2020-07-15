@@ -170,8 +170,20 @@ $logs = $logsClass->all();
 				$output  = "<tr class=\"" . $class . "\">";
 				$output .= "<td>" . $logDate . " </td>";
 				$output .= "<td>" . $log['description'] . " <span class=\"badge badge-info float-right\">" . $log['type'] . "</span></td>";
-				$output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $log['cudid'] . "\">" . $log['cudid'] . "</a></td>";
-				$output .= "<td>" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $log['username'] . "\">" . $log['username'] . "</a></td>";
+
+        if (!empty($log['cudid'])){
+          $cudLink = "<a href=\"index.php?n=persons_unique&cudid=" . $log['cudid'] . "\">" . $log['cudid'] . "</a>";
+        } else {
+          $cudLink = "";
+        }
+        $output .= "<td>" . $cudLink . "</td>";
+
+        if (!empty($log['username'])){
+          $ldapLink = "<a href=\"index.php?n=ldap_unique&samaccountname=" . $log['username'] . "\">" . $log['username'] . "</a>";
+        } else {
+          $ldapLink = "";
+        }
+        $output .= "<td>" . $ldapLink . "</td>";
 				$output .= "<td>" . $log['ip'] . "</td>";
 				$output .= "</tr>";
 			} else {
