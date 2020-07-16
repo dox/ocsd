@@ -21,11 +21,12 @@ foreach ($allLDAPUsers AS $ldapUser) {
       $password_expiry_in_days = (pwd_max_age - $pwdlastsetInDays);
 
       $sendMail = false;
-      $template = $templatesClass->one('user_password_expiring');
-        $emailMessageBody = $template['body'];
-        $emailMessageBody = str_replace("{{firstname}}", $ldapPerson->givenname, $emailMessageBody);
-        $emailMessageBody = str_replace("{{username}}", strtolower($ldapPerson->samaccountname), $emailMessageBody);
-        $emailMessageBody = str_replace("{{password_expiry_duration}}", autoPluralise($password_expiry_in_days . " day", $password_expiry_in_days . " days", $password_expiry_in_days), $emailMessageBody);
+      $replaceFields = array(
+        "username" => strtolower($ldapPerson->samaccountname),
+        "firstname" => $ldapPerson->givenname,
+        "password_expiry_duration" => autoPluralise($password_expiry_in_days . " day", $password_expiry_in_days . " days", $password_expiry_in_days)
+      );
+      $emailMessageBody = $templatesClass->oneBodyWithReplaceFields('user_password_expiring', $replaceFields);
       $sendMailSubject = "Your SEH IT Password is due to expire in " . $password_expiry_in_days . autoPluralise(" day", " days", $password_expiry_in_days);
 
       if ($password_expiry_in_days == 30) {
@@ -38,7 +39,8 @@ foreach ($allLDAPUsers AS $ldapUser) {
 
       if ($sendMail == true) {
         echo "Emailing " . $ldapPerson->samaccountname . "<br />";
-        sendMail($sendMailSubject, array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
+        //sendMail($sendMailSubject, array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
+        sendMail($sendMailSubject, array("andrew.breakspear@seh.ox.ac.uk"), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
         $logInsert = (new Logs)->insert("cron","success",null,"Sending password expiry email (" . $password_expiry_in_days . autoPluralise(" day", " days", $password_expiry_in_days) . " warning) to <code>" . $ldapPerson->mail . "</code>", $ldapPerson->samaccountname);
       }
   	} elseif ($pwdlastsetInDays > pwd_max_age) {

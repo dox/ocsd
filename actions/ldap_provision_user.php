@@ -2,6 +2,7 @@
 include_once("../includes/autoload.php");
 
 $ldapClass = new LDAP();
+$templatesClass = new Templates();
 $person = new Person($_POST['cudid']);
 
 if ($ldapClass && $person) {
@@ -41,13 +42,14 @@ if ($ldapClass && $person) {
 
 	if ($_POST['email'] == 'true') {
 		// SEND WELCOMING EMAIL
-		$emailMessageBody = file_get_contents("../cron/email_user_provision.template");
-		$emailMessageBody = str_replace("{{firstname}}", $person->firstname, $emailMessageBody);
-		$emailMessageBody = str_replace("{{username}}", $person->sso_username, $emailMessageBody);
-		$emailMessageBody = str_replace("{{password}}", $randomPassword, $emailMessageBody);
-
+		$replaceFields = array(
+			"username" => strtolower($person->sso_username),
+			"firstname" => $person->firstname,
+			"password" => $randomPassword
+		);
+		$emailMessageBody = $templatesClass->oneBodyWithReplaceFields('user_ldap_provision', $replaceFields);
 		$sendMailSubject = "Your SEH IT account has been provisioned";
-		//sendMail($sendMailSubject, array($person->oxford_email, "andrew.breakspear@seh.ox.ac.uk"), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
+		sendMail($sendMailSubject, array($person->oxford_email, "andrew.breakspear@seh.ox.ac.uk"), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
 	}
 
 	//CREATE LDAP Account
