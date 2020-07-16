@@ -99,7 +99,7 @@ foreach ($usersForOutput AS $user) {
 						Filter: <?php echo $_GET['filter']; ?>
 					</div>
 					<h2 class="page-title">
-						<?php echo count($tableOutput); ?> LDAP
+						<span id="ldap_count"><?php echo count($tableOutput); ?></span> LDAP
 					</h2>
 				</div>
 

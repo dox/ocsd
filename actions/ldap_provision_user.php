@@ -22,7 +22,7 @@ if ($ldapClass && $person) {
 	$userdata["sn"] = $person->lastname;
 	$userdata["displayname"] = $person->FullName;
 	$userdata["objectclass"] = "User";
-	$userdata["description"][0] = "\\\\helium\students$\Entry " . date('Y') . "\%username%";
+	$userdata["description"][0] = "\\\\helium\students$\\" . date('Y') . "\%username%";
 	//$userdata["instancetype"][0] = "";
 	//$userdata["name"][0] = "";
 	//$userdata["company"][0] = "";

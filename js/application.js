@@ -48,8 +48,6 @@ $(".ldap_enable_user").click(function() {
 });
 
 $(".ldap_provision_user").click(function() {
-	$(this).parent().parent().parent().parent().fadeOut('slow');
-
 	var cudid = $(this).attr('id');
 	var url = 'actions/ldap_provision_user.php';
 
@@ -63,6 +61,10 @@ $(".ldap_provision_user").click(function() {
 		cudid: cudid,
 		email: email
 	}, function(data){
+		$(this).parent().parent().parent().parent().fadeOut('slow');
+		var pageCount = $('#ldap_count').text();
+		$('#ldap_count').text(pageCount - 1);
+
 		alert("LDAP Result: " + data);
 	},'html');
 
