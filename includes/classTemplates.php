@@ -18,7 +18,10 @@ class Templates  {
   public function one($uid = null) {
 		global $db;
 
-		$sql = "SELECT * FROM " . self::$table_name . " WHERE uid = '" . $uid . "'";
+		$sql  = "SELECT * FROM " . self::$table_name;
+    $sql .= " WHERE uid = '" . $uid . "'";
+    $sql .= " OR name = '" . $uid . "'";
+    
 		$template = $db->query($sql)->fetchArray();
 
 		return $template;

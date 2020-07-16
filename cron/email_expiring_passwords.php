@@ -1,5 +1,6 @@
 <?php
 $ldapClass = new LDAP();
+$templatesClass = new Templates();
 
 if ($ldapClass) {
   $admin_bind = $ldapClass->ldap_bind();
@@ -19,12 +20,12 @@ foreach ($allLDAPUsers AS $ldapUser) {
       //password expiring within 30 - 60 days
       $password_expiry_in_days = (pwd_max_age - $pwdlastsetInDays);
 
-      $emailMessageBody = file_get_contents("cron/email_expiring_password.template");
-      $emailMessageBody = str_replace("{{firstname}}", $ldapPerson->givenname, $emailMessageBody);
-      $emailMessageBody = str_replace("{{username}}", strtolower($ldapPerson->samaccountname), $emailMessageBody);
-      $emailMessageBody = str_replace("{{password_expiry_duration}}", autoPluralise($password_expiry_in_days . " day", $password_expiry_in_days . " days", $password_expiry_in_days), $emailMessageBody);
-
       $sendMail = false;
+      $template = $templatesClass->one('user_password_expiring');
+        $emailMessageBody = $template['body'];
+        $emailMessageBody = str_replace("{{firstname}}", $ldapPerson->givenname, $emailMessageBody);
+        $emailMessageBody = str_replace("{{username}}", strtolower($ldapPerson->samaccountname), $emailMessageBody);
+        $emailMessageBody = str_replace("{{password_expiry_duration}}", autoPluralise($password_expiry_in_days . " day", $password_expiry_in_days . " days", $password_expiry_in_days), $emailMessageBody);
       $sendMailSubject = "Your SEH IT Password is due to expire in " . $password_expiry_in_days . autoPluralise(" day", " days", $password_expiry_in_days);
 
       if ($password_expiry_in_days == 30) {
