@@ -152,7 +152,7 @@ $logs = $logsClass->all();
 		foreach ($logs AS $log) {
 			$logDate = date('Y-m-d H:i:s', strtotime($log['date_created']));
 
-			if ($log->result == "success") {
+      if ($log['result'] == "success") {
 				$class = "table-success";
 			} else if ($log['result'] == "warning") {
 				$class = "table-warning";
@@ -166,10 +166,26 @@ $logs = $logsClass->all();
 				$class = "";
 			}
 
+      if ($log['type'] == "ldap") {
+				$badgeClass = "bg-indigo";
+			} else if ($log['type'] == "logon" || $log['type'] == "logoff") {
+				$badgeClass = "bg-green";
+			} else if ($log['type'] == "view") {
+				$badgeClass = "bg-lime";
+			} else if ($log['type'] == "cron") {
+				$badgeClass = "bg-blue";
+			} else if ($log['type'] == "purge") {
+				$badgeClass = "bg-pink";
+			} else if ($log['type'] == "email") {
+				$badgeClass = "bg-yellow";
+			} else {
+				$badgeClass = "";
+			}
+
 			if (in_array($_SESSION['username'], admin_usernames)) {
 				$output  = "<tr class=\"" . $class . "\">";
 				$output .= "<td>" . $logDate . " </td>";
-				$output .= "<td>" . $log['description'] . " <span class=\"badge badge-info float-right\">" . $log['type'] . "</span></td>";
+				$output .= "<td>" . $log['description'] . " <span class=\"badge float-right " . $badgeClass . "\">" . $log['type'] . "</span></td>";
 
         if (!empty($log['cudid'])){
           $cudLink = "<a href=\"index.php?n=persons_unique&cudid=" . $log['cudid'] . "\">" . $log['cudid'] . "</a>";
