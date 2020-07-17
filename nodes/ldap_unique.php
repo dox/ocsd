@@ -2,6 +2,13 @@
 $ldapPerson = new LDAPPerson($_GET['samaccountname']);
 
 if (isset($ldapPerson->samaccountname)) {
+  $logInsert = (new Logs)->insert("ldap","success",null,$ldapPerson->cn . " (" . $ldapPerson->samaccountname . ") LDAP record viewed");
+
+  $personsClass = new Persons;
+  $CUDPerson = $personsClass->search($ldapPerson->samaccountname, 2);
+  if (!count($CUDperson) == 1) {
+    $CUDPerson = $personsClass->search($ldapPerson->mail, 2);
+  }
 ?>
 
 <div class="content">
@@ -20,22 +27,32 @@ if (isset($ldapPerson->samaccountname)) {
         </div>
         <!-- Page title actions -->
         <div class="col-auto ml-auto d-print-none">
-          <span class="d-none d-sm-inline">
-            <a href="mailto:<?php echo $ldapPerson->mail;?>" class="btn btn-white">
-              Email
-            </a>
-          </span>
-          <a href="#" class="btn btn-primary ml-3 d-none d-sm-inline-block" data-toggle="modal" data-target="#modal-report">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-            LDAP Actions
-          </a>
-          <a href="#" class="btn btn-primary ml-3 d-sm-none btn-icon" data-toggle="modal" data-target="#modal-report" aria-label="Create new report">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-          </a>
+          <?php echo $ldapPerson->actionsButton(null, "btn-primary ml-3 d-none d-sm-inline-block"); ?>
         </div>
       </div>
     </div>
     <div class="row">
+      <div class="card">
+        <div class="card-body text-center">
+          <h2><?php echo $ldapPerson->dn; ?></h2>
+        </div>
+      </div>
+
+      <?php
+      if ($CUDPerson) {
+        $output  = "<div class=\"card\">";
+        $output .= "<div class=\"card-body text-center\">";
+        $output .= "<a href=\"./index.php?n=persons_unique&cudid=" . $CUDPerson[0]['cudid'] . "\">";
+        $output .= "<h2>LINKED CUD RECORD FOUND</h2>";
+        $output .= "</a>";
+        $output .= "</div>";
+        $output .= "</div>";
+
+        echo $output;
+      }
+      ?>
+
+
       <div class="col-md-6 col-xl-3">
         <div class="card">
           <div class="card-status-bottom bg-primary"></div>
@@ -109,13 +126,6 @@ if (isset($ldapPerson->samaccountname)) {
               <div class="text-muted">lastLogon</div>
             </div>
           </div>
-        </div>
-      </div>
-
-
-      <div class="card">
-        <div class="card-body text-center">
-          <h2><?php echo $ldapPerson->dn; ?></h2>
         </div>
       </div>
 
