@@ -157,6 +157,31 @@ class LDAP {
     return $users;
   }
 
+  public function search_users($baseDN = LDAP_BASE_DN, $includeDisabled = false, $searchTerm = null) {
+    $ous = $this->list_ou();
+
+    foreach ($ous AS $ou) {
+      if ($includeDisabled == true) {
+        $allByOUFilter = "(&(|(sAMAccountName=*" . $searchTerm . "*)(cn=*" . $searchTerm . "*))(!(objectclass=computer))(!(objectclass=group)))";
+      } else {
+        $allByOUFilter = "(&(|(sAMAccountName=*" . $searchTerm . "*)(cn=*" . $searchTerm . "*))(!(objectclass=computer))(!(objectclass=group))(|(useraccountcontrol=512)(useraccountcontrol=544)))";
+      }
+
+      //echo $allByOUFilter;
+
+      $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
+      $all_by_ou_entries = $this->ldap_get_entries($all_by_ou_search_results);
+
+      //printArray($all_by_ou_entries);
+
+      foreach ($all_by_ou_entries AS $user) {
+        $users[] = $user;
+      }
+    }
+
+    return $users;
+  }
+
   public function stale_users($baseDN = LDAP_BASE_DN, $includeDisabled = false) {
     $ous = $this->list_ou();
 

@@ -55,6 +55,10 @@ $navbarArray['ldap_all'] = array(
 	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"></rect><circle cx=\"12\" cy=\"16\" r=\"1\"></circle><path d=\"M8 11v-4a4 4 0 0 1 8 0v4\"></path></svg>",
 	"sublinks" => array(
 		array(
+			"title" => "<form action=\"./index.php?n=ldap_all&filter=search\" method=\"POST\" target=\"_self\"><input type=\"text\" class=\"form-control\" id=\"ldap_search\" name=\"ldap_search\" placeholder=\"Search LDAP...\" aria-describedby=\"LDAPSearch\"></form>",
+			"link" => "#"
+		),
+		array(
 			"title" => "LDAP no CUD",
 			"link" => "./index.php?n=ldap_all&filter=ldap-no-cud"
 		),
@@ -197,7 +201,7 @@ $navbarArray['admin_logs'] = array(
 								<span class="input-icon-addon">
 									<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7" /><line x1="21" y1="21" x2="15" y2="15" /></svg>
 								</span>
-								<input type="text" class="form-control typeahead" name="navbar_search" id="navbar_search" placeholder="Search…" autocomplete="off" spellcheck="false">
+								<input type="text" class="form-control typeahead" name="navbar_search" id="navbar_search" placeholder="Search CUD..." autocomplete="off" spellcheck="false">
 							</div>
 						</form>
 					</div>

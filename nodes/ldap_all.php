@@ -53,6 +53,13 @@ if (isset($_GET['filter'])) {
     foreach ($users AS $user) {
       $usersForOutput[] = $user;
     }
+	} elseif ($_GET['filter'] == "search") {
+    $logInsert = (new Logs)->insert("ldap","success",null,"LDAP Search for <code>" . $_POST['ldap_search'] . "</code>");
+    $filterDescription = "These are all records that exist in the local LDAP that match the search term '" . $_POST['ldap_search'] . "'.";
+    $users = $ldapClass->search_users(LDAP_BASE_DN, true, $_POST['ldap_search']);
+    foreach ($users AS $user) {
+      $usersForOutput[] = $user;
+    }
 	}
 }
 
@@ -99,7 +106,7 @@ foreach ($usersForOutput AS $user) {
 						Filter: <?php echo $_GET['filter']; ?>
 					</div>
 					<h2 class="page-title">
-						<span id="ldap_count"><?php echo count($tableOutput); ?></span> LDAP
+						<span id="ldap_count"><?php echo count($tableOutput); ?></span> LDAP <?php echo autoPluralise(" Record", " Records", count($tableOutput)); ?>
 					</h2>
 				</div>
 
