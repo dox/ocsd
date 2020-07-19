@@ -5,7 +5,7 @@ if ($ldapClass) {
 }
 
 if (isset($_GET['filter'])) {
-	if ($_GET['filter'] == "ldap-no-cud") {
+  if ($_GET['filter'] == "ldap-no-cud") {
     $users = $ldapClass->all_users(LDAP_BASE_DN, false);
     $filterDescription = "These are enabled records that exist in the local LDAP, but are not matched against a valid CUD record.";
     foreach ($users AS $user) {
@@ -22,7 +22,7 @@ if (isset($_GET['filter'])) {
         }
       }
     }
-	} elseif ($_GET['filter'] == "cud-no-ldap") {
+  } elseif ($_GET['filter'] == "cud-no-ldap") {
     $filterDescription = "These are enabled records that exist in CUD, but are not matched against a valid local LDAP record.";
     $personsClass = new Persons();
     $persons = $personsClass->all(LDAP_BASE_DN, false);
@@ -34,33 +34,33 @@ if (isset($_GET['filter'])) {
         $usersForOutput[] = $person;
       }
     }
-	} elseif ($_GET['filter'] == "expiring") {
+  } elseif ($_GET['filter'] == "expiring") {
     $users = $ldapClass->expiring_users(LDAP_BASE_DN);
     $filterDescription = "These are enabled records that exist in the local LDAP, but are due to expire as they have not reset their password in over " . pwd_warn_age . " days.";
     foreach ($users AS $user) {
       $usersForOutput[] = $user;
     }
-	} elseif ($_GET['filter'] == "stale") {
+  } elseif ($_GET['filter'] == "stale") {
     $users = $ldapClass->stale_users(LDAP_BASE_DN, true);
     $filterDescription = "These are all records that exist in the local LDAP, but have not had their password reset in " . (pwd_warn_age*2) . " days.";
     foreach ($users AS $user) {
       //lookup user in CUD
       $usersForOutput[] = $user;
     }
-	} elseif ($_GET['filter'] == "all") {
+  } elseif ($_GET['filter'] == "all") {
     $filterDescription = "These are all records that exist in the local LDAP.";
     $users = $ldapClass->all_users(LDAP_BASE_DN, true);
     foreach ($users AS $user) {
       $usersForOutput[] = $user;
     }
-	} elseif ($_GET['filter'] == "search") {
+  } elseif ($_GET['filter'] == "search") {
     $filterDescription = "These are all records that exist in the local LDAP that match the search term '" . $_POST['ldap_search'] . "'.";
     $users = $ldapClass->search_users(LDAP_BASE_DN, true, $_POST['ldap_search']);
     $logInsert = (new Logs)->insert("ldap","success",null,"LDAP Search for <code>" . $_POST['ldap_search'] . "</code> returned " . count($users) . " results (not all of the results were displayable users)");
     foreach ($users AS $user) {
       $usersForOutput[] = $user;
     }
-	}
+  }
 }
 
 foreach ($usersForOutput AS $user) {
@@ -95,46 +95,40 @@ foreach ($usersForOutput AS $user) {
   }
 }
 ?>
+
 <div class="content">
-	<div class="container-xl">
-		<!-- Page title -->
-		<div class="page-header">
-			<div class="row align-items-center">
-				<div class="col-auto">
-					<!-- Page pre-title -->
-					<div class="page-pretitle">
-						Filter: <?php echo $_GET['filter']; ?>
-					</div>
-					<h2 class="page-title">
-						<span id="ldap_count"><?php echo count($tableOutput); ?></span> LDAP <?php echo autoPluralise(" Record", " Records", count($tableOutput)); ?>
-					</h2>
-				</div>
-
-				<div class="row">
-          <p><?php echo $filterDescription; ?></p>
-
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Full Name</th>
-                <th scope="col">SSO</th>
-                <th scope="col">LDAP</th>
-                <th scope="col">Account Control</th>
-                <th scope="col">pwdlastset</th>
-                <th scope="col">Email</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-              foreach ($tableOutput AS $row) {
-                echo $row;
-              }
-              ?>
-            </tbody>
-          </table>
-        </div>
+  <!-- Page title -->
+  <div class="page-header">
+    <div class="row align-items-center">
+      <div class="col-auto">
+        <div class="page-pretitle">Filter: <?php echo $_GET['filter']; ?></div>
+        <h2 class="page-title"><span id="ldap_count"><?php echo count($tableOutput); ?></span> LDAP <?php echo autoPluralise(" Record", " Records", count($tableOutput)); ?></h2>
       </div>
     </div>
+  </div>
+
+  <div class="row">
+    <p><?php echo $filterDescription; ?></p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Full Name</th>
+          <th scope="col">SSO</th>
+          <th scope="col">LDAP</th>
+          <th scope="col">Account Control</th>
+          <th scope="col">pwdlastset</th>
+          <th scope="col">Email</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        foreach ($tableOutput AS $row) {
+          echo $row;
+        }
+        ?>
+      </tbody>
+    </table>
   </div>
 </div>
