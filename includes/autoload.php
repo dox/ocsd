@@ -20,22 +20,24 @@ require_once($root . '/includes/globalFunctions.php');
 require_once($root . '/includes/db.php');
 require_once($root . '/includes/classLogs.php');
 require_once($root . '/includes/classPersons.php');
-require_once($root . '/includes/adLDAP/adLDAP.php');
 require_once($root . '/includes/classLDAP.php');
 require_once($root . '/includes/classLDAPPerson.php');
 require_once($root . '/includes/classTemplates.php');
 
-try {
-	$adldap
-	 = new adLDAP();
-}
-catch (adLDAPException $e) {
-    echo $e;
-    exit();
-}
+use LdapRecord\Container;
+use LdapRecord\Connection;
+use LdapRecord\Models\Entry;
 
-//$db = new MysqliDb (db_host, db_username, db_password, db_name);
+// Create a new connection:
+$ldap_connection = new Connection([
+    'hosts' => [LDAP_SERVER],
+    'port' => LDAP_PORT,
+    'base_dn' => LDAP_BASE_DN,
+    'username' => LDAP_BIND_DN,
+    'password' => LDAP_BIND_PASSWORD,
+]);
+// Add the connection into the container:
+Container::addConnection($ldap_connection);
+
 $db = new db(db_host, db_username, db_password, db_name);
-
-$ldap_connection = new LDAP();
 ?>

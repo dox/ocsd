@@ -2,64 +2,94 @@
 
 <?php
 //you should look into using PECL filter or some form of filtering here for POST variables
-if (isset($_POST["username"])) {
-	$username = strtoupper($_POST["username"]); //remove case sensitivity on the username
-	$password = $_POST["password"];
-}
+if (isset($_POST["username"]) && isset($_POST["password"])) {
+	$form_username = strtoupper($_POST["username"]); //remove case sensitivity on the username
+	$form_password = $_POST["password"];
 
-if (isset($_POST["oldform"])) { //prevent null bind
-	if ($username != NULL && $password != NULL){
-        try {
-		    $adldap = new adLDAP();
-        }
-        catch (adLDAPException $e) {
-            echo $e;
-            exit();
-        }
-
-		//authenticate the user
-		if ($adldap->authenticate($username, $password)){
-			//establish your session and redirect
-
-			$ldapArray = $adldap->user()->info($username);
-	    $ldapArray = $ldapArray[0];
+	if ($ldap_connection->auth()->attempt($form_username . "@seh.ox.ac.uk", $form_password, $stayAuthenticated = true)) {
+	    // Successfully authenticated user.
+			$ldap_user = $ldap_connection->query()->findBy('samaccountname', $form_username);
 
 			$personsClass = new Persons;
-		  $CUDPerson = $personsClass->search($ldapArray['samaccountname'][0]);
-		  if (!count($CUDperson) == 1) {
-		    $CUDPerson = $personsClass->search($ldapArray['mail'][0], 2);
-		  }
+			$CUDPerson = $personsClass->search($ldap_user['samaccountname'][0]);
+			if (!count($CUDperson) == 1) {
+				$CUDPerson = $personsClass->search($ldap_user['mail'][0], 2);
+			}
 
 			$_SESSION["cudid"] = $CUDPerson[0]['cudid'];
 			$_SESSION["bodcard"] = $CUDPerson[0]['barcode7'];
-			$_SESSION["username"] = strtoupper($ldapArray['samaccountname'][0]);
+			$_SESSION["username"] = strtoupper($ldap_user['samaccountname'][0]);
 			$_SESSION["avatar_url"] = "photos/UAS_UniversityCard-" . $CUDPerson[0]['university_card_sysis'] . ".jpg";
-			$_SESSION["email"] = $ldapArray['mail'][0];
-      $_SESSION["userinfo"] = $adldap->user()->info($username);
+			$_SESSION["email"] = $ldap_user['mail'][0];
+			//$_SESSION["userinfo"] = $adldap->user()->info($username);
+
+			if (isset($_POST['remember'])) {
+				$hash = crypt($_POST['form_password'], salt);
+				$date_created = date('Y-m-d H:i:s');
+				$cookie_duration = time()+3600; // seconds
+
+				setcookie("ocsd_username", $_SESSION["username"], $cookie_duration);
+				setcookie("ocsd_hash", $hash, $cookie_duration);
+
+				$sql  = "INSERT INTO _sessions ";
+				$sql .= " (username, hash, date_created)";
+				$sql .= " VALUES ('" . $_SESSION["username"] . "', '" . $hash . "', '" . $date_created . "') ";
+				$sql .= " ON DUPLICATE KEY UPDATE";
+				$sql .= " username='" . $_SESSION["username"] . "', hash='" . $hash . "', date_created='" . $date_created . "';";
+
+				$db->query($sql);
+			}
+
 			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
 
 			$logInsert = (new Logs)->insert("logon","success",null,"LDAP logon success");
+
 			header($redir);
 			exit;
-		} else {
-			$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.</div>";
-			$logInsert = (new Logs)->insert("logon","error",null,"LDAP logon failed for <code>" . $username . "</code>");
-		}
+	} else {
+		// Username or password is incorrect.
+		$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.</div>";
+		$logInsert = (new Logs)->insert("logon","error",null,"LDAP logon failed for <code>" . $form_username . "</code>");
 	}
-
 }
 
+/*
+// try to log in with cookie
+if (!isset($_SESSION['username']) && !isset($_POST["oldform"])) {
+	if (isset($_COOKIE['ocsd_username']) && isset($_COOKIE['ocsd_hash'])) {
+		$sql  = "SELECT * FROM _sessions ";
+		$sql .= " WHERE username = '" . $_SESSION["username"] . "'";
+		$sql .= "  AND hash = '" . $hash . "'";
+
+		$dbSession = $db->query($sql);
+
+		if (count($dbSession) == 1) {
+			echo "COOKIE LOGON!";
+
+			$_SESSION["cudid"] = "unknown";
+			$_SESSION["bodcard"] = "unknown";
+			$_SESSION["username"] = strtoupper($_COOKIE['ocsd_username']);
+			$_SESSION["avatar_url"] = "unknown";
+			$_SESSION["email"] = "unknown";
+			$_SESSION["userinfo"] = "unknown";
+			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
+
+			$logInsert = (new Logs)->insert("logon","success",null,"COOKIE logon success");
+
+			header($redir);
+			exit;
+		}
+	}
+*/
 ?>
 
 <body>
-<?php
-if (isset($_SESSION['username'])) {
-	include_once("views/navbar_top.php");
-}
-?>
-<div class="page">
-		<?php //include_once("views/navbar_side.php"); ?>
-
+	<?php
+	if (isset($_SESSION['username'])) {
+		include_once("views/navbar_top.php");
+	}
+	?>
+	<div class="page">
 		<?php
 		if (isset($_SESSION['username'])) {
 			if (!in_array(strtoupper($_SESSION["username"]), allowed_usernames) ) {
@@ -92,6 +122,6 @@ if (isset($_SESSION['username'])) {
 		}
 		include_once("views/footer.php");
 		?>
-</div>
+	</div>
 </body>
 </html>

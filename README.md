@@ -14,6 +14,7 @@ Please ensure you have a valid Apache virtual host/site ready, and mySQL working
 
 * Download OCSD into your web root from GitHub: <code>git clone https://github.com/dox/ocsd.git</code>
 * Import the mySQL schema into mySQL (coming soon)
+* Install ldaprecord: <code>composer require directorytree/ldaprecord</code>
 * Install mPDF: <code>composer require mpdf/mpdf</code>
 * Install PHPMailer: <code>composer require phpmailer/phpmailer</code>
 * Copy config.php.SAMPLE to config.php (in the root of the web directory) and modify

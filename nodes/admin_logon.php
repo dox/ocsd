@@ -28,9 +28,9 @@ if (isset($_GET['logout'])) {
 					<label class="form-label">
 						<?php
 						if (pwd_reset_url) {
-						echo "<span class=\"form-label-description\">";
-						echo "<a href=\"" . pwd_reset_url . "\">Forgot Password</a>";
-						echo "</span>";
+							echo "<span class=\"form-label-description\">";
+							echo "<a href=\"" . pwd_reset_url . "\">Forgot Password</a>";
+							echo "</span>";
 						}
 						?>
 					</label>
@@ -39,7 +39,7 @@ if (isset($_GET['logout'])) {
 				</div>
 				<div class="mb-2">
 					<label class="form-check">
-						<input type="checkbox" class="form-check-input"/>
+						<input type="checkbox" class="form-check-input" id="remember" name="remember" />
 						<span class="form-check-label">Remember me on this device</span>
 					</label>
 				</div>
