@@ -1,4 +1,6 @@
 <?php
+include_once("../includes/autoload.php");
+
 $ldapClass = new LDAP();
 $templatesClass = new Templates();
 
@@ -39,7 +41,7 @@ foreach ($allLDAPUsers AS $ldapUser) {
 
       if ($sendMail == true) {
         echo "Emailing " . $ldapPerson->samaccountname . "<br />";
-        sendMail($sendMailSubject, array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
+        //sendMail($sendMailSubject, array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
         $logInsert = (new Logs)->insert("cron","success",null,"Sending password expiry email (" . $password_expiry_in_days . autoPluralise(" day", " days", $password_expiry_in_days) . " warning) to <code>" . $ldapPerson->mail . "</code>", $ldapPerson->samaccountname);
       }
   	} elseif ($pwdlastsetInDays > pwd_max_age) {

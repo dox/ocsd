@@ -1,4 +1,6 @@
 <?php
+include_once("../includes/autoload.php");
+
 // this checks each LDAP record against a matched CUD record
 // if pager, or mail isn't correct in LDAP (based on the data in CUD)
 // it will update the LDAP record

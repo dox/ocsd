@@ -1,4 +1,6 @@
 <?php
+include_once("../includes/autoload.php");
+
 $timeFirst  = strtotime("now");
 
 function _s_has_letters( $string ) {

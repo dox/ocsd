@@ -71,4 +71,25 @@ $(".ldap_provision_user").click(function() {
 	return false;
 });
 
+$(".cron_run_task").click(function() {
+	var spinner = "<div class=\"spinner-border\" role=\"status\"></div>";
+	$('#cron_results').append(spinner);
+	//$(this).parent().dropdown('toggle');
+
+	var filename = $(this).attr('id');
+	var url = 'cron/' + filename;
+	//alert(url);
+
+	$.ajax({ type: "GET",
+		url: url,
+		success : function(text) {
+			$('.spinner-border').remove();
+			$('#cron_results').prepend('<div>'+text+'</div>');
+			$('#cron_results').prepend('<div><strong>Execution of ' + filename + ' completed successfully.<strong></div>');
+		}
+	});
+
+	return false;
+});
+
 });

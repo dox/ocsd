@@ -10,4 +10,6 @@ $test = str_replace("{{username}}", $username, $test);
 $test = str_replace("{{password_expiry_in_days}}", $password_expiry_in_days, $test);
 echo $test;
 */
+
+echo "Ta Da!";
 ?>

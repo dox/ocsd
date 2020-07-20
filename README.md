@@ -20,9 +20,6 @@ Please ensure you have a valid Apache virtual host/site ready, and mySQL working
 * Log in (using your LDAP username/password)!
 
 # Scheduled Tasks
-<code>0 1 * * * curl https://your-web-address-here/cron.php</code> can be added to crontab which will trigger every <code>.php</code> file in the <code>/cron</code> folder
+<code>0 1 * * * curl https://your-web-address-here/cron.php?action=run_all</code> can be added to crontab which will trigger every <code>.php</code> file in the <code>/cron</code> folder
 
-* _test.php
-* cud_sync.php
-* email_expiring_passwords.php
-* ldap_sync.php
+Alternatively, you can run /cron.php?action=run_one&file=somefile.php to execute just one of the cron tasks.
