@@ -48,13 +48,13 @@ class Person extends Persons {
 		if ($datediff > 365) {
 			$width = "100%";
 			$class = "bg-green";
-		} elseif ($datediff < 365 && $datediff > 100) {
+		} elseif ($datediff <= 365 && $datediff > 100) {
 			$width = $datediff . "%";
 			$class = "bg-blue";
-		} elseif ($datediff < 100 && $datediff > 30) {
+		} elseif ($datediff <= 100 && $datediff > 30) {
 			$width = $datediff . "%";
 			$class = "bg-yellow";
-		} elseif ($datediff < 30 && $datediff > 0) {
+		} elseif ($datediff <= 30 && $datediff > 0) {
 			$width = $datediff . "%";
 			$class = "bg-red";
 		} else {
