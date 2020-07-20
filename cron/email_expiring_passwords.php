@@ -41,23 +41,19 @@ foreach ($allLDAPUsers AS $ldapUser) {
 
       if ($sendMail == true) {
         echo "Emailing " . $ldapPerson->samaccountname . "<br />";
-        //sendMail($sendMailSubject, array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
+        sendMail($sendMailSubject, array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
         $logInsert = (new Logs)->insert("cron","success",null,"Sending password expiry email (" . $password_expiry_in_days . autoPluralise(" day", " days", $password_expiry_in_days) . " warning) to <code>" . $ldapPerson->mail . "</code>", $ldapPerson->samaccountname);
       }
-  	} elseif ($pwdlastsetInDays > pwd_max_age) {
-  		//password expired
-      echo "Expiring " . $ldapPerson->samaccountname . "<br />";
-      $userdata["useraccountcontrol"] = "514";
-      $userdata["description"] = $ldapPerson->description . " PWD EXPIRED";
-      $ldapClass->ldap_mod_replace($ldapUser['dn'], $userdata);
-      $logInsert = (new Logs)->insert("cron","warning",null,"Auto disable user account <code>" . $ldapPerson->samaccountname . "</code>", $ldapPerson->samaccountname);
-  	} else {
-  		//password expiry unknown
   	}
+  }
 
-
-  } else {
-    // user doesn't have an email address!
+  if ($pwdlastsetInDays >= pwd_max_age) {
+    //password expired
+    echo "Expiring " . $ldapPerson->samaccountname . "<br />";
+    $userdata["useraccountcontrol"] = "514";
+    $userdata["description"] = $ldapPerson->description . " PWD EXPIRED";
+    $ldapClass->ldap_mod_replace($ldapUser['dn'], $userdata);
+    $logInsert = (new Logs)->insert("cron","warning",null,"Auto disable user account <code>" . $ldapPerson->samaccountname . "</code>", $ldapPerson->samaccountname);
   }
 }
 ?>
