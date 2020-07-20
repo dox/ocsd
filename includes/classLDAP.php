@@ -35,198 +35,67 @@ class LDAP {
     return $this->ldapconn;
   }
 
-  public function ldap_bind() {
-  	$ldapbind = ldap_bind($this->ldapconn, LDAP_BIND_DN, LDAP_BIND_PASSWORD);
+  public function all_users_enabled() {
+    global $ldap_connection;
 
-  	if ($ldapbind) {
-  		if (debug) {
-  			echo "<div class=\"alert alert-success\" role=\"alert\">";
-  			echo "<kbd>ldap_bind</kbd> with <code>" . LDAP_BIND_DN . "</code> is <code>" . $ldapbind . "</code>";
-  			echo "</div>";
-  		}
-  	} else {
-  		if (debug) {
-  			echo "<div class=\"alert alert-danger\" role=\"alert\">";
-  			echo "<kbd>ldap_bind</kbd> with <code>" . LDAP_BIND_DN . "</code> is <code>" . $ldapbind . "</code>";
-  			echo "</div>";
-  		}
-  	}
+    $records = $ldap_connection->query()->select('samaccountname', 'mail', 'pager')->orFilter(function (LdapRecord\Query\Builder $q) {
+      $q->where('useraccountcontrol', '=', '512')
+      ->where('useraccountcontrol', '=', '544');
+    })->get();
 
-  	return $ldapbind;
+
+    return $records;
   }
 
-  public function ldap_search($ldap_search_ou, $ldap_search_filter) {
-  	$ldapsearch = ldap_search($this->ldapconn, $ldap_search_ou, $ldap_search_filter, LDAP_VALUES);
+  public function all_users_disabled() {
+    global $ldap_connection;
 
-  	if ($ldapsearch) {
-  		if (debug) {
-  			echo "<div class=\"alert alert-success\" role=\"alert\">";
-  			echo "<kbd>ldap_search</kbd> in <code>" . $ldap_search_ou . "</code> with filter <code>" . $ldap_search_filter . "</code> and values <code>" . implode(LDAP_VALUES,", ") . "</code> is <code>" . $ldapsearch . "</code>";
-  			echo "</div>";
+    $records = $ldap_connection->query()->select('samaccountname', 'mail')->andFilter(function (LdapRecord\Query\Builder $q) {
+      $q->where('useraccountcontrol', '!', '512')
+      ->where('useraccountcontrol', '!', '544');
+    })->get();
 
-  			echo "<div class=\"alert alert-success\" role=\"alert\">";
-  			echo "<kbd>ldap_count_entries</kbd> returned  <code>" . ldap_count_entries($this->ldapconn, $ldapsearch)  . "</code> entries";
-  			echo "</div>";
-  		}
-  	} else {
-  		if (debug) {
-  			echo "<div class=\"alert alert-danger\" role=\"alert\">";
-  			echo "<kbd>ldap_search</kbd> in <code>" . $ldap_search_ou . "</code> with filter <code>" . $ldap_search_filter . "</code> is <code>" . $ldapsearch . "</code>";
-  			echo "</div>";
-  		}
-  	}
-
-  	return $ldapsearch;
+    return $records;
   }
 
-  public function ldap_list($ldap_search_ou, $ldap_search_filter) {
-  	$ldapsearch = ldap_list($this->ldapconn, $ldap_search_ou, $ldap_search_filter, LDAP_VALUES);
+  public function search_users($searchTerm = null) {
+    global $ldap_connection;
 
-  	if ($ldapsearch) {
-  		if (debug) {
-  			echo "<div class=\"alert alert-success\" role=\"alert\">";
-  			echo "<kbd>ldap_list</kbd> in <code>" . $ldap_search_ou . "</code> with filter <code>" . $ldap_search_filter . "</code> and values <code>" . implode(LDAP_VALUES,", ") . "</code> is <code>" . $ldapsearch . "</code>";
-  			echo "</div>";
+    $records = $ldap_connection->query()
+      ->where('samaccountname', '=', $searchTerm)
+      ->orWhere('cn', 'contains', $searchTerm)
+      ->get();
 
-  			echo "<div class=\"alert alert-success\" role=\"alert\">";
-  			echo "<kbd>ldap_list</kbd> returned  <code>" . ldap_count_entries($this->ldapconn, $ldapsearch)  . "</code> entries";
-  			echo "</div>";
-  		}
-  	} else {
-  		if (debug) {
-  			echo "<div class=\"alert alert-danger\" role=\"alert\">";
-  			echo "<kbd>ldap_search</kbd> in <code>" . $ldap_search_ou . "</code> with filter <code>" . $ldap_search_filter . "</code> is <code>" . $ldapsearch . "</code>";
-  			echo "</div>";
-  		}
-  	}
-
-  	return $ldapsearch;
-  }
-
-  public function ldap_get_entries($ldap_search_results) {
-  	$ldapentries = ldap_get_entries($this->ldapconn, $ldap_search_results);
-
-  	if ($ldapentries) {
-  		if (debug) {
-  			echo "<div class=\"alert alert-success\" role=\"alert\">";
-  			echo "<kbd>ldap_get_entries</kbd> in <code>" . $ldap_search_results . "</code>";
-  			echo "</div>";
-  		}
-  	} else {
-  		if (debug) {
-  			echo "<div class=\"alert alert-danger\" role=\"alert\">";
-  			echo "<kbd>ldap_get_entries</kbd> in <code>" . $ldap_search_results . "</code>";
-  			echo "</div>";
-  		}
-  	}
-
-  	return $ldapentries;
-  }
-
-  public function list_ou($baseDN = LDAP_BASE_DN) {
-    $ouFilter = "(objectClass=organizationalUnit)";
-    $ou_search_results = ldap_search($this->ldapconn, $baseDN, $ouFilter, LDAP_VALUES);
-    $ouArrayResults = ldap_get_entries($this->ldapconn, $ou_search_results);
-    for ($i=0; $i < $ouArrayResults["count"]; $i++) {
-        $ouArray[] = $ouArrayResults[$i]["dn"];
-    }
-
-    return $ouArray;
-  }
-
-  public function all_users($baseDN = LDAP_BASE_DN, $includeDisabled = false) {
-    $ous = $this->list_ou();
-
-    foreach ($ous AS $ou) {
-      if ($includeDisabled == true) {
-        $allByOUFilter = "(&(sAMAccountName=*)(!(objectclass=computer))(!(objectclass=group)))";
-      } else {
-        $allByOUFilter = "(&(sAMAccountName=*)(!(objectclass=computer))(!(objectclass=group))(|(useraccountcontrol=512)(useraccountcontrol=544)))";
-      }
-
-      $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
-      $all_by_ou_entries = $this->ldap_get_entries($all_by_ou_search_results);
-
-      //printArray($all_by_ou_entries);
-
-      foreach ($all_by_ou_entries AS $user) {
-        $users[] = $user;
-      }
-    }
-
-    return $users;
-  }
-
-  public function search_users($baseDN = LDAP_BASE_DN, $includeDisabled = false, $searchTerm = null) {
-    $ous = $this->list_ou();
-
-    foreach ($ous AS $ou) {
-      if ($includeDisabled == true) {
-        $allByOUFilter = "(&(|(sAMAccountName=*" . $searchTerm . "*)(cn=*" . $searchTerm . "*))(!(objectclass=computer))(!(objectclass=group)))";
-      } else {
-        $allByOUFilter = "(&(|(sAMAccountName=*" . $searchTerm . "*)(cn=*" . $searchTerm . "*))(!(objectclass=computer))(!(objectclass=group))(|(useraccountcontrol=512)(useraccountcontrol=544)))";
-      }
-
-      //echo $allByOUFilter;
-
-      $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
-      $all_by_ou_entries = $this->ldap_get_entries($all_by_ou_search_results);
-
-      //printArray($all_by_ou_entries);
-
-      foreach ($all_by_ou_entries AS $user) {
-        $users[] = $user;
-      }
-    }
-
-    return $users;
+    return $records;
   }
 
   public function stale_users($baseDN = LDAP_BASE_DN, $includeDisabled = false) {
-    $ous = $this->list_ou();
+    global $ldap_connection;
 
-    $date = (strtotime(pwd_warn_age*2 . " days ago") + 11644473600)*10000000;
+    $date = (strtotime(pwd_warn_age*3 . " days ago") + 11644473600)*10000000;
 
-    foreach ($ous AS $ou) {
-      if ($includeDisabled == true) {
-        $allByOUFilter = "(&(sAMAccountName=*)(pwdLastSet<=" . $date . ")(!(objectclass=computer))(!(objectclass=group)))";
-      } else {
-        $allByOUFilter = "(&(sAMAccountName=*)(pwdLastSet<=" . $date . ")(!(objectclass=computer))(!(objectclass=group))(|(useraccountcontrol=512)(useraccountcontrol=544)))";
-        //$allByOUFilter = "(pwdLastSet<=132386760880000000)";
-      }
+    $filters = [
+      '(pwdlastset<=' . $date . ')'
+    ];
 
-      $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
-      $all_by_ou_entries = $this->ldap_get_entries($all_by_ou_search_results);
+    $records = $ldap_connection->query()->select('samaccountname')->rawFilter($filters)->paginate(1000);
 
-      //printArray($all_by_ou_entries);
-
-      foreach ($all_by_ou_entries AS $user) {
-        $users[] = $user;
-      }
-    }
-
-    return $users;
+    return $records;
   }
 
-  public function expiring_users($baseDN = LDAP_BASE_DN) {
-    $ous = $this->list_ou();
+  public function expiring_users() {
+    global $ldap_connection;
 
     $date = (strtotime(pwd_warn_age . " days ago") + 11644473600)*10000000;
 
-    foreach ($ous AS $ou) {
-      $allByOUFilter = "(&(sAMAccountName=*)(pwdLastSet<=" . $date . ")(!(objectclass=computer))(!(objectclass=group))(|(useraccountcontrol=512)(useraccountcontrol=544)))";
+    $filters = [
+      '(pwdlastset<=' . $date . ')',
+      '(|(useraccountcontrol=512)(useraccountcontrol=544))'
+    ];
 
-      $all_by_ou_search_results = $this->ldap_list($ou, $allByOUFilter);
-      $all_by_ou_entries = $this->ldap_get_entries($all_by_ou_search_results);
+    $records = $ldap_connection->query()->rawFilter($filters)->get();
 
-      //printArray($all_by_ou_entries);
-
-      foreach ($all_by_ou_entries AS $user) {
-        $users[] = $user;
-      }
-    }
-
-    return $users;
+    return $records;
   }
 
   public function randomPassword($length = 12) {
@@ -274,22 +143,40 @@ class LDAP {
   }
 
   public function ldap_mod_replace($userDN, $actionsArray) {
-  	$ldapmodreplace = ldap_mod_replace($this->ldapconn, $userDN, $actionsArray) or die(ldap_error($ldapconn));
+    $object = LdapRecord\Models\Entry::find($userDN);
+
+    foreach ($actionsArray AS $key => $value) {
+      $object->$key = $value;
+    }
+    $object->save();
+
     $logInsert = (new Logs)->insert("ldap","warning",null,"LDAP record updated with " . implode(", ",array_keys($actionsArray)) . " for user " . $userDN);
 
-  	if (debug) {
-  		if ($ldapmodreplace) {
+  	return false;
+  }
 
-  			echo "<div class=\"alert alert-success\" role=\"alert\">";
-  			echo "<kbd>ldap_mod_replace</kbd> for user <code>" . $userDN . "</code> with values <code>" . implode(", ",array_keys($actionsArray)) . "</code>";
-  			echo "</div>";
-  		} else {
-  			echo "<div class=\"alert alert-danger\" role=\"alert\">";
-  			echo "<kbd>ldap_mod_replace</kbd> for user <code>" . $userDN . "</code> with values <code>" . implode(", ",array_keys($actionsArray)) . "</code>";
-  			echo "</div>";
-  		}
-  	}
-  	return $ldapmodreplace;
+  public function enableUser() {
+    $object = LdapRecord\Models\ActiveDirectory\User::find($this->dn);
+
+    $object->useraccountcontrol = 512;
+    $object->unicodepwd = $this->randomPassword();
+    $object->save();
+
+    $logInsert = (new Logs)->insert("ldap","warning",null,"Enable user account <code>" . $this->samaccountname . "</code>");
+
+  	return false;
+  }
+
+  public function disableUser() {
+    $object = LdapRecord\Models\ActiveDirectory\User::find($this->dn);
+
+    $object->useraccountcontrol = 514;
+    $object->unicodepwd = $this->randomPassword();
+    $object->save();
+
+    $logInsert = (new Logs)->insert("ldap","warning",null,"Disable user account <code>" . $this->samaccountname . "</code>");
+
+  	return false;
   }
 
   public function ldap_add($userDN, $actionsArray) {

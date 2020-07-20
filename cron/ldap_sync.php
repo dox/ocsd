@@ -4,17 +4,11 @@ include_once("../includes/autoload.php");
 // this checks each LDAP record against a matched CUD record
 // if pager, or mail isn't correct in LDAP (based on the data in CUD)
 // it will update the LDAP record
+$ldapClass = new LDAP;
 
-$ldapClass = new LDAP();
+$users = $ldapClass->all_users_enabled();
 
-if ($ldapClass) {
-  $admin_bind = $ldapClass->ldap_bind();
-  $allLDAPUsers = $ldapClass->all_users(LDAP_BASE_DN, false);
-}
-
-foreach ($allLDAPUsers AS $ldapUser) {
-  //printArray($ldapUser);
-
+foreach ($users AS $ldapUser) {
   $userdata = null;
 
   $personsClass = new Persons;
@@ -22,8 +16,6 @@ foreach ($allLDAPUsers AS $ldapUser) {
   if (!count($CUDperson) == 1) {
     $CUDPerson = $personsClass->search($ldapUser['mail'][0], 2);
   }
-
-  //printArray($ldapUser);
 
   if (count($CUDPerson) == 1) {
     //echo "<p>Actioning on " . $ldapUser['samaccountname'][0] . " with mail: " . $CUDPerson[0]['oxford_email'] . "</p>";

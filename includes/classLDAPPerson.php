@@ -3,18 +3,13 @@ class LDAPPerson extends LDAP {
 	function __construct($samaccountname = null, $mail = null) {
     global $ldap_connection;
 
-    if (isset($samaccountname) && isset($mail)) {
-      $filter = "(|(sAMAccountName=" . $samaccountname . ")(mail=" . $mail . "))";
-    } else {
-      $filter = "(sAMAccountName=" . $samaccountname . ")";
-    }
+		$ldap_entries = $ldap_connection->query()
+			->where('samaccountname', '=', $samaccountname)
+			->orWhere('mail', '=', $mail)
+			->get();
 
-    $ldap_bind = $ldap_connection->ldap_bind();
-  	$ldap_search_results = $ldap_connection->ldap_search(LDAP_BASE_DN, $filter);
-  	$ldap_entries = $ldap_connection->ldap_get_entries($ldap_search_results);
-
-    if ($ldap_entries['count'] == 1) {
-      $ldapUser = $ldap_entries[0];
+    if (count($ldap_entries) == 1) {
+			$ldapUser = $ldap_entries[0];
 
       $keys = array_keys($ldapUser);
 

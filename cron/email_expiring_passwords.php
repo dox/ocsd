@@ -3,14 +3,11 @@ include_once("../includes/autoload.php");
 
 $ldapClass = new LDAP();
 $templatesClass = new Templates();
-
-if ($ldapClass) {
-  $admin_bind = $ldapClass->ldap_bind();
-  $allLDAPUsers = $ldapClass->all_users();
-}
 $dateNow = date('Y-m-d');
 
-foreach ($allLDAPUsers AS $ldapUser) {
+$users = $ldapClass->all_users_enabled();
+
+foreach ($users AS $ldapUser) {
   $ldapPerson = new LDAPPerson($ldapUser['samaccountname'][0]);
   if (isset($ldapPerson->mail)) {
     $pwdlastsetInDays = $ldapPerson->pwdlastsetage();

@@ -16,17 +16,10 @@ if (debug == true) {
 
 require_once($root . '/vendor/autoload.php');
 
-require_once($root . '/includes/globalFunctions.php');
-require_once($root . '/includes/db.php');
-require_once($root . '/includes/classLogs.php');
-require_once($root . '/includes/classPersons.php');
-require_once($root . '/includes/classLDAP.php');
-require_once($root . '/includes/classLDAPPerson.php');
-require_once($root . '/includes/classTemplates.php');
-
 use LdapRecord\Container;
 use LdapRecord\Connection;
 use LdapRecord\Models\Entry;
+use LdapRecord\Models\ActiveDirectory\User;
 
 // Create a new connection:
 $ldap_connection = new Connection([
@@ -34,10 +27,20 @@ $ldap_connection = new Connection([
     'port' => LDAP_PORT,
     'base_dn' => LDAP_BASE_DN,
     'username' => LDAP_BIND_DN,
-    'password' => LDAP_BIND_PASSWORD,
+		'password' => LDAP_BIND_PASSWORD,
+		'use_tls' => LDAP_STARTTLS,
 ]);
+ldap_start_tls($ldap_connection);
 // Add the connection into the container:
 Container::addConnection($ldap_connection);
+
+require_once($root . '/includes/globalFunctions.php');
+require_once($root . '/includes/db.php');
+require_once($root . '/includes/classLogs.php');
+require_once($root . '/includes/classPersons.php');
+require_once($root . '/includes/classLDAP.php');
+require_once($root . '/includes/classLDAPPerson.php');
+require_once($root . '/includes/classTemplates.php');
 
 $db = new db(db_host, db_username, db_password, db_name);
 ?>
