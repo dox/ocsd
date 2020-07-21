@@ -6,14 +6,26 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 	$form_username = strtoupper($_POST["username"]); //remove case sensitivity on the username
 	$form_password = $_POST["password"];
 
-	if ($ldap_connection->auth()->attempt($form_username . "@seh.ox.ac.uk", $form_password, $stayAuthenticated = true)) {
-	    // Successfully authenticated user.
-			$ldap_user = $ldap_connection->query()->findBy('samaccountname', $form_username);
+	$user = $ldap_connection->query()
+	->where('samaccountname', '=', $form_username)
+	->first();
 
+	$userGroups = $user['memberof'];
+	$allowed = LDAP_ALLOWED_DN;
+	$difference = array_intersect(
+		array_map('strtolower', $userGroups),
+		array_map('strtolower', $allowed)
+	);
+
+	if (count($difference) > 0) {
+    // Our user is a member of one of the allowed groups.
+    // Continue with authentication.
+    if ($ldap_connection->auth()->attempt($user['distinguishedname'][0], $form_password, $stayAuthenticated = true)) {
+			// User has been successfully authenticated.
 			$personsClass = new Persons;
-			$CUDPerson = $personsClass->search($ldap_user['samaccountname'][0]);
+			$CUDPerson = $personsClass->search($user['samaccountname'][0]);
 			if (!count($CUDperson) == 1) {
-				$CUDPerson = $personsClass->search($ldap_user['mail'][0], 2);
+				$CUDPerson = $personsClass->search($user['mail'][0], 2);
 			}
 
 			$_SESSION["cudid"] = $CUDPerson[0]['cudid'];
@@ -21,7 +33,6 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 			$_SESSION["username"] = strtoupper($ldap_user['samaccountname'][0]);
 			$_SESSION["avatar_url"] = "photos/UAS_UniversityCard-" . $CUDPerson[0]['university_card_sysis'] . ".jpg";
 			$_SESSION["email"] = $ldap_user['mail'][0];
-			//$_SESSION["userinfo"] = $adldap->user()->info($username);
 
 			if (isset($_POST['remember'])) {
 				$hash = crypt($_POST['form_password'], salt);
@@ -46,10 +57,13 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 
 			header($redir);
 			exit;
+    } else {
+			// Username or password is incorrect.
+			$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.</div>";
+			$logInsert = (new Logs)->insert("logon","error",null,"LDAP logon failed for <code>" . $form_username . "</code>");
+    }
 	} else {
-		// Username or password is incorrect.
-		$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.</div>";
-		$logInsert = (new Logs)->insert("logon","error",null,"LDAP logon failed for <code>" . $form_username . "</code>");
+		$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.  User not in group</div>";
 	}
 }
 
@@ -92,10 +106,10 @@ if (!isset($_SESSION['username']) && !isset($_POST["oldform"])) {
 	<div class="page">
 		<?php
 		if (isset($_SESSION['username'])) {
-			if (!in_array(strtoupper($_SESSION["username"]), allowed_usernames) ) {
-				echo "<br /><div class=\"alert alert-danger\" role=\"alert\">You do not have permission to use this system.</div>";
-				die;
-			}
+			//if (!in_array(strtoupper($_SESSION["username"]), allowed_usernames) ) {
+			//	echo "<br /><div class=\"alert alert-danger\" role=\"alert\">You do not have permission to use this system.</div>";
+			//	die;
+			//}
 			if (isset($_GET['n'])) {
 				$node = "nodes/" . $_GET['n'] . ".php";
 
