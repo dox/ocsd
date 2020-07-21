@@ -18,8 +18,6 @@ $(".emailParcelButton1").click(function() {
 });
 
 $(".ldap_disable_user").click(function() {
-	$(this).parent().dropdown('toggle');
-
 	var samaccountname = $(this).attr('id');
 	var url = './actions/ldap_disable_user.php';
 
@@ -33,8 +31,6 @@ $(".ldap_disable_user").click(function() {
 });
 
 $(".ldap_enable_user").click(function() {
-	$(this).parent().dropdown('toggle');
-
 	var samaccountname = $(this).attr('id');
 	var url = './actions/ldap_enable_user.php';
 
