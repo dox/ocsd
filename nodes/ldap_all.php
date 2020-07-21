@@ -53,10 +53,23 @@ if (isset($_GET['filter'])) {
 
 foreach ($users AS $user) {
   $ldapUser = new LDAPPerson($user['samaccountname'][0]);
+  $personsClass = new Persons;
+
   if (isset($user['samaccountname'][0])) {
+    $CUDPerson = $personsClass->search($ldapUser->samaccountname, 2);
+    if (count($CUDperson) != 1) {
+      $CUDPerson = $personsClass->search($ldapUser->mail, 2);
+    }
+
+    if (count($CUDPerson) == 1) {
+      $CUDPerson = $CUDPerson[0];
+    } else {
+      $CUDPerson = "";
+    }
+    
     $output  = "<tr>";
     $output .= "<td>" . $ldapUser->cn . "</td>";
-    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=person_unique&cudid=" . $cudid . "\">" . $sso_username . "</a>" . "</td>";
+    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=person_unique&cudid=" . $CUDPerson['cudid'] . "\">" . $CUDPerson['sso_username'] . "</a>" . "</td>";
     $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser->samaccountname . "\">" . $ldapUser->samaccountname . "</a>" . "</td>";
     $output .= "<td>" . $ldapUser->useraccountcontrolbadge() . "</td>";
     $output .= "<td>" . $ldapUser->pwdlastsetbadge() . "</td>";

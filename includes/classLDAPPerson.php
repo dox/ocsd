@@ -108,8 +108,12 @@ class LDAPPerson extends LDAP {
         $output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account</a>";
       }
 
-      if (isset($this->samaccountname) && $this->isEnabled()) {
+			if (isset($this->samaccountname) && $this->isEnabled()) {
         $output .= "<a class=\"dropdown-item ldap_disable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Disable Account</a>";
+      }
+
+			if (isset($this->samaccountname)) {
+        $output .= "<a class=\"dropdown-item ldap_delete_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Delete Account</a>";
       }
 
       if ($cudid != null) {

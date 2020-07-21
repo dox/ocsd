@@ -17,6 +17,23 @@ $(".emailParcelButton1").click(function() {
 	return false;
 });
 
+$(".ldap_delete_user").click(function() {
+	var isGood=confirm('Are you sure you want to delete this user from the LDAP?  This action cannot be undone!');
+
+	if(isGood) {
+		var samaccountname = $(this).attr('id');
+		var url = './actions/ldap_delete_user.php';
+
+		$.post(url,{
+			samaccountname: samaccountname
+		}, function(data){
+			$(this).parent().dropdown('toggle');
+		},'html');
+	}
+
+	return false;
+});
+
 $(".ldap_disable_user").click(function() {
 	var samaccountname = $(this).attr('id');
 	var url = './actions/ldap_disable_user.php';

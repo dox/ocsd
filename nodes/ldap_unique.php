@@ -9,7 +9,7 @@ if (isset($ldapPerson->samaccountname)) {
   if (!count($CUDperson) == 1) {
     $CUDPerson = $personsClass->search($ldapPerson->mail, 2);
   }
-  ?>
+?>
 
 <div class="content">
   <!-- Page title -->

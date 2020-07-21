@@ -333,22 +333,30 @@ class Persons {
 	public function search($searchTerm = null, $limit = null) {
 		global $db;
 
-		$sql  = "SELECT * FROM " . self::$table_name;
-		$sql .= " WHERE lastname LIKE '%" . $searchTerm . "%'";
-		$sql .= " OR sso_username LIKE '%" . $searchTerm . "%'";
-		$sql .= " OR cudid LIKE '%" . $searchTerm . "%'";
-		$sql .= " OR barcode7 LIKE '%" . $searchTerm . "%'";
-		$sql .= " OR oxford_email LIKE '%" . $searchTerm . "%'";
+		if (!empty($searchTerm)) {
+			$sql  = "SELECT * FROM " . self::$table_name;
+			$sql .= " WHERE lastname LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR sso_username LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR cudid LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR barcode7 LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR oxford_email LIKE '%" . $searchTerm . "%'";
 
-		if (!$limit == null) {
-			$sql .= " LIMIT " . $limit;
+			if (!$limit == null) {
+				$sql .= " LIMIT " . $limit;
+			}
+
+			$persons = $db->query($sql, 'test', 'test')->fetchAll();
+
+			if (count($persons) > 0) {
+				return $persons;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
 		}
 
-		$persons = $db->query($sql, 'test', 'test')->fetchAll();
 
-		if (count($persons) > 0) {
-			return $persons;
-		}
 	}
 } //end of class Persons
 

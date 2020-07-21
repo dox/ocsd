@@ -74,11 +74,17 @@ class LDAP {
 
     $date = (strtotime(pwd_warn_age*3 . " days ago") + 11644473600)*10000000;
 
-    $filters = [
-      '(pwdlastset<=' . $date . ')'
+    /*$filters = [
+      'pwdlastset<=' . $date,
+      'objectclass = top'
     ];
 
     $records = $ldap_connection->query()->select('samaccountname')->rawFilter($filters)->paginate(1000);
+*/
+    $records = $ldap_connection->query()->select('samaccountname')->where([
+      ['pwdlastset', '<=', $date],
+      ['objectclass', '!=', 'computer'],
+    ])->paginate(1000);
 
     return $records;
   }
@@ -175,6 +181,16 @@ class LDAP {
     $object->save();
 
     $logInsert = (new Logs)->insert("ldap","warning",null,"Disable user account <code>" . $this->samaccountname . "</code>");
+
+  	return false;
+  }
+
+  public function deleteUser() {
+    $object = LdapRecord\Models\ActiveDirectory\User::find($this->dn);
+
+    $object->delete();
+
+    $logInsert = (new Logs)->insert("ldap","warning",null,"Deleted user account <code>" . $this->samaccountname . "</code>");
 
   	return false;
   }
