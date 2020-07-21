@@ -66,10 +66,10 @@ foreach ($users AS $user) {
     } else {
       $CUDPerson = "";
     }
-    
+
     $output  = "<tr>";
     $output .= "<td>" . $ldapUser->cn . "</td>";
-    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=person_unique&cudid=" . $CUDPerson['cudid'] . "\">" . $CUDPerson['sso_username'] . "</a>" . "</td>";
+    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=persons_unique&cudid=" . $CUDPerson['cudid'] . "\">" . $CUDPerson['sso_username'] . "</a>" . "</td>";
     $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser->samaccountname . "\">" . $ldapUser->samaccountname . "</a>" . "</td>";
     $output .= "<td>" . $ldapUser->useraccountcontrolbadge() . "</td>";
     $output .= "<td>" . $ldapUser->pwdlastsetbadge() . "</td>";
