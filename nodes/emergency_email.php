@@ -2,14 +2,7 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <?php
-$emailAllowedUsers[] = "BREAKSPEAR";
-$emailAllowedUsers[] = "TREHEARNE";
-$emailAllowedUsers[] = "PARFITT";
-$emailAllowedUsers[] = "ESTALL";
-$emailAllowedUsers[] = "WILLIS";
-$emailAllowedUsers[] = "BROOKS";
-
-if (!in_array(strtoupper($_SESSION["username"]), $emailAllowedUsers) ) {
+if ($_SESSION['user_type'] != "Administrator") {
 	$logInsert = (new Logs)->insert("view","error",null,"Emergency email system access attempted");
 	echo "<br /><div class=\"alert alert-danger\" role=\"alert\">You do not have permission to use this feature.  Contact <a href=\"mailto:help@seh.ox.ac.uk\">help@seh.ox.ac.uk</a></div>";
 	die;

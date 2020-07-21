@@ -61,7 +61,7 @@ $logs = $logsClass->all();
             $badgeClass = "";
           }
 
-          if (in_array($_SESSION['username'], admin_usernames)) {
+          if ($_SESSION['user_type'] == "Administrator") {
             $output  = "<tr class=\"" . $class . "\">";
             $output .= "<td>" . $logDate . " </td>";
             $output .= "<td>" . $log['description'] . " <span class=\"badge float-right " . $badgeClass . "\">" . $log['type'] . "</span></td>";

@@ -11,7 +11,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 	->first();
 
 	$userGroups = $user['memberof'];
-	$allowed = LDAP_ALLOWED_DN;
+	$allowed = array(LDAP_ALLOWED_DN);
 	$difference = array_intersect(
 		array_map('strtolower', $userGroups),
 		array_map('strtolower', $allowed)
@@ -30,9 +30,16 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 
 			$_SESSION["cudid"] = $CUDPerson[0]['cudid'];
 			$_SESSION["bodcard"] = $CUDPerson[0]['barcode7'];
-			$_SESSION["username"] = strtoupper($ldap_user['samaccountname'][0]);
+			$_SESSION["username"] = strtoupper($user['samaccountname'][0]);
 			$_SESSION["avatar_url"] = "photos/UAS_UniversityCard-" . $CUDPerson[0]['university_card_sysis'] . ".jpg";
 			$_SESSION["email"] = $ldap_user['mail'][0];
+			$_SESSION["groups"] = $userGroups;
+
+			if (in_array(LDAP_ADMIN_DN, $_SESSION['groups'])) {
+				$_SESSION["user_type"] = 'Administrator';
+			} else {
+				$_SESSION["user_type"] = 'OCSD User';
+			}
 
 			if (isset($_POST['remember'])) {
 				$hash = crypt($_POST['form_password'], salt);

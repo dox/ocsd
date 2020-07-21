@@ -125,7 +125,7 @@ $navbarArray['admin_logs'] = array(
 					<span class="avatar" style="background-image: url(<?php echo $_SESSION['avatar_url'];?>)"></span>
 					<div class="d-none d-xl-block pl-2">
 						<div><?php echo $_SESSION['username']; ?></div>
-						<div class="mt-1 small text-muted">Administrator</div>
+						<div class="mt-1 small text-muted"><?php echo $_SESSION["user_type"]; ?></div>
 					</div>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right">

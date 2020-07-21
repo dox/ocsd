@@ -99,11 +99,11 @@ class LDAPPerson extends LDAP {
     $output .= "<button class=\"btn " . $class . " dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">LDAP Actions</button>";
     $output .= "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">";
 
-    if (in_array($_SESSION['username'], admin_usernames)){
-			if (isset($this->mail)) {
-        $output .= "<a class=\"dropdown-item\" href=\"mailto:" . $this->mail . "\">Email</a>";
-      }
+		if (isset($this->mail)) {
+			$output .= "<a class=\"dropdown-item\" href=\"mailto:" . $this->mail . "\">Email</a>";
+		}
 
+    if ($_SESSION["user_type"] == "Administrator") {
 			if (isset($this->samaccountname) && !$this->isEnabled()) {
         $output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account</a>";
       }
@@ -111,7 +111,6 @@ class LDAPPerson extends LDAP {
       if (isset($this->samaccountname) && $this->isEnabled()) {
         $output .= "<a class=\"dropdown-item ldap_disable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Disable Account</a>";
       }
-
 
       if ($cudid != null) {
 				$person = new Person($cudid);
