@@ -198,4 +198,52 @@ function api_decode($category = null, $endpoint = null, $filter = null, $usernam
 
 	return json_decode(file_get_contents($url, false, $context));
 }
+
+function howLongAgo($strPastDate = null) {
+	$diff = time() - ((int) $strPastDate);
+
+	if ($diff < 0) {
+		return FALSE;
+	} else if ($diff < 60) {
+		return ("just now");
+	} else if ($diff < 3600) {
+		// minutes ago
+		$diff = round($diff / 60);
+		if ($diff == 0) {
+			$diff = 1;
+		}
+		$diff = $diff . (autoPluralise (" minute", " minutes", $diff)) . " ago";
+
+		return ($diff);
+	} else if ($diff < 86400) {
+		// hours ago
+		$diff = round($diff / 3600);
+		if ($diff == 0) {
+			$diff = 1;
+		}
+		$diff = $diff . (autoPluralise (" hour", " hours", $diff)) . " ago";
+
+		return ($diff);
+	} else if ($diff < 2592000) {
+		// days ago
+		$diff = round($diff / 86400);
+		if ($diff == 0 | $diff == 1) {
+			$diff = ("yesterday");
+			return $diff;
+		}
+		$diff = $diff . (autoPluralise (" day", " days", $diff)) . " ago";
+		return ($diff);
+	} else if ($diff < 31536000) {
+		//months ago
+		$diff = round($diff / 2592000);
+		$diff = $diff . (autoPluralise (" month", " months", $diff)) . " ago";
+		return ($diff);
+	} else {
+		// years ago
+		$diff = round($diff / 31536000);
+		$diff = $diff . (autoPluralise (" year", " years", $diff)) . " ago";
+		return ($diff);
+	}
+
+}
 ?>

@@ -38,14 +38,21 @@ class LDAPPerson extends LDAP {
     }
   }
 
-  public function pwdlastsetage () {
-  	$winSecs       = (int)($this->pwdlastset / 10000000); // divide by 10 000 000 to get seconds
-  	$unixTimestamp = ($winSecs - 11644473600); // 1.1.1600 -> 1.1.1970 difference in seconds
-  	$pwdlastsetDate = date('U', $unixTimestamp);
+	public function pwdlastsetage () {
+  	$pwdlastsetDate = $this->pwdlastsetdate();
+
   	$dateToday = date('U');
   	$pwdlastsetAgeInDays = round(($dateToday - $pwdlastsetDate)/60/60/24,0);
 
   	return $pwdlastsetAgeInDays;
+  }
+
+	public function pwdlastsetdate () {
+  	$winSecs       = (int)($this->pwdlastset / 10000000); // divide by 10 000 000 to get seconds
+  	$unixTimestamp = ($winSecs - 11644473600); // 1.1.1600 -> 1.1.1970 difference in seconds
+  	$pwdlastsetDate = date('U', $unixTimestamp);
+
+  	return $pwdlastsetDate;
   }
 
   public function pwdlastsetbadge () {
@@ -53,13 +60,13 @@ class LDAPPerson extends LDAP {
 
   	if ($pwdlastsetAgeInDays <= pwd_warn_age) {
   		$badgeClass = "bg-green";
-  		$flagName = "Password OK aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
+  		$flagName = "Password OK aged " . howLongAgo($this->pwdlastsetdate());
   	} elseif ($pwdlastsetAgeInDays >= pwd_warn_age && $pwdlastsetAgeInDays <= pwd_max_age) {
   		$badgeClass = "bg-yellow";
   		$flagName = "Password expiring in " . (pwd_max_age - $pwdlastsetAgeInDays) . autoPluralise(" day", " days", (pwd_max_age - $pwdlastsetAgeInDays));
   	} elseif ($pwdlastsetAgeInDays > pwd_max_age) {
   		$badgeClass = "bg-red";
-  		$flagName = "Password EXPIRED aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
+  		$flagName = "Password EXPIRED " . howLongAgo($this->pwdlastsetdate());
   	} else {
   		$badgeClass = "bg-gray";
   		$flagName = "Password UNKNOWN aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
