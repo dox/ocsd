@@ -1,6 +1,6 @@
 <?php
 $sql = "SELECT * FROM _stats WHERE name = 'person_rows_total' ORDER BY date_created DESC LIMIT 7";
-$statsPersonsTotals = $db->query($sql, 'test', 'test')->fetchAll();
+$statsPersonsTotals = $db->query($sql)->fetchAll();
 foreach ($statsPersonsTotals AS $personTotal) {
 	$personTotalArray["'" . date('Y-m-d', strtotime($personTotal['date_created'])) . "'"] = $personTotal['value'];
 }
@@ -8,7 +8,7 @@ $personTotalArray = array_reverse($personTotalArray);
 
 
 $sql = "SELECT * FROM _stats WHERE name = 'student_rows_total' ORDER BY date_created DESC LIMIT 7";
-$statsStudentTotals = $db->query($sql, 'test', 'test')->fetchAll();
+$statsStudentTotals = $db->query($sql)->fetchAll();
 foreach ($statsStudentTotals AS $studentTotal) {
 	$studentTotalArray["'" . date('Y-m-d', strtotime($studentTotal['date_created'])) . "'"] = $studentTotal['value'];
 }
@@ -16,25 +16,25 @@ $studentTotalArray = array_reverse($studentTotalArray);
 
 
 $sql = "SELECT * FROM _logs WHERE type = 'LOGON' ORDER BY date_created DESC LIMIT 7";
-$logonsAll = $db->query($sql, 'test', 'test')->fetchAll();
+$logonsAll = $db->query($sql)->fetchAll();
 $logonsAllCount = count($logonsAll);
 
 $sql = "SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs WHERE type = 'LOGON' GROUP BY DATE(date_created) ORDER BY date_created DESC LIMIT 7";
-$logonsByDay = $db->query($sql, 'test', 'test')->fetchAll();
+$logonsByDay = $db->query($sql)->fetchAll();
 foreach ($logonsByDay AS $day) {
 	$logonsCountArray["'" . date('Y-m-d', strtotime($day['date_created'])) . "'"] = $day['cnt'];
 }
 
 $sql = "SELECT * FROM _logs WHERE type = 'VIEW' ORDER BY date_created DESC";
-$logViewsAll = $db->query($sql, 'test', 'test')->fetchAll();
+$logViewsAll = $db->query($sql)->fetchAll();
 $logViewsAllCount = count($logViewsAll);
 
-$sql = "SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs WHERE type = 'VIEW' GROUP BY DATE(date_created) ORDER BY date_created DESC";
-$logViewsByDay = $db->query($sql, 'test', 'test')->fetchAll();
-foreach ($logViewsByDay AS $day) {
-	$logViewsCountArray["'" . date('Y-m-d', strtotime($day['date_created'])) . "'"] = $day['cnt'];
+$sql = "SELECT DATE(date_created) AS date_created, COUNT(*) AS cnt FROM _logs GROUP BY DATE(date_created) ORDER BY date_created DESC";
+$logsByDay = $db->query($sql)->fetchAll();
+foreach ($logsByDay AS $day) {
+	$logsCountArray["'" . date('Y-m-d', strtotime($day['date_created'])) . "'"] = $day['cnt'];
 }
-$logViewsCountArray = array_reverse(array_slice($logViewsCountArray, 0, 7));
+$logsCountArray = array_reverse(array_slice($logsCountArray, 0, 7));
 ?>
 
 <div class="content">
@@ -93,9 +93,9 @@ $logViewsCountArray = array_reverse(array_slice($logViewsCountArray, 0, 7));
 			"id" => "logs_count",
 			"area_type" => "bar",
 			"title" => "Logs Count",
-			"count_total" => array_sum($logViewsAllCount),
-			"titles" => array_keys($logViewsCountArray),
-			"values" => $logViewsCountArray
+			"count_total" => array_sum($logsAllCount),
+			"titles" => array_keys($logsCountArray),
+			"values" => $logsCountArray
 		);
 		echo cardWithGraph($personsCountCard);
 		echo cardWithGraph($otherCard1);
