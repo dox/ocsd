@@ -28,6 +28,22 @@ class Logs {
 		return $logs;
 	}
 
+	public function paginatedAll($from = 0, $to = 100) {
+		global $db;
+
+		$sql  = "SELECT * FROM " . self::$table_name;
+		$sql .= " ORDER BY date_created DESC";
+		$sql .= " LIMIT " . $from . ", " . $to;
+
+		if ($limit != null) {
+			$sql .= " LIMIT " . $limit;
+		}
+
+		$logs = $db->query($sql)->fetchAll();
+
+		return $logs;
+	}
+
 	// not fixed anything below this line!
 	public function allByUser($cudid = null, $username = null) {
 		global $db;
