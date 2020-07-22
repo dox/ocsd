@@ -73,8 +73,10 @@ class LDAPPerson extends LDAP {
 	public function useraccountcontrolbadge () {
   	if ($this->isEnabled()) {
   		$badgeClass = "bg-green";
-  	} elseif (in_array($this->useraccountcontrol, array("2", "16", "514", "546", "8388608"))) {
+  	} elseif (in_array($this->useraccountcontrol, array("2", "16", "514", "546", "66050", "66082", "8388608"))) {
   		$badgeClass = "bg-red";
+  	} elseif (in_array($this->useraccountcontrol, array("66048"))) {
+  		$badgeClass = "bg-yellow";
   	} else {
   		$badgeClass = "bg-gray";
   	}
@@ -113,7 +115,7 @@ class LDAPPerson extends LDAP {
       }
 
 			if (isset($this->samaccountname)) {
-        $output .= "<a class=\"dropdown-item ldap_delete_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Delete Account</a>";
+        $output .= "<a class=\"dropdown-item text-danger ldap_delete_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Delete Account</a>";
       }
 
       if ($cudid != null) {

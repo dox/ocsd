@@ -9,11 +9,9 @@ if (isset($_GET['filter'])) {
     $filterDescription = "These are enabled records that exist in the local LDAP, but are not matched against a valid CUD record.";
     foreach ($preCheckedUsers AS $user) {
       $person = $personsClass->search($user['mail'][0], 1);
-      if (count($person) == 1) {
-      } else {
+      if (!isset($person[0]['cudid'])) {
         $person = $personsClass->search($user['samaccountname'][0], 1);
-        if (count($person) == 1) {
-        } else {
+        if (!isset($person[0]['cudid'])) {
           $users[] = $user;
         }
       }

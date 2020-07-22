@@ -47,9 +47,8 @@ foreach ($users AS $ldapUser) {
   if ($pwdlastsetInDays >= pwd_max_age) {
     //password expired
     echo "Expiring " . $ldapPerson->samaccountname . "<br />";
-    $userdata["useraccountcontrol"] = "514";
-    $userdata["description"] = $ldapPerson->description . " PWD EXPIRED";
-    $ldapClass->ldap_mod_replace($ldapUser['dn'], $userdata);
+    $ldapPerson->disableUser();
+    
     $logInsert = (new Logs)->insert("cron","warning",null,"Auto disable user account <code>" . $ldapPerson->samaccountname . "</code>", $ldapPerson->samaccountname);
   }
 }

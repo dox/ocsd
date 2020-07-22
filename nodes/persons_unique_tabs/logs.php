@@ -35,7 +35,7 @@ $logs = $logsClass->allByUser($person->cudid, $person->sso_username);
       				$class = "";
       			}
 
-      			if (in_array($_SESSION['username'], admin_usernames)) {
+      			if ($_SESSION["user_type"] == "Administrator") {
       				$output  = "<tr class=\"" . $class . "\">";
       				$output .= "<td>" . $logDate . " </td>";
       				$output .= "<td>" . $log['description'] . " <span class=\"badge badge-info float-right\">" . $log['type'] . "</span></td>";

@@ -17,8 +17,8 @@ foreach ($users AS $ldapUser) {
     $CUDPerson = $personsClass->search($ldapUser['mail'][0], 2);
   }
 
-  if (count($CUDPerson) == 1) {
-    //echo "<p>Actioning on " . $ldapUser['samaccountname'][0] . " with mail: " . $CUDPerson[0]['oxford_email'] . "</p>";
+  if (isset($CUDPerson[0]['cudid']) == 1) {
+    //echo "<p>Checking CUD/LDAP details match on " . $ldapUser['samaccountname'][0] . " with mail: " . $CUDPerson[0]['oxford_email'] . "</p>";
 
     if ($ldapUser['pager'][0] != $CUDPerson[0]['MiFareID']) {
       $userdata["pager"] = $CUDPerson[0]['MiFareID'];
