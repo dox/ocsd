@@ -113,7 +113,7 @@ if (isset($ldapPerson->samaccountname)) {
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="8" cy="15" r="4"></circle><line x1="10.85" y1="12.15" x2="19" y2="4"></line><line x1="18" y1="5" x2="20" y2="7"></line><line x1="15" y1="8" x2="17" y2="10"></line></svg>
           </div>
           <div class="lh-sm">
-            <div class="strong"><?php echo date('Y-m-d', w32timeToTime($ldapPerson->pwdlastset)) . " <i>(" . howLongAgo($ldapPerson->pwdlastsetdate()); ?>)</i></div>
+            <div class="strong"><?php echo date('Y-m-d', w32timeToTime($ldapPerson->pwdlastset)) . " <em>(" . howLongAgo($ldapPerson->pwdlastsetdate()); ?>)</em></div>
             <div class="text-muted">pwdLastSet</div>
           </div>
         </div>
@@ -128,7 +128,7 @@ if (isset($ldapPerson->samaccountname)) {
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="12" cy="12" r="9"></circle><line x1="9" y1="15" x2="15" y2="9"></line></svg>
           </div>
           <div class="lh-sm">
-            <div class="strong"><?php echo date('Y-m-d', w32timeToTime($ldapPerson->lastlogon)) . " <i>(" . howLongAgo(w32timeToTime($ldapPerson->lastlogon)); ?>)</i></div>
+            <div class="strong"><?php echo date('Y-m-d', w32timeToTime($ldapPerson->lastlogon)) . " <em>(" . howLongAgo(w32timeToTime($ldapPerson->lastlogon)); ?>)</em></div>
             <div class="text-muted">lastLogon</div>
           </div>
         </div>

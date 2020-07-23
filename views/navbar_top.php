@@ -55,7 +55,7 @@ $navbarArray['ldap_all'] = array(
 	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"></rect><circle cx=\"12\" cy=\"16\" r=\"1\"></circle><path d=\"M8 11v-4a4 4 0 0 1 8 0v4\"></path></svg>",
 	"sublinks" => array(
 		array(
-			"title" => "<form action=\"./index.php?n=ldap_all&filter=search\" method=\"POST\" target=\"_self\"><input type=\"text\" class=\"form-control\" id=\"ldap_search\" name=\"ldap_search\" placeholder=\"Search LDAP...\" aria-describedby=\"LDAPSearch\"></form>",
+			"title" => "<form action=\"./index.php?n=ldap_all&filter=search\" method=\"POST\" target=\"_self\"><input type=\"text\" class=\"form-control\" id=\"ldap_search\" name=\"ldap_search\" placeholder=\"Search LDAP...\" title=\"LDAP Search\" ></form>",
 			"link" => "#"
 		),
 		array(
@@ -93,6 +93,7 @@ $navbarArray['admin_logs'] = array(
 	"link" => "./index.php?n=admin_logs"
 );
 ?>
+<div role="navigation">
 <header class="navbar navbar-expand-md navbar-light">
 	<div class="container-xl">
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu">
@@ -210,7 +211,7 @@ $navbarArray['admin_logs'] = array(
 		</div>
 	</div>
 </div>
-
+</div>
 <script>
 $('#navbar_search').autocomplete({
 	serviceUrl: 'api/person/navbar_search.php',

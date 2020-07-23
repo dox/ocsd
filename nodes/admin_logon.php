@@ -15,7 +15,7 @@ if (isset($_GET['logout'])) {
 		<div class="text-center mb-4">
 			<img src="./images/logo.svg" height="36" alt="">
 		</div>
-		<form class="card card-md" id="loginForm" method="post" role="form">
+		<form class="card card-md" id="loginForm" method="post" role="main">
 			<div class="card-body">
 				<h1 class="mb-5 text-center">Login Required</h1>
 				<?php echo $message; ?>

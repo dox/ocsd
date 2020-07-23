@@ -135,7 +135,7 @@ if (!isset($_SESSION['username']) && !isset($_POST["oldform"])) {
 		if ($node == "nodes/admin_logon.php" || $_GET['n'] == "admin_logon") {
 			include_once($node);
 		} else {
-			echo "<div class=\"content\">";
+			echo "<div class=\"content\" role=\"main\">";
 			echo "<div class=\"container-xl d-flex flex-column justify-content-center\">";
 			include_once($node);
 			echo "</div>";

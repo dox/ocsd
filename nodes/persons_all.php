@@ -23,7 +23,7 @@ if (isset($_GET['filter'])) {
 		<div class="row align-items-center">
 			<div class="col-auto">
 				<div class="page-pretitle">Filter: <?php echo $_GET['filter']; ?></div>
-				<h2 class="page-title"><?php echo count($persons); ?> Persons</h2>
+				<h2 class="page-title" role="heading" aria-level="1"><?php echo count($persons); ?> Persons</h2>
 			</div>
 			<!-- Page title actions -->
 			<div class="col-auto ml-auto d-print-none">
