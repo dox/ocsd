@@ -161,11 +161,15 @@ class LDAP {
   	return false;
   }
 
-  public function enableUser() {
+  public function enableUser($resetPassword = false) {
     $object = LdapRecord\Models\ActiveDirectory\User::find($this->dn);
 
     $object->useraccountcontrol = 512;
-    $object->unicodepwd = $this->randomPassword();
+
+    if ($resetPassword == true) {
+      $object->unicodepwd = $this->randomPassword();
+    }
+
     $object->save();
 
     $logInsert = (new Logs)->insert("ldap","warning",null,"Enable user account <code>" . $this->samaccountname . "</code>");

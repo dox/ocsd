@@ -60,6 +60,20 @@ $(".ldap_enable_user").click(function() {
 	return false;
 });
 
+$(".ldap_enable_user_resetPwd").click(function() {
+	var samaccountname = $(this).attr('id');
+	var url = './actions/ldap_enable_user.php';
+
+	$.post(url,{
+		samaccountname: samaccountname,
+		reset: true
+	}, function(data){
+		alert("Enable User (and reset password): " + samaccountname);
+	},'html');
+
+	return false;
+});
+
 $(".ldap_provision_user").click(function() {
 	var cudid = $(this).attr('id');
 	var url = 'actions/ldap_provision_user.php';

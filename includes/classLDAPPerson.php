@@ -114,7 +114,8 @@ class LDAPPerson extends LDAP {
 
     if ($_SESSION["user_type"] == "Administrator") {
 			if (isset($this->samaccountname) && !$this->isEnabled()) {
-        $output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account</a>";
+				$output .= "<a class=\"dropdown-item ldap_enable_user_resetPwd\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account (reset password)</a>";
+				$output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account</a>";
       }
 
 			if (isset($this->samaccountname) && $this->isEnabled()) {
