@@ -1,3 +1,6 @@
+<?php
+$logInsert = (new Logs)->insert("view","error",null,"404 for page <code>" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "</code>");
+?>
 <div class="container-tight py-6">
 	<div class="empty">
 		<div class="empty-icon">

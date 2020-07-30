@@ -2,7 +2,7 @@
 $person = new Person($_GET['cudid']);
 
 if (isset($person->cudid)) {
-	$logInsert = (new Logs)->insert("view","success",$person->cudid,$person->FullName . " record viewed");
+	$logInsert = (new Logs)->insert("view","success",$person->cudid,"{cudid:" . $person->cudid . "}" . $person->FullName . " record viewed");
 } else {
 	$logInsert = (new Logs)->insert("view","error",null,"<code>" . $_GET['cudid'] . "</code> record viewed but doesn't exist");
 }

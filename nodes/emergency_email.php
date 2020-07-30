@@ -31,8 +31,6 @@ if (isset($_POST['emailRecipients']) && isset($_POST['emailSubject']) && isset($
 	sendMail($_POST['emailSubject'], $recipients, $_POST['emailMessage'], $_POST['emailSender'], $_POST['emailSenderName']);
 	//mail(implode(",", $recipients), $_POST['emailSubject'], $message, implode("\r\n", $headers));
 
-	$logInsert = (new Logs)->insert("email","success",null,"Email sent to <code>" . $_POST['emailRecipients'] . "</code>");
-
 	echo "<div class=\"alert alert-primary\" role=\"alert\">E-Mail successfully sent to " . count($recipients) . " addresses</div>";
 }
 

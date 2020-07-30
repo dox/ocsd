@@ -39,7 +39,7 @@ foreach ($users AS $ldapUser) {
       if ($sendMail == true) {
         echo "Emailing " . $ldapPerson->samaccountname . "<br />";
         sendMail($sendMailSubject, array($ldapUser['mail'][0]), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
-        $logInsert = (new Logs)->insert("cron","success",null,"Sending password expiry email (" . $password_expiry_in_days . autoPluralise(" day", " days", $password_expiry_in_days) . " warning) to <code>" . $ldapPerson->mail . "</code>", $ldapPerson->samaccountname);
+        $logInsert = (new Logs)->insert("cron","success",null,"Sending password expiry email (" . $password_expiry_in_days . autoPluralise(" day", " days", $password_expiry_in_days) . " warning) to {cudid:" . $ldapPerson->samaccountname . "}");
       }
   	}
   }
@@ -48,7 +48,7 @@ foreach ($users AS $ldapUser) {
     //password expired
     echo "Expiring " . $ldapPerson->samaccountname . "<br />";
     $ldapPerson->disableUser();
-    
+
     $logInsert = (new Logs)->insert("cron","warning",null,"Auto disable user account <code>" . $ldapPerson->samaccountname . "</code>", $ldapPerson->samaccountname);
   }
 }

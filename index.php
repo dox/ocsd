@@ -60,7 +60,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 
 			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
 
-			$logInsert = (new Logs)->insert("logon","success",null,"LDAP logon success");
+			$logInsert = (new Logs)->insert("logon","success",null,"LDAP logon success for {ldap:" . $user['samaccountname'][0] . "}");
 
 			header($redir);
 			exit;
@@ -70,7 +70,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 			$logInsert = (new Logs)->insert("logon","error",null,"LDAP logon failed for <code>" . $form_username . "</code>");
     }
 	} else {
-		$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.  User not in group</div>";
+		$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.  User {ldap:" . $user['samaccountname'][0] . "} not in group</div>";
 	}
 }
 

@@ -118,6 +118,22 @@ class Logs {
 			}
 		}
 	}
+	private function cleanDescription($description = null) {
+		//cudid preg_replace
+		$pattern = "/\{cudid:(.+?)\}/";
+		$cudURL = "./index.php?n=persons_unique&cudid=$1";
+		$replacement = "<a href=\"" . $cudURL . "\">$1</a>";
+		$cleanDescription = preg_replace($pattern, $replacement, $description);
+
+		//ldap preg_replace
+		$pattern = "/\{ldap:(.+?)\}/";
+		$cudURL = "./index.php?n=ldap_unique&samaccountname=$1";
+		$replacement = "<a href=\"" . $cudURL . "\">$1</a>";
+
+		$cleanDescription = preg_replace($pattern, $replacement, $cleanDescription);
+
+		return $cleanDescription;
+	}
 
 	private function makeRow($log = null) {
 		$logDate = date('Y-m-d H:i:s', strtotime($log['date_created']));
@@ -152,16 +168,11 @@ class Logs {
 			$badgeClass = "";
 		}
 
+
+
 		$output  = "<tr class=\"" . $class . "\">";
 		$output .= "<td>" . $logDate . " </td>";
-		$output .= "<td>" . $log['description'] . " <span class=\"badge float-right " . $badgeClass . "\">" . $log['type'] . "</span></td>";
-
-		if (!empty($log['cudid'])){
-			$cudLink = "<a href=\"index.php?n=persons_unique&cudid=" . $log['cudid'] . "\">" . $log['cudid'] . "</a>";
-		} else {
-			$cudLink = "";
-		}
-		$output .= "<td>" . $cudLink . "</td>";
+		$output .= "<td>" . $this->cleanDescription($log['description']) . " <span class=\"badge float-right " . $badgeClass . "\">" . $log['type'] . "</span></td>";
 
 		if (!empty($log['username'])){
 			$ldapLink = "<a href=\"index.php?n=ldap_unique&samaccountname=" . $log['username'] . "\">" . $log['username'] . "</a>";
@@ -183,7 +194,6 @@ class Logs {
 		$output .= "<tr>";
 		$output .= "<th scope=\"col\" style=\"width: 180px\">Date</th>";
 		$output .= "<th scope=\"col\">Description</th>";
-		$output .= "<th scope=\"col\" style=\"width: 330px\">CUDID</th>";
 		$output .= "<th scope=\"col\" style=\"width: 140px\">Username</th>";
 		$output .= "<th scope=\"col\" style=\"width: 140px\">ip</th>";
 		$output .= "</tr>";

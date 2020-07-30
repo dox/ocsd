@@ -4,7 +4,7 @@ $ldapPerson = new LDAPPerson($_GET['samaccountname']);
 $logsClass = new Logs();
 
 if (isset($ldapPerson->samaccountname)) {
-  $logInsert = (new Logs)->insert("ldap","success",null,$ldapPerson->cn . " (" . $ldapPerson->samaccountname . ") LDAP record viewed");
+  $logInsert = (new Logs)->insert("ldap","success",null,$ldapPerson->cn . " ({ldap:" . $ldapPerson->samaccountname . "}) LDAP record viewed");
 
   $personsClass = new Persons;
   $CUDPerson = $personsClass->search($ldapPerson->samaccountname, 2);
