@@ -17,6 +17,13 @@ class Person extends Persons {
 		}
 	}
 
+	public function bodcardDaysLeft() {
+		$now = time(); // or your date as well
+		$your_date = strtotime($this->University_Card_End_Dt);
+		$datediff = round(($your_date - $now) / (60 * 60 * 24));
+
+		return $datediff;
+	}
 	public function makeListItem() {
 		$cudURL = "./index.php?n=persons_unique&cudid=" . $this->cudid;
 		$ldapURL = "./index.php?n=ldap_unique&samaccountname=" . $this->ldap_samaccountname;
@@ -41,10 +48,8 @@ class Person extends Persons {
 		$output .= "<div class=\"row align-items-center mt-4\">";
 		$output .= "<div class=\"col\">";
 		$output .= "<div>";
-
-		$now = time(); // or your date as well
-		$your_date = strtotime($this->University_Card_End_Dt);
-		$datediff = round(($your_date - $now) / (60 * 60 * 24));
+		
+		$datediff = $this->bodcardDaysLeft();
 		if ($datediff > 365) {
 			$width = "100%";
 			$class = "bg-green";
@@ -68,7 +73,7 @@ class Person extends Persons {
 		$output .= "</div>";
 		$output .= "<div class=\"progress progress-sm\">";
 		$output .= "<div class=\"progress-bar " . $class . "\" style=\"width: " . $width . "\" role=\"progressbar\" aria-valuenow=\"84\" aria-valuemin=\"0\" aria-valuemax=\"100\">";
-		$output .= "<span class=\"sr-only\">84% Complete</span>";
+		$output .= "<span class=\"sr-only\">" . $width . "% Complete</span>";
 		$output .= "</div>";
 		$output .= "</div>";
 		$output .= "</div>";

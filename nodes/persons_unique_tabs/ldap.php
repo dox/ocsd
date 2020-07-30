@@ -13,14 +13,14 @@ if (isset($ldapPerson->samaccountname)) {
 		?>
 
 		<?php echo $ldapPerson->pwdlastsetbadge() . " " . $ldapPerson->useraccountcontrolbadge(); ?>
-		<?php echo $ldapPerson->actionsButton(); ?>
+
 
 		</div>
 		<!-- Card footer -->
 		<div class="card-footer">
 			<div class="d-flex">
 				<a href="./index.php?n=ldap_unique&samaccountname=<?php echo $ldapPerson->samaccountname; ?>" class="btn btn-link"><?php echo $ldapPerson->samaccountname; ?></a>
-				<a href="#" class="btn btn-primary ml-auto">Quick Actions</a>
+				<?php echo $ldapPerson->actionsButton(null, "btn btn-primary ml-auto"); ?>
 			</div>
 		</div>
 	</div>

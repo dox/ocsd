@@ -11,6 +11,7 @@ class Logs {
 	public $ip;
 
 	public $data;
+	public $logsPerPage = 100;
 
 	function __construct() {
 	}
@@ -36,10 +37,6 @@ class Logs {
 		$sql  = "SELECT * FROM " . self::$table_name;
 		$sql .= " ORDER BY date_created DESC";
 		$sql .= " LIMIT " . $from . ", " . $to;
-
-		if ($limit != null) {
-			$sql .= " LIMIT " . $limit;
-		}
 
 		$logs = $db->query($sql)->fetchAll();
 
@@ -122,18 +119,6 @@ class Logs {
 		}
 	}
 
-	public function all2() {
-		global $db;
-
-		$sql  = "SELECT * FROM " . self::$table_name;
-		$sql .= " ORDER BY date_created DESC";
-
-		//$logs = $db->query($sql)->fetchAll();
-		$logs = $db->ObjectBuilder()->getOne("_logs");
-
-		return $logs;
-	}
-
 	private function makeRow($log = null) {
 		$logDate = date('Y-m-d H:i:s', strtotime($log['date_created']));
 
@@ -187,7 +172,9 @@ class Logs {
 		$output .= "<td>" . $log['ip'] . "</td>";
 		$output .= "</tr>";
 
-		return $output;
+		if (isset($log['date_created'])) {
+			return $output;
+		}
 	}
 
 	public function makeTable($logs = null) {
@@ -203,12 +190,77 @@ class Logs {
 		$output .= "</thead>";
 		$output .= "<tbody>";
 
-		foreach ($logs AS $log) {
-			$output .= $this->makeRow($log);
+		if (isset($_GET['offset'])) {
+		 $offset = $_GET['offset'];
+		} else {
+		  $offset = 0;
 		}
+
+		$i = 0;
+		do {
+			$output .= $this->makeRow($logs[$offset+$i]);
+			$i++;
+		} while ($i < $this->logsPerPage);
 
 		$output .= "</tbody>";
 		$output .= "</table>";
+
+		if (count($logs) > $this->logsPerPage) {
+			$output .= $this->paginateNav(count($logs));
+		}
+
+		return $output;
+	}
+
+	private function paginateNav($logsCount = null) {
+		$x = $_SERVER['REQUEST_URI'];
+		$parsed = parse_url($x);
+		$query = $parsed['query'];
+		parse_str($query, $params);
+		unset($params['offset']);
+		$cleanURL = $parsed['path'] . "?" . http_build_query($params);
+
+		if (isset($_GET['offset'])) {
+		  $from = $_GET['offset'];
+		  $to = $from + $this->logsPerPage;
+		} else {
+		  $from = 0;
+		  $to = $from + $this->logsPerPage;
+		}
+
+		$output  = "<nav aria-label=\"...\">";
+		$output .= "<ul class=\"pagination justify-content-center\">";
+
+		if ($from < $this->logsPerPage) {
+			$output .= "<li class=\"page-item disabled\"><a class=\"page-link\" href=\"#\" tabindex=\"-1\" aria-disabled=\"true\">Previous</a></li>";
+		} else {
+			$output .= "<li class=\"page-item\"><a class=\"page-link\" href=\"./index.php?n=admin_logs&offset=" . ($from - 100) . "\" tabindex=\"-1\">Previous</a></li>";
+		}
+
+		$i = 1;
+		do {
+			$offset = ($i * $this->logsPerPage) - $this->logsPerPage;
+
+			$url = $cleanURL . "&offset=" . $offset;
+
+      $logsCountBlocks = ceil($logsCount / $this->logsPerPage);
+
+			if ($_GET['offset'] == $offset) {
+				$output .= "<li class=\"page-item active\"><a class=\"page-link\" href=\"" . $url . "\">" . $i . " <span class=\"sr-only\">(current)</span></a></li>";
+			} else {
+				$output .= "<li class=\"page-item\"><a class=\"page-link\" href=\"" . $url . "\">" . $i . "</a></li>";
+			}
+
+			$i++;
+		} while ($i <= $logsCountBlocks);
+
+		if ($from > ($logsCount-$this->logsPerPage)) {
+			$output .= "<li class=\"page-item disabled\"><a class=\"page-link\" href=\"#\" tabindex=\"-1\" aria-disabled=\"true\">Next</a></li>";
+		} else {
+			$output .= "<li class=\"page-item\"><a class=\"page-link\" href=\"./index.php?n=admin_logs&offset=" . ($from + $this->logsPerPage) . "\" tabindex=\"-1\">Next</a></li>";
+		}
+		$output .= "</ul>";
+		$output .= "</nav>";
 
 		return $output;
 	}
