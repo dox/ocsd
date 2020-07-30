@@ -78,8 +78,17 @@ foreach ($users AS $user) {
     $tableOutput[] = $output;
   } else {
     if ($_GET['filter'] == "cud-no-ldap") {
+      $sql  = "SELECT * FROM Applications";
+      $sql .= " WHERE cudid = '" . $user['cudid'] . "'";
+      $dbOutput = $db->query($sql)->fetchAll();
+
+      if ($dbOutput[0]['Stage'] == "Applicant") {
+        $badge = " <span class=\"badge bg-orange float-right\">Applicant</span>";
+      } else {
+        $badge = "";
+      }
       $output  = "<tr>";
-      $output .= "<td>" . $user['FullName'] . "</td>";
+      $output .= "<td>" . $user['FullName'] . $badge . "</td>";
       $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $user['cudid'] . "\">" . $user['sso_username'] . "</a>" . "</td>";
       $output .= "<td>" . "</td>";
       $output .= "<td>" . "" . "</td>";

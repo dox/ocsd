@@ -4,7 +4,7 @@ $filename = basename(__FILE__, '.php');
 $sql  = "SELECT * FROM " . $filename;
 $sql .= " WHERE cudid = '" . $person->cudid . "'";
 
-$dbOutput = $db->query($sql, 'test', 'test')->fetchAll();
+$dbOutput = $db->query($sql)->fetchAll();
 ?>
 
 <?php if ($dbOutput) { ?>
