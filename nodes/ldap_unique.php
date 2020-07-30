@@ -1,6 +1,8 @@
 <?php
 $ldapPerson = new LDAPPerson($_GET['samaccountname']);
 
+$logsClass = new Logs();
+
 if (isset($ldapPerson->samaccountname)) {
   $logInsert = (new Logs)->insert("ldap","success",null,$ldapPerson->cn . " (" . $ldapPerson->samaccountname . ") LDAP record viewed");
 
@@ -9,6 +11,8 @@ if (isset($ldapPerson->samaccountname)) {
   if (!count($CUDperson) == 1) {
     $CUDPerson = $personsClass->search($ldapPerson->mail, 2);
   }
+
+  $logs = $logsClass->allByUser($CUDPerson->cudid, $CUDPerson->sso_username);
 ?>
 
 <div class="content">
@@ -182,7 +186,11 @@ if (isset($ldapPerson->samaccountname)) {
         </div>
       </div>
     </div>
-
+  </div>
+  <div class="row">
+    <?php
+    echo $logsClass->makeTable($logs);
+    ?>
   </div>
 </div>
 
