@@ -161,7 +161,8 @@ if (isset($ldapPerson->samaccountname)) {
           <?php
           echo "<ul>";
           foreach ($ldapPerson->memberof AS $memberOf) {
-            echo "<li>" . $memberOf . "</li>";
+            $url = "./index.php?n=ldap_all&filter=group&cn=" . urlencode($memberOf);
+            echo "<li><a href=\"" . $url . "\">" . $memberOf . "</a></li>";
           }
           echo "</ul>";
           ?>

@@ -44,7 +44,14 @@ if (isset($_GET['filter'])) {
     $filterDescription = "These are all records that exist in the local LDAP that match the search term '" . $_POST['ldap_search'] . "'.";
     $users = $ldapClass->search_users($_POST['ldap_search']);
     $logInsert = (new Logs)->insert("ldap","success",null,"LDAP Search for <code>" . $_POST['ldap_search'] . "</code> returned " . count($users) . " results (not all of the results were displayable users)");
+  } elseif ($_GET['filter'] == "group") {
+    $filterDescription = "These are all records that exist in the local LDAP that are in the group '" . $_GET['cn'] . "'.";
+    $group = LdapRecord\Models\ActiveDirectory\Group::find($_GET['cn']);
+    $users = $group->members()->get();
+    //$logInsert = (new Logs)->insert("ldap","success",null,"LDAP Search for <code>" . $_POST['ldap_search'] . "</code> returned " . count($users) . " results (not all of the results were displayable users)");
 
+
+  //$members = $group->members()->get();
     //printArray($usersForOutput);
   }
 }

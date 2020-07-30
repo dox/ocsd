@@ -20,6 +20,7 @@ use LdapRecord\Container;
 use LdapRecord\Connection;
 use LdapRecord\Models\Entry;
 use LdapRecord\Models\ActiveDirectory\User;
+use LdapRecord\Models\ActiveDirectory\Group;
 
 // Create a new connection:
 $ldap_connection = new Connection([
