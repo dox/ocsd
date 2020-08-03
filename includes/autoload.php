@@ -31,7 +31,6 @@ $ldap_connection = new Connection([
 		'password' => LDAP_BIND_PASSWORD,
 		'use_tls' => LDAP_STARTTLS,
 ]);
-ldap_start_tls($ldap_connection);
 // Add the connection into the container:
 Container::addConnection($ldap_connection);
 
