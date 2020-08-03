@@ -47,23 +47,22 @@ class Logs {
 	public function allByUser($cudid = null, $username = null) {
 		global $db;
 
-		$sql  = "SELECT * FROM " . self::$table_name;
-
-		if ($cudid != null) {
-			$sql .= " WHERE cudid = '" . $cudid . "'";
-			if ($username != null) {
-				$sql .= " OR username = '" . $username . "'";
-			}
-		} elseif ($username != null) {
-			$sql .= " WHERE username = '" . $username . "'";
-			if ($username != null) {
-				$sql .= " OR cudid = '" . $cudid . "'";
-			}
+		if (empty($cudid)) {
+			$cudid = "never_find";
 		}
 
+		if (empty($username)) {
+			$username = "never_find";
+		}
+
+		$sql  = "SELECT * FROM " . self::$table_name;
+		$sql .= " WHERE cudid = '" . $cudid . "'";
+		$sql .= " OR username = '" . $username . "'";
+		$sql .= " OR description LIKE '%{ldap:" . $username . "}%'";
+		$sql .= " OR cudid LIKE '%{cudid:" . $cudid . "}%'";
 		$sql .= " ORDER BY date_created DESC";
 
-		$logs = $db->query($sql, 'test', 'test')->fetchAll();
+		$logs = $db->query($sql)->fetchAll();
 
 		return $logs;
 	}
@@ -122,13 +121,13 @@ class Logs {
 		//cudid preg_replace
 		$pattern = "/\{cudid:(.+?)\}/";
 		$cudURL = "./index.php?n=persons_unique&cudid=$1";
-		$replacement = "<a href=\"" . $cudURL . "\">$1</a>";
+		$replacement = "<a href=\"" . $cudURL . "\">$1</a> ";
 		$cleanDescription = preg_replace($pattern, $replacement, $description);
 
 		//ldap preg_replace
 		$pattern = "/\{ldap:(.+?)\}/";
 		$cudURL = "./index.php?n=ldap_unique&samaccountname=$1";
-		$replacement = "<a href=\"" . $cudURL . "\">$1</a>";
+		$replacement = "<a href=\"" . $cudURL . "\">$1</a> ";
 
 		$cleanDescription = preg_replace($pattern, $replacement, $cleanDescription);
 

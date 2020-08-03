@@ -12,7 +12,7 @@ if (isset($ldapPerson->samaccountname)) {
     $CUDPerson = $personsClass->search($ldapPerson->mail, 2);
   }
 
-  $logs = $logsClass->allByUser($CUDPerson->cudid, $CUDPerson->sso_username);
+  $logs = $logsClass->allByUser($CUDPerson->cudid, $ldapPerson->samaccountname);
 ?>
 
 <div class="content">
