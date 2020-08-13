@@ -15,7 +15,7 @@ foreach ($users AS $ldapUser) {
 
     if ($pwdlastsetInDays <= pwd_warn_age) {
   		//password ok
-  	} elseif ($pwdlastsetInDays > pwd_warn_age && $pwdlastsetInDays) {
+  	} elseif ($pwdlastsetInDays >= pwd_warn_age) {
       //password expiring within 30 - 60 days
       $password_expiry_in_days = (pwd_max_age - $pwdlastsetInDays);
 
