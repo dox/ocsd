@@ -6,6 +6,11 @@ if (isset($person->cudid)) {
 } else {
 	$logInsert = (new Logs)->insert("view","error",null,"<code>" . $_GET['cudid'] . "</code> record viewed but doesn't exist");
 }
+
+if (obscure == true) {
+	$obscureClass = $class . " obscure";
+	$obscureImgClass = $class . " obscureImg";
+}
 ?>
 
 <div class="content">
@@ -13,8 +18,8 @@ if (isset($person->cudid)) {
 	<div class="page-header">
 		<div class="row align-items-center">
 			<div class="col-auto">
-				<div class="page-pretitle">CUD Filter: <?php echo $_GET['cudid'];?></div>
-				<h2 class="page-title"><?php echo $person->FullName; ?></h2>
+				<div class="page-pretitle">CUD Filter: <span class="<?php echo $obscureClass; ?>"><?php echo $_GET['cudid'];?></span></div>
+				<h2 class="page-title <?php echo $obscureClass; ?>"><?php echo $person->FullName; ?></h2>
 			</div>
 			<!-- Page title actions -->
 			<div class="col-auto ml-auto d-print-none">
@@ -28,10 +33,10 @@ if (isset($person->cudid)) {
 	<div class="row">
 		<div class="col-lg-4">
 			<div class="card">
-				<img src="<?php echo $person->photo();?>" class="card-img-top" alt="Card top image">
+				<img src="<?php echo $person->photo();?>" class="card-img-top <?php echo $obscureImgClass; ?>" alt="Card top image">
 				<div class="card-body text-center">
-					<h3 class="mb-3"><?php echo $person->FullName; ?> <button class="btn btn-outline-primary btn-sm"><?php echo $person->university_card_type;?></button></h3>
-					<?php echo "SSO: " . $person->sso_username; ?>
+					<h3 class="mb-3"><span class="<?php echo $obscureClass; ?>"><?php echo $person->FullName; ?></span> <button class="btn btn-outline-primary btn-sm"><?php echo $person->university_card_type;?></button></h3>
+					<?php echo "SSO: <span class=\"" . $obscureClass . "\">" . $person->sso_username . "</span>"; ?>
 					</div>
 				</div>
 				<?php include("nodes/persons_unique_tabs/ldap.php");?>

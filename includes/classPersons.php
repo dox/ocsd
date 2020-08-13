@@ -25,6 +25,10 @@ class Person extends Persons {
 		return $datediff;
 	}
 	public function makeListItem() {
+		if (obscure == true) {
+			$obscure = " obscure";
+		}
+
 		$cudURL = "./index.php?n=persons_unique&cudid=" . $this->cudid;
 		$ldapURL = "./index.php?n=ldap_unique&samaccountname=" . $this->ldap_samaccountname;
 
@@ -35,9 +39,9 @@ class Person extends Persons {
 		$output .= $this->avatar();
 		$output .= "</div>";
 		$output .= "<div class=\"col\">";
-		$output .= "<h3 class=\"mb-0 text-truncate\"><a href=\"" . $cudURL . "\">" . $this->FullName . "</a></h3>";
+		$output .= "<h3 class=\"mb-0 text-truncate" . $obscure . "\"><a href=\"" . $cudURL . "\">" . $this->FullName . "</a></h3>";
 		$output .= "<div class=\"text-muted text-h5\">" . $this->bodcardType() . "</div>";
-		$output .= "<div class=\"text-muted text-h5\">SSO: " . $this->sso_username . "</div>";
+		$output .= "<div class=\"text-muted text-h5\">SSO: <span class=\"" . $obscure . "\">" . $this->sso_username . "</span></div>";
 		$output .= "</div>";
 		//$output .= "<div class=\"col-auto lh-1 align-self-start\">";
 		//$output .= "<span class=\"badge bg-gray-lt\">";
@@ -48,7 +52,7 @@ class Person extends Persons {
 		$output .= "<div class=\"row align-items-center mt-4\">";
 		$output .= "<div class=\"col\">";
 		$output .= "<div>";
-		
+
 		$datediff = $this->bodcardDaysLeft();
 		if ($datediff > 365) {
 			$width = "100%";
@@ -68,7 +72,7 @@ class Person extends Persons {
 		}
 
 		$output .= "<div class=\"d-flex mb-1 align-items-center lh-1\">";
-		$output .= "<div class=\"text-h5 font-weight-bolder m-0\">" . $this->barcode7 . "</div>";
+		$output .= "<div class=\"text-h5 font-weight-bolder m-0\"><span class=\"" . $obscure . "\">" . $this->barcode7 . "</span></div>";
 		$output .= "<span class=\"ml-auto text-h6 strong\">" . $datediff . " days left</span>";
 		$output .= "</div>";
 		$output .= "<div class=\"progress progress-sm\">";
@@ -127,13 +131,21 @@ class Person extends Persons {
 		$imgSrc = $this->photo();
 
 		$output  = "<a href=\"index.php?n=persons_unique&cudid=" . $this->cudid . "\" class=\"circle\">";
-		$output .= "<span alt=\"this is a test\" class=\"avatar rounded-lg avatar-lg\" style=\"background-image: url(" . $imgSrc . ")\">";
+
+		$class = "avatar rounded-lg avatar-lg";
+		$style = "background-image: url(" . $imgSrc . ")";
+		if (obscure == true) {
+			$class = $class . " obscureImg";
+		}
+
+		$output .= "<span alt=\"this is a test\" class=\"" . $class . "\" style=\"" . $style . "\">";
 
 		if ($this->ldap_isEnabled == true) {
 			$class = "bg-success";
 		} else {
 			$class = "bg-danger";
 		}
+
 		$output .= "<span class=\"badge " . $class . "\"></span>";
 
 		$output .="</span>";
