@@ -24,7 +24,7 @@ try {
 	$user->save();
 
 	$ldapPerson = new LDAPPerson(strtolower($person->sso_username));
-	$ldapPerson->enableUser();
+	$ldapPerson->enableUser(true);
 
 	// SEND WELCOMING EMAIL
 	if ($_POST['email'] == 'true') {
