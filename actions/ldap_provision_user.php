@@ -17,14 +17,15 @@ $user->sn = $person->lastname;
 $user->displayname = $person->FullName;
 $user->objectclass = "User";
 $user->description = "\\\\helium\students$\\" . date('Y') . "\%username%";
-$user->unicodepwd = $randomPassword;
+$user->unicodePwd = $randomPassword;
 $user->mail = $person->oxford_email;
 
 try {
 	$user->save();
+	sleep(1);
 
-	$ldapPerson = new LDAPPerson(strtolower($person->sso_username));
-	$ldapPerson->enableUser(true);
+	$user->userAccountControl = 512;
+	$user->save();
 
 	// SEND WELCOMING EMAIL
 	if ($_POST['email'] == 'true') {
