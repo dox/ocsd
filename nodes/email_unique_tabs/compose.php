@@ -8,7 +8,7 @@
         <div class="row align-items-center">
           <label class="col-sm-2">To:</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" name="emailRecipients">
+            <textarea rows="5" class="form-control" name="emailRecipients"></textarea>
           </div>
         </div>
       </div>
