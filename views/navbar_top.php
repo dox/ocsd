@@ -75,6 +75,10 @@ $navbarArray['ldap_all'] = array(
 			"link" => "./index.php?n=ldap_all&filter=stale"
 		),
 		array(
+			"title" => "Stale Workstations",
+			"link" => "./index.php?n=ldap_all&filter=stale-workstations"
+		),
+		array(
 			"title" => "All",
 			"link" => "./index.php?n=ldap_all&filter=all"
 		)

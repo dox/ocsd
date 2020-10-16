@@ -37,6 +37,9 @@ if (isset($_GET['filter'])) {
   } elseif ($_GET['filter'] == "stale") {
     $users = $ldapClass->stale_users(LDAP_BASE_DN, true);
     $filterDescription = "These are all records that exist in the local LDAP, but have not had their password reset in " . (pwd_warn_age*3) . " days.";
+  } elseif ($_GET['filter'] == "stale-workstations") {
+    $users = $ldapClass->stale_workstations(LDAP_BASE_DN, true);
+    $filterDescription = "These are all records for workstations that exist in the local LDAP, but have not had any activity in " . (pwd_warn_age*3) . " days.";
   } elseif ($_GET['filter'] == "all") {
     $filterDescription = "These are all records that exist in the local LDAP.";
     $users = $ldapClass->all_users_enabled();

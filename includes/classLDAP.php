@@ -89,6 +89,26 @@ class LDAP {
     return $records;
   }
 
+  public function stale_workstations($baseDN = LDAP_BASE_DN, $includeDisabled = false) {
+    global $ldap_connection;
+
+    $date = (strtotime(pwd_warn_age*3 . " days ago") + 11644473600)*10000000;
+
+    /*$filters = [
+      'pwdlastset<=' . $date,
+      'objectclass = top'
+    ];
+
+    $records = $ldap_connection->query()->select('samaccountname')->rawFilter($filters)->paginate(1000);
+*/
+    $records = $ldap_connection->query()->select('samaccountname')->where([
+      ['pwdlastset', '<=', $date],
+      ['objectclass', '=', 'computer'],
+    ])->paginate(1000);
+
+    return $records;
+  }
+
   public function expiring_users() {
     global $ldap_connection;
 
