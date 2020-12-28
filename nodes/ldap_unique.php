@@ -19,7 +19,7 @@ if (isset($ldapPerson->samaccountname)) {
   <!-- Page title -->
   <div class="page-header">
     <div class="row align-items-center">
-      <div class="col-auto">
+      <div class="col">
         <div class="page-pretitle">LDAP Filter: <?php echo $_GET['samaccountname'];?></div>
         <h2 class="page-title"><?php echo $ldapPerson->cn; ?></h2>
       </div>
