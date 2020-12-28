@@ -117,9 +117,9 @@ foreach ($users AS $user) {
   <!-- Page title -->
   <div class="page-header">
     <div class="row align-items-center">
-      <div class="col-auto">
+      <div class="col">
         <div class="page-pretitle">Filter: <?php echo $_GET['filter']; ?></div>
-        <h2 class="page-title"><span id="ldap_count"><?php echo count($users); ?></span> LDAP <?php echo autoPluralise(" Record", " Records", count($users)); ?></h2>
+        <h2 class="page-title"><!--<span id="ldap_count">--><?php echo count($users); ?><!--</span>--> <?php echo autoPluralise(" LDAP Record", " LDAP Records", count($users)); ?></h2>
       </div>
     </div>
   </div>

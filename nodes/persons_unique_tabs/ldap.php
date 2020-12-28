@@ -20,7 +20,7 @@ if (isset($ldapPerson->samaccountname)) {
 		<div class="card-footer">
 			<div class="d-flex">
 				<a href="./index.php?n=ldap_unique&samaccountname=<?php echo $ldapPerson->samaccountname; ?>" class="btn btn-link"><?php echo $ldapPerson->samaccountname; ?></a>
-				<?php echo $ldapPerson->actionsButton(null, "btn btn-primary ml-auto"); ?>
+				<?php echo $ldapPerson->actionsButton($user['cudid'],"btn btn-primary ml-auto"); ?>
 			</div>
 		</div>
 	</div>

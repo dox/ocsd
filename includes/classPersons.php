@@ -34,6 +34,7 @@ class Person extends Persons {
 
 		$output  = "<div class=\"card\">";
 		$output .= "<div class=\"card-body\">";
+
 		$output .= "<div class=\"row row-sm align-items-center\">";
 		$output .= "<div class=\"col-auto\">";
 		$output .= $this->avatar();
@@ -49,6 +50,7 @@ class Person extends Persons {
 		//$output .= "</span>";
 		//$output .= "</div>";
 		$output .= "</div>";
+
 		$output .= "<div class=\"row align-items-center mt-4\">";
 		$output .= "<div class=\"col\">";
 		$output .= "<div>";
@@ -72,16 +74,16 @@ class Person extends Persons {
 		}
 
 		$output .= "<div class=\"d-flex mb-1 align-items-center lh-1\">";
-		$output .= "<div class=\"text-h5 font-weight-bolder m-0\"><span class=\"" . $obscure . "\">" . $this->barcode7 . "</span></div>";
+		$output .= "<div class=\"text-h5 font-weight-bolder m-0\">" . $this->barcode7 . "</div>";
 		$output .= "<span class=\"ml-auto text-h6 strong\">" . $datediff . " days left</span>";
 		$output .= "</div>";
+		$output .= "</div>";
+		
 		$output .= "<div class=\"progress progress-sm\">";
-		$output .= "<div class=\"progress-bar " . $class . "\" style=\"width: " . $width . "\" role=\"progressbar\" aria-valuenow=\"84\" aria-valuemin=\"0\" aria-valuemax=\"100\">";
-		$output .= "<span class=\"sr-only\">" . $width . "% Complete</span>";
+		$output .= "<div class=\"progress-bar " . $class . "\" style=\"width: " . $width . "\" role=\"progressbar\" aria-valuenow=\"84\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>";
 		$output .= "</div>";
 		$output .= "</div>";
-		$output .= "</div>";
-		$output .= "</div>";
+
 
 		$output .= "<div class=\"col-auto\">";
 		$output .= "<div class=\"btn-list\">";

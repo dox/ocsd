@@ -41,7 +41,7 @@ $logsCountArray = array_reverse(array_slice($logsCountArray, 0, 7));
 	<!-- Page title -->
 	<div class="page-header">
 		<div class="row align-items-center">
-			<div class="col-auto">
+			<div class="col">
 				<div class="page-pretitle">Overview</div>
 				<h2 class="page-title" role="heading" aria-level="1">Dashboard</h2>
 			</div>

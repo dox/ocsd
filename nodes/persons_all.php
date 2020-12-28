@@ -21,7 +21,7 @@ if (isset($_GET['filter'])) {
 	<!-- Page title -->
 	<div class="page-header">
 		<div class="row align-items-center">
-			<div class="col-auto">
+			<div class="col">
 				<div class="page-pretitle">Filter: <?php echo $_GET['filter']; ?></div>
 				<h2 class="page-title" role="heading" aria-level="1"><?php echo count($persons); ?> Persons</h2>
 			</div>

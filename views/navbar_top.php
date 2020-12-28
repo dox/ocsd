@@ -2,13 +2,14 @@
 
 $navbarArray['home'] = array(
 	"title" => "Home",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"/><polyline points=\"5 12 3 12 12 3 21 12 19 12\" /><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\" /><path d=\"M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6\" /></svg>",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"/></path><polyline points=\"5 12 3 12 12 3 21 12 19 12\" /></polyline><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\" /></path><path d=\"M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6\" /></path></path></svg>",
 	"link" => "./index.php"
 );
 
 $navbarArray['persons_all'] = array(
 	"title" => "Persons",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><circle cx=\"12\" cy=\"7\" r=\"4\"></circle><path d=\"M5.5 21v-2a4 4 0 0 1 4 -4h5a4 4 0 0 1 4 4v2\"></path></svg>",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\">
+	<path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><circle cx=\"12\" cy=\"7\" r=\"4\"></circle><path d=\"M5.5 21v-2a4 4 0 0 1 4 -4h5a4 4 0 0 1 4 4v2\"></path></svg>",
 	"sublinks" => array(
 		array(
 			"title" => "Students",
@@ -27,7 +28,7 @@ $navbarArray['persons_all'] = array(
 
 $navbarArray['photos'] = array(
 	"title" => "Photo Reports",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><line x1=\"15\" y1=\"8\" x2=\"15.01\" y2=\"8\"></line><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"></rect><path d=\"M4 15l4 -4a3 5 0 0 1 3 0l 5 5\"></path><path d=\"M14 14l1 -1a3 5 0 0 1 3 0l 2 2\"></path></svg>",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><line x1=\"15\" y1=\"8\" x2=\"15.01\" y2=\"8\"></line><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"></rect><path d=\"M4 15l4 -4a3 5 0 0 1 3 0l 5 5\"></path><path d=\"M14 14l1 -1a3 5 0 0 1 3 0l 2 2\"></path></svg>",
 	"sublinks" => array(
 		array(
 			"title" => "All",
@@ -52,7 +53,7 @@ do {
 
 $navbarArray['ldap_all'] = array(
 	"title" => "LDAP",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"></rect><circle cx=\"12\" cy=\"16\" r=\"1\"></circle><path d=\"M8 11v-4a4 4 0 0 1 8 0v4\"></path></svg>",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"></rect><circle cx=\"12\" cy=\"16\" r=\"1\"></circle><path d=\"M8 11v-4a4 4 0 0 1 8 0v4\"></path></svg>",
 	"sublinks" => array(
 		array(
 			"title" => "<form action=\"./index.php?n=ldap_all&filter=search\" method=\"POST\" target=\"_self\"><input type=\"text\" class=\"form-control\" id=\"ldap_search\" name=\"ldap_search\" placeholder=\"Search LDAP...\" title=\"LDAP Search\" ></form>",
@@ -87,13 +88,13 @@ $navbarArray['ldap_all'] = array(
 
 $navbarArray['emergency_email'] = array(
 	"title" => "Email",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"></rect><polyline points=\"3 7 12 13 21 7\"></polyline></svg>",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"></rect><polyline points=\"3 7 12 13 21 7\"></polyline></svg>",
 	"link" => "./index.php?n=emergency_email"
 );
 
 $navbarArray['admin_logs'] = array(
 	"title" => "Logs",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon icon-md\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><circle cx=\"12\" cy=\"12\" r=\"9\"></circle><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"></line><polyline points=\"11 12 12 12 12 16 13 16\"></polyline></svg>",
+	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><circle cx=\"12\" cy=\"12\" r=\"9\"></circle><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"></line><polyline points=\"11 12 12 12 12 16 13 16\"></polyline></svg>",
 	"link" => "./index.php?n=admin_logs"
 );
 ?>
@@ -111,13 +112,13 @@ $navbarArray['admin_logs'] = array(
 			}?>
 		</a>
 		<div class="navbar-nav flex-row order-md-last">
-			<div class="nav-item dropdown d-none d-md-flex mr-3">
+			<div class="nav-item dropdown d-none d-md-flex me-3">
 				<a href="#" class="nav-link px-0" data-toggle="dropdown" tabindex="-1">
 					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg>
 					<span class="badge bg-red"></span>
 				</a>
 
-				<div class="dropdown-menu dropdown-menu-right dropdown-menu-card">
+				<div class="dropdown-menu dropdown-menu-end dropdown-menu-card">
 					<div class="card">
 						<div class="card-body">
 							This system is massivley still in development!  It's not even at beta yet.  So don't use it.  You've been warned...
@@ -126,14 +127,14 @@ $navbarArray['admin_logs'] = array(
 				</div>
 			</div>
 			<div class="nav-item dropdown">
-				<a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-toggle="dropdown">
-					<span class="avatar" style="background-image: url(<?php echo $_SESSION['avatar_url'];?>)"></span>
-					<div class="d-none d-xl-block pl-2">
+				<a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-toggle="dropdown" aria-label="Open user menu">
+					<span class="avatar avatar-sm" style="background-image: url(<?php echo $_SESSION['avatar_url'];?>)"></span>
+					<div class="d-none d-xl-block ps-2">
 						<div><?php echo $_SESSION['username']; ?></div>
 						<div class="mt-1 small text-muted"><?php echo $_SESSION["user_type"]; ?></div>
 					</div>
 				</a>
-				<div class="dropdown-menu dropdown-menu-right">
+				<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
 					<a class="dropdown-item" href="./index.php?n=persons_unique&cudid=<?php echo $_SESSION['cudid'];?>">
 						<svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21v-2a4 4 0 0 1 4 -4h5a4 4 0 0 1 4 4v2"></path></svg>
 						My CUD Profile
@@ -171,10 +172,10 @@ $navbarArray['admin_logs'] = array(
 
 						if (is_array($navBarLink['sublinks'])) {
 							$output  = "<li class=\"nav-item dropdown " . $active . "\">";
-							$output .= "<a class=\"nav-link dropdown-toggle\" href=\"#navbar-base\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\" >";
+							$output .= "<a class=\"nav-link dropdown-toggle\" href=\"#navbar-base\" data-toggle=\"dropdown\" >";
 						} else {
 							$output  = "<li class=\"nav-item " . $active . "\">";
-							$output .= "<a class=\"nav-link\" href=\"" . $navBarLink['link'] . "\" role=\"button\" aria-expanded=\"false\" >";
+							$output .= "<a class=\"nav-link\" href=\"" . $navBarLink['link'] . "\" >";
 						}
 						$output .= "<span class=\"nav-link-icon d-md-none d-lg-inline-block\">";
 						$output .= $navBarLink['icon'];
@@ -202,7 +203,6 @@ $navbarArray['admin_logs'] = array(
 				</ul>
 				<div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
 					<form action="./index.php?n=persons_all&filter=search" method="POST" target="_self">
-						<label for="navbar_search" class="sr-only">Search</label>
 						<div class="input-icon">
 							<span class="input-icon-addon">
 								<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7" /><line x1="21" y1="21" x2="15" y2="15" /></svg>

@@ -17,10 +17,10 @@ if (isset($_GET['logout'])) {
 		</div>
 		<form class="card card-md" id="loginForm" method="post" role="main">
 			<div class="card-body">
-				<h1 class="mb-5 text-center">Login Required</h1>
+				<h1 class="card-title mb-4 text-center">Login Required</h1>
 				<?php echo $message; ?>
 				<div class="mb-3">
-					<label for="username" class="sr-only">Username</label>
+					<label for="username" class="form-label">Username</label>
 					<input type="text" class="form-control" placeholder="Username" id="username" name="username" value="<?php if (isset($_POST['username'])) { echo $username; } ?>" required autocomplete="off" autofocus>
 
 				</div>
@@ -34,17 +34,17 @@ if (isset($_GET['logout'])) {
 						}
 						?>
 					</label>
-					<label for="password" class="sr-only">Password</label>
+					<label for="password" class="form-label">Password</label>
 					<input type="password" class="form-control" placeholder="Password" id="password" name="password" required>
 				</div>
-				<div class="mb-2">
+				<!--<div class="mb-2">
 					<label class="form-check">
 						<input type="checkbox" class="form-check-input" id="remember" name="remember" />
 						<span class="form-check-label">Remember me on this device</span>
 					</label>
-				</div>
+				</div>-->
 				<div class="form-footer">
-					<button type="submit" name="submit" value="submit" class="btn btn-primary btn-block">Sign in</button>
+					<button type="submit" name="submit" value="submit" class="btn btn-primary w-100">Sign in</button>
 					<input type='hidden' name='oldform' value='1'>
 				</div>
 			</div>

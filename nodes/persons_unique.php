@@ -17,7 +17,7 @@ if (obscure == true) {
 	<!-- Page title -->
 	<div class="page-header">
 		<div class="row align-items-center">
-			<div class="col-auto">
+			<div class="col">
 				<div class="page-pretitle">CUD Filter: <span class="<?php echo $obscureClass; ?>"><?php echo $_GET['cudid'];?></span></div>
 				<h2 class="page-title <?php echo $obscureClass; ?>"><?php echo $person->FullName; ?></h2>
 			</div>
