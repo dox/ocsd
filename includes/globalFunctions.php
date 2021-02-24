@@ -244,6 +244,33 @@ function howLongAgo($strPastDate = null) {
 		$diff = $diff . (autoPluralise (" year", " years", $diff)) . " ago";
 		return ($diff);
 	}
+}
 
+function displayTitle($title = null, $subtitle = nulll, $iconsArray = null) {
+	$output  = "<div class=\"page-header mt-3 mb-3\">";
+	$output .= "<div class=\"row align-items-center\">";
+	$output .= "<div class=\"col\">";
+	if ($subtitle != null) {
+		$output .= "<div class=\"page-pretitle\">" . $subtitle . "</div>";
+	}
+	if ($title != null) {
+		$output .= "<h2 class=\"page-title\" role=\"heading\" aria-level=\"1\">" . $title . "</h2>";
+	}
+	$output .= "</div>";
+
+	// Page title actions
+	$output .= "<div class=\"col-auto ml-auto d-print-none\">";
+
+	foreach ($iconsArray AS $icon) {
+		$output .= "<button type=\"button\" class=\"btn btn-sm ms-1 " . $icon['class'] . "\"" . $icon['value'] . ">";
+		$output .= $icon['name'];
+		$output .= "</button>";
+	}
+
+	$output .= "</div>";
+	$output .= "</div>";
+	$output .= "</div>";
+
+	return $output;
 }
 ?>

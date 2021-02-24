@@ -59,16 +59,16 @@ class LDAPPerson extends LDAP {
   	$pwdlastsetAgeInDays = $this->pwdlastsetage();
 
   	if ($pwdlastsetAgeInDays <= pwd_warn_age) {
-  		$badgeClass = "bg-green";
+  		$badgeClass = "bg-primary";
   		$flagName = "Password OK aged " . howLongAgo($this->pwdlastsetdate());
   	} elseif ($pwdlastsetAgeInDays >= pwd_warn_age && $pwdlastsetAgeInDays <= pwd_max_age) {
-  		$badgeClass = "bg-yellow";
+  		$badgeClass = "bg-warning";
   		$flagName = "Password expiring in " . (pwd_max_age - $pwdlastsetAgeInDays) . autoPluralise(" day", " days", (pwd_max_age - $pwdlastsetAgeInDays));
   	} elseif ($pwdlastsetAgeInDays > pwd_max_age) {
-  		$badgeClass = "bg-red";
+  		$badgeClass = "bg-danger";
   		$flagName = "Password EXPIRED " . howLongAgo($this->pwdlastsetdate());
   	} else {
-  		$badgeClass = "bg-gray";
+  		$badgeClass = "bg-dark";
   		$flagName = "Password UNKNOWN aged " . $pwdlastsetAgeInDays . autoPluralise(" day", " days", $pwdlastsetAgeInDays);
   	}
 
@@ -79,16 +79,16 @@ class LDAPPerson extends LDAP {
 
 	public function useraccountcontrolbadge () {
   	if ($this->isEnabled()) {
-  		$badgeClass = "bg-green";
+  		$badgeClass = "bg-primary";
   	} elseif (in_array($this->useraccountcontrol, array("2", "16", "514", "546", "66050", "66082", "8388608"))) {
-  		$badgeClass = "bg-red";
+  		$badgeClass = "bg-danger";
   	} elseif (in_array($this->useraccountcontrol, array("66048"))) {
-  		$badgeClass = "bg-yellow";
+  		$badgeClass = "bg-warning";
   	} else {
-  		$badgeClass = "bg-gray";
+  		$badgeClass = "bg-dark";
   	}
 
-    $output  = "<a href=\"index.php?n=card_types\" class=\"badge " . $badgeClass . "\">" . $this->useraccountcontrol . "</a>";
+    $output  = "<a href=\"index.php?n=card_types\" class=\"text-decoration-none badge " . $badgeClass . "\">" . $this->useraccountcontrol . "</a>";
 
   	return $output;
   }
@@ -105,7 +105,7 @@ class LDAPPerson extends LDAP {
 
   public function actionsButton($cudid = null, $class = "btn-sm btn-secondary") {
     $output  = "<div class=\"dropdown\">";
-    $output .= "<button class=\"btn " . $class . " dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">LDAP Actions</button>";
+    $output .= "<button class=\"btn " . $class . " dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">LDAP Actions</button>";
     $output .= "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">";
 
 		if (isset($this->mail)) {

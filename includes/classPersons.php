@@ -78,7 +78,7 @@ class Person extends Persons {
 		$output .= "<span class=\"ml-auto text-h6 strong\">" . $datediff . " days left</span>";
 		$output .= "</div>";
 		$output .= "</div>";
-		
+
 		$output .= "<div class=\"progress progress-sm\">";
 		$output .= "<div class=\"progress-bar " . $class . "\" style=\"width: " . $width . "\" role=\"progressbar\" aria-valuenow=\"84\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>";
 		$output .= "</div>";
@@ -130,17 +130,11 @@ class Person extends Persons {
 	}
 
 	public function avatar() {
-		$imgSrc = $this->photo();
+		$output  = "<a href=\"index.php?n=persons_unique&cudid=" . $this->cudid . "\">";
 
-		$output  = "<a href=\"index.php?n=persons_unique&cudid=" . $this->cudid . "\" class=\"circle\">";
 
-		$class = "avatar rounded-lg avatar-lg";
-		$style = "background-image: url(" . $imgSrc . ")";
-		if (obscure == true) {
-			$class = $class . " obscureImg";
-		}
-
-		$output .= "<span alt=\"this is a test\" class=\"" . $class . "\" style=\"" . $style . "\">";
+		//$output .= "<span alt=\"this is a test\" class=\"" . $class . "\" style=\"" . $style . "\">";
+		$output .= "<img class=\"avatar rounded-2\" src=\"" . $this->photo() . "\" />";
 
 		if ($this->ldap_isEnabled == true) {
 			$class = "bg-success";
@@ -148,9 +142,8 @@ class Person extends Persons {
 			$class = "bg-danger";
 		}
 
-		$output .= "<span class=\"badge " . $class . "\"></span>";
+		//$output .= "<span class=\"badge " . $class . "\"></span>";
 
-		$output .="</span>";
 		$output .= "</a>";
 
 		return $output;
@@ -322,6 +315,21 @@ class Persons {
 		$sql .= " WHERE university_card_type IN ('" . implode("', '", $this->studentArrayTypes) . "')";
 
 		$persons = $db->query($sql, 'test', 'test')->fetchAll();
+
+		return $persons;
+	}
+
+	public function suspendedPersons() {
+		global $db;
+
+		$sqlCurrent  = "SELECT cudid FROM Suspensions";
+		$sqlCurrent .= " WHERE DATE(SuspendStrDt) < '" . date('Y-m-d') . "'";
+		$sqlCurrent .= " AND DATE(SuspendExpEndDt) > '" . date('Y-m-d') . "'";
+
+		$sql  = "SELECT * FROM " . self::$table_name;
+		$sql .= " WHERE cudid IN (" . $sqlCurrent . ")";
+
+		$persons = $db->query($sql)->fetchAll();
 
 		return $persons;
 	}

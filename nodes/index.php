@@ -35,33 +35,13 @@ foreach ($logsByDay AS $day) {
 	$logsCountArray["'" . date('Y-m-d', strtotime($day['date_created'])) . "'"] = $day['cnt'];
 }
 $logsCountArray = array_reverse(array_slice($logsCountArray, 0, 7));
+
+$icons[] = array("class" => "btn-primary", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#bell\"/></svg> Test Button", "value" => "data-bs-toggle=\"modal\" data-bs-target=\"#deleteMealModal\"");
+$icons[] = array("class" => "btn-warning", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#email\"/></svg> Test Button", "value" => "data-bs-toggle=\"modal\" data-bs-target=\"#deleteMealModal\"");
+
+echo displayTitle("Dashboard", "Overview", $icons);
 ?>
 
-<div class="content">
-	<!-- Page title -->
-	<div class="page-header">
-		<div class="row align-items-center">
-			<div class="col">
-				<div class="page-pretitle">Overview</div>
-				<h2 class="page-title" role="heading" aria-level="1">Dashboard</h2>
-			</div>
-			<!-- Page title actions -->
-			<div class="col-auto ml-auto d-print-none">
-				<span class="d-none d-sm-inline">
-					<a href="#" class="btn btn-white">
-						New view
-					</a>
-				</span>
-				<a href="#" class="btn btn-primary ml-3 d-none d-sm-inline-block" data-toggle="modal" data-target="#modal-report">
-					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-					Create new report
-				</a>
-				<a href="#" class="btn btn-primary ml-3 d-sm-none btn-icon" data-toggle="modal" data-target="#modal-report" aria-label="Create new report">
-					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-				</a>
-			</div>
-		</div>
-	</div>
 
 	<div class="row row-deck row-cards">
 		<?php
@@ -103,7 +83,6 @@ $logsCountArray = array_reverse(array_slice($logsCountArray, 0, 7));
 		echo cardWithGraph($otherCard3);
 		?>
 	</div>
-</div>
 
 <?php
 

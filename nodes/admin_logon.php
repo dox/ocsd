@@ -10,44 +10,59 @@ if (isset($_GET['logout'])) {
 }
 ?>
 
-<div class="flex-fill d-flex flex-column justify-content-center">
-	<div class="container-tight py-6">
-		<div class="text-center mb-4">
-			<img src="./images/logo.svg" height="36" alt="">
-		</div>
-		<form class="card card-md" id="loginForm" method="post" role="main">
-			<div class="card-body">
-				<h1 class="card-title mb-4 text-center">Login Required</h1>
-				<?php echo $message; ?>
-				<div class="mb-3">
-					<label for="username" class="form-label">Username</label>
-					<input type="text" class="form-control" placeholder="Username" id="username" name="username" value="<?php if (isset($_POST['username'])) { echo $username; } ?>" required autocomplete="off" autofocus>
+<form class="form-signin" id="loginForm" method="post" role="main">
+	<h1 class="text-primary text-center"><svg width="2em" height="2em"><use xlink:href="images/icons.svg#ocsd-logo"/></svg></h1>
+	<h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+	<?php echo $message; ?>
 
-				</div>
-				<div class="mb-3">
-					<label class="form-label">
-						<?php
-						if (pwd_reset_url) {
-							echo "<span class=\"form-label-description\">";
-							echo "<a href=\"" . pwd_reset_url . "\">Forgot Password</a>";
-							echo "</span>";
-						}
-						?>
-					</label>
-					<label for="password" class="form-label">Password</label>
-					<input type="password" class="form-control" placeholder="Password" id="password" name="password" required>
-				</div>
-				<!--<div class="mb-2">
-					<label class="form-check">
-						<input type="checkbox" class="form-check-input" id="remember" name="remember" />
-						<span class="form-check-label">Remember me on this device</span>
-					</label>
-				</div>-->
-				<div class="form-footer">
-					<button type="submit" name="submit" value="submit" class="btn btn-primary w-100">Sign in</button>
-					<input type='hidden' name='oldform' value='1'>
-				</div>
-			</div>
-		</form>
-	</div>
-</div>
+	<label for="username" class="visually-hidden">Username</label>
+	<input type="text" id="username" name="username" class="form-control" value="<?php if (isset($_POST['username'])) { echo $username; } ?>" placeholder="Username" required autofocus>
+	<label for="password" class="visually-hidden">Password</label>
+	<input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+
+	<label class="form-label float-end">
+		<?php
+		if (pwd_reset_url) {
+			echo "<span class=\"form-label-description\">";
+			echo "<a href=\"" . pwd_reset_url . "\" class=\"text-muted\">Forgot Password?</a>";
+			echo "</span>";
+		}
+		?>
+	</label>
+
+	<button class="w-100 btn btn-lg btn-primary" name="submit" value="submit" type="submit">Sign in</button>
+	<input type='hidden' name='oldform' value='1'>
+</form>
+
+
+
+<style>
+
+
+.form-signin {
+	width: 100%;
+	max-width: 330px;
+	padding: 15px;
+	margin: auto;
+}
+.form-signin .form-control {
+	position: relative;
+	box-sizing: border-box;
+	height: auto;
+	padding: 10px;
+	font-size: 16px;
+}
+.form-signin .form-control:focus {
+	z-index: 2;
+}
+.form-signin input[type="text"] {
+	margin-bottom: -1px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+	margin-bottom: 10px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+</style>

@@ -111,41 +111,33 @@ foreach ($users AS $user) {
     }
   }
 }
+
+$icons[] = array("class" => "btn-primary", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#bell\"/></svg> Test Button", "value" => "data-bs-toggle=\"modal\" data-bs-target=\"#deleteMealModal\"");
+$icons[] = array("class" => "btn-warning", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#email\"/></svg> Test Button", "value" => "data-bs-toggle=\"modal\" data-bs-target=\"#deleteMealModal\"");
+
+$title = count($users) . autoPluralise(" LDAP Record", " LDAP Records", count($users));
+echo displayTitle($title, "Filter: " . $_GET['filter'], $icons);
 ?>
 
-<div class="content">
-  <!-- Page title -->
-  <div class="page-header">
-    <div class="row align-items-center">
-      <div class="col">
-        <div class="page-pretitle">Filter: <?php echo $_GET['filter']; ?></div>
-        <h2 class="page-title"><!--<span id="ldap_count">--><?php echo count($users); ?><!--</span>--> <?php echo autoPluralise(" LDAP Record", " LDAP Records", count($users)); ?></h2>
-      </div>
-    </div>
-  </div>
+<p><?php echo $filterDescription; ?></p>
 
-  <div class="row">
-    <p><?php echo $filterDescription; ?></p>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Full Name</th>
-          <th scope="col">SSO</th>
-          <th scope="col">LDAP</th>
-          <th scope="col">Account Control</th>
-          <th scope="col">pwdlastset</th>
-          <th scope="col">Email</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        foreach ($tableOutput AS $row) {
-          echo $row;
-        }
-        ?>
-      </tbody>
-    </table>
-  </div>
-</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Full Name</th>
+      <th scope="col">SSO</th>
+      <th scope="col">LDAP</th>
+      <th scope="col">Account Control</th>
+      <th scope="col">pwdlastset</th>
+      <th scope="col">Email</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php
+    foreach ($tableOutput AS $row) {
+      echo $row;
+    }
+    ?>
+  </tbody>
+</table>

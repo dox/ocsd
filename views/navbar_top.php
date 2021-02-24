@@ -2,15 +2,18 @@
 
 $navbarArray['home'] = array(
 	"title" => "Home",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"/></path><polyline points=\"5 12 3 12 12 3 21 12 19 12\" /></polyline><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\" /></path><path d=\"M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6\" /></path></path></svg>",
+	"icon" => "home",
 	"link" => "./index.php"
 );
 
 $navbarArray['persons_all'] = array(
 	"title" => "Persons",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\">
-	<path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><circle cx=\"12\" cy=\"7\" r=\"4\"></circle><path d=\"M5.5 21v-2a4 4 0 0 1 4 -4h5a4 4 0 0 1 4 4v2\"></path></svg>",
+	"icon" => "person",
 	"sublinks" => array(
+		array(
+			"title" => "Suspended",
+			"link" => "./index.php?n=persons_all&filter=suspended"
+		),
 		array(
 			"title" => "Students",
 			"link" => "./index.php?n=persons_all&filter=students"
@@ -28,7 +31,7 @@ $navbarArray['persons_all'] = array(
 
 $navbarArray['photos'] = array(
 	"title" => "Photo Reports",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><line x1=\"15\" y1=\"8\" x2=\"15.01\" y2=\"8\"></line><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"></rect><path d=\"M4 15l4 -4a3 5 0 0 1 3 0l 5 5\"></path><path d=\"M14 14l1 -1a3 5 0 0 1 3 0l 2 2\"></path></svg>",
+	"icon" => "photo",
 	"sublinks" => array(
 		array(
 			"title" => "All",
@@ -53,7 +56,7 @@ do {
 
 $navbarArray['ldap_all'] = array(
 	"title" => "LDAP",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"></rect><circle cx=\"12\" cy=\"16\" r=\"1\"></circle><path d=\"M8 11v-4a4 4 0 0 1 8 0v4\"></path></svg>",
+	"icon" => "ldap",
 	"sublinks" => array(
 		array(
 			"title" => "<form action=\"./index.php?n=ldap_all&filter=search\" method=\"POST\" target=\"_self\"><input type=\"text\" class=\"form-control\" id=\"ldap_search\" name=\"ldap_search\" placeholder=\"Search LDAP...\" title=\"LDAP Search\" ></form>",
@@ -88,78 +91,82 @@ $navbarArray['ldap_all'] = array(
 
 $navbarArray['emergency_email'] = array(
 	"title" => "Email",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"></rect><polyline points=\"3 7 12 13 21 7\"></polyline></svg>",
+	"icon" => "email",
 	"link" => "./index.php?n=emergency_email"
 );
 
 $navbarArray['admin_logs'] = array(
 	"title" => "Logs",
-	"icon" => "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" stroke-width=\"2\" stroke=\"currentColor\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\"></path><circle cx=\"12\" cy=\"12\" r=\"9\"></circle><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"></line><polyline points=\"11 12 12 12 12 16 13 16\"></polyline></svg>",
+	"icon" => "logs",
 	"link" => "./index.php?n=admin_logs"
 );
 ?>
-<div role="navigation">
-<header class="navbar navbar-expand-md navbar-light">
-	<div class="container-xl">
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<a href="." class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pr-0 pr-md-3">
-			<img src="images/logo.svg" alt="OCSD" class="navbar-brand-image">
-			<?php
-			if (debug == true) {
-				echo "<button type=\"button\" class=\"btn btn-sm btn-warning\">DEBUG ENABLED</button>";
-			}?>
-		</a>
-		<div class="navbar-nav flex-row order-md-last">
-			<div class="nav-item dropdown d-none d-md-flex me-3">
-				<a href="#" class="nav-link px-0" data-toggle="dropdown" tabindex="-1">
-					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg>
-					<span class="badge bg-red"></span>
-				</a>
 
-				<div class="dropdown-menu dropdown-menu-end dropdown-menu-card">
-					<div class="card">
-						<div class="card-body">
-							This system is massivley still in development!  It's not even at beta yet.  So don't use it.  You've been warned...
+<header>
+	<nav class="navbar navbar-light bg-light">
+		<div class="container">
+			<a class="navbar-brand">
+				<svg width="1em" height="1em" class="text-primary">
+					<use xlink:href="images/icons.svg#ocsd-logo"/>
+				</svg> OCSD
+			</a>
+			<div class="d-flex">
+				<div class="nav-item me-2">
+					<form action="./index.php?n=persons_all&filter=search" method="POST" target="_self">
+						<input class="form-control me-2 typeahead" type="search" placeholder="Search CUD" name="navbar_search" id="navbar_search" aria-label="Search" autocomplete="off" spellcheck="false">
+					</form>
+				</div>
+
+				<div class="nav-item dropdown me-2">
+					<a href="#" class="nav-link mx-0" data-bs-toggle="dropdown" tabindex="-1">
+						<svg width="1em" height="1em" class=""><use xlink:href="images/icons.svg#bell"/></svg>
+					</a>
+
+					<div class="dropdown-menu dropdown-menu-end dropdown-menu-card">
+						<div class="card">
+							<div class="card-body">
+								This system is massivley still in development!  It's not even at beta yet.  So don't use it.  You've been warned...
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="nav-item dropdown">
-				<a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-toggle="dropdown" aria-label="Open user menu">
-					<span class="avatar avatar-sm" style="background-image: url(<?php echo $_SESSION['avatar_url'];?>)"></span>
-					<div class="d-none d-xl-block ps-2">
-						<div><?php echo $_SESSION['username']; ?></div>
-						<div class="mt-1 small text-muted"><?php echo $_SESSION["user_type"]; ?></div>
+
+				<div class="nav-item dropdown">
+					<a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+						<img class="avatar avatar-24 rounded-2" src="<?php echo $_SESSION['avatar_url'] ; ?>" />
+						<div class="ps-2">
+							<div><?php echo $_SESSION['username']; ?></div>
+							<div class="mt-1 small text-muted text-end"><?php echo $_SESSION["user_type"]; ?></div>
+						</div>
+					</a>
+					<div class="dropdown-menu dropdown-menu-start dropdown-menu-arrow">
+						<a class="dropdown-item" href="./index.php?n=persons_unique&cudid=<?php echo $_SESSION['cudid'];?>">
+							<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile
+						</a>
+						<a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>">
+							<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> My LDAP Record
+						</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="./index.php?n=admin_logon&logout=true">
+							<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#signout"/></svg> Sign Out
+						</a>
 					</div>
-				</a>
-				<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-					<a class="dropdown-item" href="./index.php?n=persons_unique&cudid=<?php echo $_SESSION['cudid'];?>">
-						<svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21v-2a4 4 0 0 1 4 -4h5a4 4 0 0 1 4 4v2"></path></svg>
-						My CUD Profile
-					</a>
-					<a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>">
-						<svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><rect x="5" y="11" width="14" height="10" rx="2"></rect><circle cx="12" cy="16" r="1"></circle><path d="M8 11v-4a4 4 0 0 1 8 0v4"></path></svg>
-						My LDAP Record
-					</a>
-					<div class="dropdown-divider"></div>
-					<a class="dropdown-item" href="./index.php?n=admin_logon&logout=true">
-						<svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"></path><path d="M7 12h14l-3 -3m0 6l3 -3"></path></svg>
-						Sign Out
-					</a>
 				</div>
 			</div>
 		</div>
-	</div>
-</header>
-<div class="navbar-expand-md">
-	<div class="collapse navbar-collapse" id="navbar-menu">
-		<div class="navbar navbar-light">
-			<div class="container-xl">
-				<ul class="navbar-nav">
+	</nav>
+
+	<nav class="navbar navbar-expand-md navbar-light bg-light">
+		<div class="container">
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<?php
 					foreach ($navbarArray AS $key => $navBarLink) {
+						$icon = "<svg width=\"1em\" height=\"1em\" class=\"me-2\"><use xlink:href=\"images/icons.svg#" . $navBarLink['icon'] . "\"/></svg>";
+
 						if ($key == $_GET['n']) {
 							$active = " active";
 						} else {
@@ -171,51 +178,46 @@ $navbarArray['admin_logs'] = array(
 						}
 
 						if (is_array($navBarLink['sublinks'])) {
-							$output  = "<li class=\"nav-item dropdown " . $active . "\">";
-							$output .= "<a class=\"nav-link dropdown-toggle\" href=\"#navbar-base\" data-toggle=\"dropdown\" >";
-						} else {
-							$output  = "<li class=\"nav-item " . $active . "\">";
-							$output .= "<a class=\"nav-link\" href=\"" . $navBarLink['link'] . "\" >";
-						}
-						$output .= "<span class=\"nav-link-icon d-md-none d-lg-inline-block\">";
-						$output .= $navBarLink['icon'];
-						$output .= "</span>";
-						$output .= "<span class=\"nav-link-title\">" . $navBarLink['title'] . "</span>";
-						$output .= "</a>";
+							$output  = "<li class=\"nav-item dropdown\">";
+							$output .= "<a class=\"nav-link dropdown-toggle " . $active . "\" href=\"#navbar-base\" role=\"button\" data-bs-toggle=\"dropdown\" >";
+							$output .= $icon;
+							$output .= $navBarLink['title'];
+							$output .= "</a>";
 
-						if (isset($navBarLink['sublinks'])) {
-							$output .= "<ul class=\"dropdown-menu dropdown-menu\">";
-
+							$output .= "<ul class=\"dropdown-menu\">";
 							foreach ($navBarLink['sublinks'] AS $sublink) {
 								$output .= "<li >";
 								$output .= "<a class=\"dropdown-item\" href=\"" . $sublink['link'] . "\" >" . $sublink['title'] . "</a>";
 								$output .= "</li>";
 							}
 							$output .= "</ul>";
+						} else {
+							$output  = "<li class=\"nav-item\">";
+							$output .= "<a class=\"nav-link" . $active . "\" href=\"" . $navBarLink['link'] . "\" >";
+							$output .= $icon;
+							$output .= $navBarLink['title'];
+							$output .= "</a>";
+							$output .= "</li>";
 						}
-
-						$output .= "</li>";
-
 						echo $output;
 					}
-
 					?>
 				</ul>
-				<div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
-					<form action="./index.php?n=persons_all&filter=search" method="POST" target="_self">
-						<div class="input-icon">
-							<span class="input-icon-addon">
-								<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7" /><line x1="21" y1="21" x2="15" y2="15" /></svg>
-							</span>
-							<input type="text" class="form-control typeahead" name="navbar_search" id="navbar_search" placeholder="Search CUD..." autocomplete="off" spellcheck="false">
-						</div>
-					</form>
-				</div>
+
+
 			</div>
 		</div>
-	</div>
-</div>
-</div>
+	</nav>
+</header>
+
+<?php
+if (debug == true) {
+	echo "<button type=\"button\" class=\"btn btn-sm btn-warning\">DEBUG ENABLED</button>";
+}
+?>
+
+
+
 <script>
 $('#navbar_search').autocomplete({
 	serviceUrl: 'api/person/navbar_search.php',

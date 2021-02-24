@@ -11,26 +11,14 @@ if (obscure == true) {
 	$obscureClass = $class . " obscure";
 	$obscureImgClass = $class . " obscureImg";
 }
+
+$icons[] = array("class" => "btn-primary", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#bell\"/></svg> Test Button", "value" => "data-bs-toggle=\"modal\" data-bs-target=\"#deleteMealModal\"");
+$icons[] = array("class" => "btn-warning", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#email\"/></svg> Email", "value" => "onclick=\"window.open('mailto:" . $person->oxford_email . "')\"");
+
+echo displayTitle($person->FullName, "CUD Filter: " . $_GET['cudid'], $icons);
 ?>
 
-<div class="content">
-	<!-- Page title -->
-	<div class="page-header">
-		<div class="row align-items-center">
-			<div class="col">
-				<div class="page-pretitle">CUD Filter: <span class="<?php echo $obscureClass; ?>"><?php echo $_GET['cudid'];?></span></div>
-				<h2 class="page-title <?php echo $obscureClass; ?>"><?php echo $person->FullName; ?></h2>
-			</div>
-			<!-- Page title actions -->
-			<div class="col-auto ml-auto d-print-none">
-				<span class="d-none d-sm-inline">
-					<a href="mailto:<?php echo $person->oxford_email;?>" class="btn btn-white">Email</a>
-				</span>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
+<div class="row">
 		<div class="col-lg-4">
 			<div class="card">
 				<img src="<?php echo $person->photo();?>" class="card-img-top <?php echo $obscureImgClass; ?>" alt="Card top image">
@@ -50,19 +38,19 @@ if (obscure == true) {
 								<p class="text-muted mb-0">Nationality: <?php echo $person->nationality(); ?></p>
 								<ul class="social-links list-inline mb-0 mt-2">
 									<li class="list-inline-item">
-										<a href="javascript:void(0)" title="Phone" data-toggle="tooltip"><i class="fe fe-phone"></i></a>
+										<a href="javascript:void(0)" title="Phone" data-bs-toggle="tooltip"><i class="fe fe-phone"></i></a>
 									</li>
 									<li class="list-inline-item">
-										<a href="javascript:void(0)" title="Email" data-toggle="tooltip"><i class="fe fe-mail"></i></a>
+										<a href="javascript:void(0)" title="Email" data-bs-toggle="tooltip"><i class="fe fe-mail"></i></a>
 									</li>
 									<li class="list-inline-item">
-										<a href="javascript:void(0)" title="1234567890" data-toggle="tooltip"><i class="fe fe-phone"></i></a>
+										<a href="javascript:void(0)" title="1234567890" data-bs-toggle="tooltip"><i class="fe fe-phone"></i></a>
 									</li>
 									<li class="list-inline-item">
-										<a href="javascript:void(0)" title="@skypename" data-toggle="tooltip"><i class="fe fe-mail"></i></a>
+										<a href="javascript:void(0)" title="@skypename" data-bs-toggle="tooltip"><i class="fe fe-mail"></i></a>
 									</li>
 									<li class="list-inline-item">
-										<a href="persons_unique_tabs/signpass.php" title="Signpass" data-toggle="tooltip"><i class="fe fe-credit-card"></i></a>
+										<a href="persons_unique_tabs/signpass.php" title="Signpass" data-bs-toggle="tooltip"><i class="fe fe-credit-card"></i></a>
 									</li>
 								</ul>
 							</div>

@@ -73,35 +73,6 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 		$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.  User {ldap:" . $user['samaccountname'][0] . "} not in group</div>";
 	}
 }
-
-/*
-// try to log in with cookie
-if (!isset($_SESSION['username']) && !isset($_POST["oldform"])) {
-	if (isset($_COOKIE['ocsd_username']) && isset($_COOKIE['ocsd_hash'])) {
-		$sql  = "SELECT * FROM _sessions ";
-		$sql .= " WHERE username = '" . $_SESSION["username"] . "'";
-		$sql .= "  AND hash = '" . $hash . "'";
-
-		$dbSession = $db->query($sql);
-
-		if (count($dbSession) == 1) {
-			echo "COOKIE LOGON!";
-
-			$_SESSION["cudid"] = "unknown";
-			$_SESSION["bodcard"] = "unknown";
-			$_SESSION["username"] = strtoupper($_COOKIE['ocsd_username']);
-			$_SESSION["avatar_url"] = "unknown";
-			$_SESSION["email"] = "unknown";
-			$_SESSION["userinfo"] = "unknown";
-			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
-
-			$logInsert = (new Logs)->insert("logon","success",null,"COOKIE logon success");
-
-			header($redir);
-			exit;
-		}
-	}
-*/
 ?>
 
 <body>
@@ -109,40 +80,36 @@ if (!isset($_SESSION['username']) && !isset($_POST["oldform"])) {
 	if (isset($_SESSION['username'])) {
 		include_once("views/navbar_top.php");
 	}
-	?>
-	<div class="page">
-		<?php
-		if (isset($_SESSION['username'])) {
-			//if (!in_array(strtoupper($_SESSION["username"]), allowed_usernames) ) {
-			//	echo "<br /><div class=\"alert alert-danger\" role=\"alert\">You do not have permission to use this system.</div>";
-			//	die;
-			//}
-			if (isset($_GET['n'])) {
-				$node = "nodes/" . $_GET['n'] . ".php";
 
-				if (!file_exists($node)) {
-					$node = "nodes/404.php";
-				}
-			} elseif (!isset($_GET['n'])) {
-				$node = "nodes/index.php";
-			} else {
+	if (isset($_SESSION['username'])) {
+		if (isset($_GET['n'])) {
+			$node = "nodes/" . $_GET['n'] . ".php";
+
+			if (!file_exists($node)) {
 				$node = "nodes/404.php";
 			}
+		} elseif (!isset($_GET['n'])) {
+			$node = "nodes/index.php";
 		} else {
-			$node = "nodes/admin_logon.php";
+			$node = "nodes/404.php";
 		}
+	} else {
+		$node = "nodes/admin_logon.php";
+	}
 
-		if ($node == "nodes/admin_logon.php" || $_GET['n'] == "admin_logon") {
-			include_once($node);
-		} else {
-			echo "<div class=\"content\" role=\"main\">";
-			echo "<div class=\"container-xl d-flex flex-column justify-content-center\">";
-			include_once($node);
-			echo "</div>";
-			echo "</div>";
-		}
+	if ($node == "nodes/admin_logon.php" || $_GET['n'] == "admin_logon") {
+		include_once($node);
+	} else {
+		echo "<div class=\"container\" role=\"main\">";
+		//echo "<div class=\"container-xl d-flex flex-column justify-content-center\">";
+		include_once($node);
+		//echo "</div>";
+		echo "</div>";
+	}
+
+	if ($_GET['n'] != 'admin_logon') {
 		include_once("views/footer.php");
-		?>
-	</div>
+	}
+	?>
 </body>
 </html>
