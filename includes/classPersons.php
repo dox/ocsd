@@ -40,9 +40,22 @@ class Person extends Persons {
 		$output .= $this->avatar();
 		$output .= "</div>";
 		$output .= "<div class=\"col\">";
+
+		$output .= "<div class=\"col-auto\">";
+		$output .= "<div class=\"btn-group float-end\">";
+		$output .= "<a href=\"" . $ldapURL . "\" class=\"btn btn-info btn-sm\">";
+		$output .= "LDAP";
+		$output .= "</a>";
+		$output .= "<a href=\"" . $cudURL . "\" class=\"btn btn-primary btn-sm\">";
+		$output .= "CUD Profile";
+		$output .= "</a>";
+		$output .= "</div>";
+		$output .= "</div>";
+
 		$output .= "<h3 class=\"mb-0 text-truncate" . $obscure . "\"><a href=\"" . $cudURL . "\">" . $this->FullName . "</a></h3>";
-		$output .= "<div class=\"text-muted text-h5\">" . $this->bodcardType() . "</div>";
-		$output .= "<div class=\"text-muted text-h5\">SSO: <span class=\"" . $obscure . "\">" . $this->sso_username . "</span></div>";
+
+		$output .= "<div class=\"text-muted\">" . $this->bodcardType() . "</div>";
+		$output .= "<div class=\"text-muted\">SSO: <span class=\"" . $obscure . "\">" . $this->sso_username . "</span></div>";
 		$output .= "</div>";
 		//$output .= "<div class=\"col-auto lh-1 align-self-start\">";
 		//$output .= "<span class=\"badge bg-gray-lt\">";
@@ -74,8 +87,8 @@ class Person extends Persons {
 		}
 
 		$output .= "<div class=\"d-flex mb-1 align-items-center lh-1\">";
-		$output .= "<div class=\"text-h5 font-weight-bolder m-0\">" . $this->barcode7 . "</div>";
-		$output .= "<span class=\"ml-auto text-h6 strong\">" . $datediff . " days left</span>";
+		$output .= "<div class=\"\">" . $this->barcode7 . "</div> ";
+		$output .= "<span class=\"ml-auto\"> " . $datediff . " days left</span>";
 		$output .= "</div>";
 		$output .= "</div>";
 
@@ -85,16 +98,8 @@ class Person extends Persons {
 		$output .= "</div>";
 
 
-		$output .= "<div class=\"col-auto\">";
-		$output .= "<div class=\"btn-list\">";
-		$output .= "<a href=\"" . $ldapURL . "\" class=\"btn btn-white btn-sm\">";
-		$output .= "LDAP";
-		$output .= "</a>";
-		$output .= "<a href=\"" . $cudURL . "\" class=\"btn btn-white btn-sm\">";
-		$output .= "Profile";
-		$output .= "</a>";
-		$output .= "</div>";
-		$output .= "</div>";
+
+
 		$output .= "</div>";
 		$output .= "</div>";
 		$output .= "</div>";
@@ -323,8 +328,8 @@ class Persons {
 		global $db;
 
 		$sqlCurrent  = "SELECT cudid FROM Suspensions";
-		$sqlCurrent .= " WHERE DATE(SuspendStrDt) < '" . date('Y-m-d') . "'";
-		$sqlCurrent .= " AND DATE(SuspendExpEndDt) > '" . date('Y-m-d') . "'";
+		$sqlCurrent .= " WHERE (DATE(SuspendStrDt) < '" . date('Y-m-d') . "'";
+		$sqlCurrent .= " AND DATE(SuspendExpEndDt) > '" . date('Y-m-d') . "' AND SuspendEndDt IS null) OR SuspendEndDt IS null";
 
 		$sql  = "SELECT * FROM " . self::$table_name;
 		$sql .= " WHERE cudid IN (" . $sqlCurrent . ")";

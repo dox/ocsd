@@ -1,4 +1,5 @@
 <?php
+
 $filename = basename(__FILE__, '.php');
 
 $sql  = "SELECT * FROM " . $filename;
@@ -7,11 +8,10 @@ $sql .= " ORDER BY SuspendSeq DESC";
 
 $dbOutput = $db->query($sql)->fetchAll();
 
-
 $sqlCurrent  = "SELECT * FROM " . $filename;
 $sqlCurrent .= " WHERE cudid = '" . $person->cudid . "'";
-$sqlCurrent .= " AND DATE(SuspendStrDt) < '" . date('Y-m-d') . "'";
-$sqlCurrent .= " AND DATE(SuspendExpEndDt) > '" . date('Y-m-d') . "'";
+$sqlCurrent .= " AND (DATE(SuspendStrDt) < '" . date('Y-m-d') . "'";
+$sqlCurrent .= " AND DATE(SuspendExpEndDt) > '" . date('Y-m-d') . "' AND SuspendEndDt IS null) OR (cudid = '" . $person->cudid . "' AND SuspendEndDt IS null)";
 
 $currentSuspension = $db->query($sqlCurrent)->fetchArray();
 ?>
@@ -25,7 +25,12 @@ $currentSuspension = $db->query($sqlCurrent)->fetchArray();
   <div class="card-body">
     <?php
     if ($currentSuspension) {
-      echo "<div class=\"alert alert-danger text-center\" role=\"alert\">CURRENTLY SUSPENDED UNTIL " . date('Y-m-d', strtotime($currentSuspension['SuspendExpEndDt'])) . "</div>";
+      if (!empty($currentSuspension['SuspendEndDt'])) {
+        $suspensionEndDate = date('Y-m-d', strtotime($currentSuspension['SuspendEndDt']));
+      } else {
+        $suspensionEndDate = date('Y-m-d', strtotime($currentSuspension['SuspendExpEndDt']));
+      }
+      echo "<div class=\"alert alert-danger text-center\" role=\"alert\">CURRENTLY SUSPENDED UNTIL " . $suspensionEndDate . "</div>";
     }
     ?>
     <ul>

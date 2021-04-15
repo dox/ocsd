@@ -24,14 +24,14 @@ $icons[] = array("class" => "btn-warning", "name" => "<svg width=\"1em\" height=
 echo displayTitle(count($persons) . " Persons", "Filter: " . $_GET['filter'], $icons);
 ?>
 
-<div class="row">
+
 	<?php
 	if ($persons) {
 		foreach ($persons AS $personUnique) {
 			$person = new Person($personUnique['cudid']);
-			echo "<div class=\"col-md-6 col-lg-4\">";
+			//echo "<div class=\"col\">";
 			echo $person->makeListItem();
-			echo "</div>";
+			//echo "</div>";
 		}
 	} else {
 	?>
@@ -43,4 +43,3 @@ echo displayTitle(count($persons) . " Persons", "Filter: " . $_GET['filter'], $i
 		<p class="empty-subtitle text-muted">Try adjusting your search or filter to find what you're looking for.</p>
 	</div>
 	<?php } ?>
-</div>
