@@ -1,90 +1,71 @@
 <?php
-$c_address = $person->address("C");
-$t_address = $person->address("T");
-$h_address = $person->address("H");
+$addressTypesToDisplay = array('C' => 'Contact', 'T' => 'Term-Time', 'H' => 'Home');
 
-if ($c_address || $c_address || $c_address) {
+foreach ($addressTypesToDisplay AS $addressType => $addressTypeName) {
+  $address = $person->address($addressType);
+
+  if (!empty($address)) {
+    $navTabs[$addressTypeName] = $address;
+  }
+}
 ?>
-<div class="card-tabs">
+<div class="card mb-3">
   <!-- Cards navigation -->
-  <ul class="nav nav-tabs">
-    <li class="nav-item"><a href="#tab-addresses-contact" class="nav-link active" data-toggle="tab">Contact</a></li>
-    <li class="nav-item"><a href="#tab-addresses-termtime" class="nav-link" data-toggle="tab">Term-Time</a></li>
-    <li class="nav-item"><a href="#tab-addresses-home" class="nav-link" data-toggle="tab">Home</a></li>
+  <ul class="nav nav-pills">
+    <?php
+    foreach ($navTabs AS $addressTypeName => $address) {
+      if ($addressTypeName == 'Contact') {
+        $active = "active";
+      } else {
+        $active = "";
+      }
+      echo "<li class=\"nav-item\"><a href=\"#tab-addresses-" . $addressTypeName . "\" class=\"nav-link " . $active . "\" data-bs-toggle=\"tab\">" . $addressTypeName . "</a></li>";
+    }
+    ?>
+    <!--<li class="nav-item"><a href="#tab-addresses-contact" class="nav-link active" data-bs-toggle="tab">Contact</a></li>
+    <li class="nav-item"><a href="#tab-addresses-termtime" class="nav-link" data-bs-toggle="tab">Term-Time</a></li>
+    <li class="nav-item"><a href="#tab-addresses-home" class="nav-link" data-bs-toggle="tab">Home</a></li>-->
   </ul>
   <div class="tab-content">
-    <!-- Content of card #1 -->
-    <div id="tab-addresses-contact" class="card tab-pane show active">
-      <div class="card-body">
-        <p>
-          <?php
-          echo makeAddress($c_address);
-          foreach ($person->contactDetails() AS $contact) {
-            //$contact['SubType']
-            echo "<p><i class=\"fe fe-phone\"></i> " .  $contact['Value'] . "</p>";
-          }
+    <?php
+    foreach ($navTabs AS $addressTypeName => $address) {
+      if ($addressTypeName == 'Contact') {
+        $active = "show active";
+      } else {
+        $active = "";
+      }
 
-          if (isset($personJSON->internal_tel)) {
-            echo "<p><i class=\"fe fe-phone\"></i> " . $personJSON->internal_tel . "</p>";
-          }
-          ?>
-        </p>
-      </div>
-      <div class="card-footer">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            Updated: <?php echo date('Y-m-d', strtotime($c_address['LastUpdateDt'])); ?>
-          </div>
-          <div class="col-auto ml-auto">
-            <a href="">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="12" cy="11" r="3"></circle><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"></path></svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Content of card #2 -->
-    <div id="tab-addresses-termtime" class="card tab-pane">
-      <div class="card-body">
-        <p><?php echo makeAddress($person->address("T")); ?></p>
-      </div>
-      <div class="card-footer">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            Updated: <?php echo date('Y-m-d', strtotime($t_address['LastUpdateDt'])); ?>
-          </div>
-          <div class="col-auto ml-auto">
-            <a href="">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="12" cy="11" r="3"></circle><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"></path></svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Content of card #3 -->
-    <div id="tab-addresses-home" class="card tab-pane">
-      <div class="card-body">
-        <p><?php echo makeAddress($person->address("H")); ?></p>
-      </div>
-      <div class="card-footer">
-        <div class="row align-items-center">
-          <div class="col-auto">
-            Updated: <?php echo date('Y-m-d', strtotime($h_address['LastUpdateDt'])); ?>
-          </div>
-          <div class="col-auto ml-auto">
-            <a href="">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="12" cy="11" r="3"></circle><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"></path></svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+      $output  = "<div id=\"tab-addresses-" . $addressTypeName . "\" class=\"tab-pane " . $active . "\">";
+      $output .= "<div class=\"card-body\">";
+      $output .= makeAddress($address);
+
+      if ($addressTypeName == 'Contact') {
+        foreach ($person->contactDetails() AS $contact) {
+          //$contact['SubType']
+          $output .= "<p><i class=\"fe fe-phone\"></i> " .  $contact['Value'] . "</p>";
+        }
+
+        if (isset($personJSON->internal_tel)) {
+          $output .= "<p><i class=\"fe fe-phone\"></i> " . $personJSON->internal_tel . "</p>";
+        }
+      }
+      $output .= "</div>";
+
+      $output .= "<div class=\"card-footer\">";
+      $mapsURL = "https://www.google.co.uk/maps/place/" . $address['Line1'] . "+" . $address['AddressCtryDesc'] . "+" . $address['PostCode'];
+      $output .= "Updated: " . date('Y-m-d', strtotime($address['LastUpdateDt']));
+      $output .= "<a href=\"" . $mapsURL . "\"><svg width=\"1em\" height=\"1em\" class=\"float-end\"><use xlink:href=\"images/icons.svg#geo\"/></svg></a>";
+      $output .= "</div>";
+
+      $output .= "</div>";
+
+      echo $output;
+    }
+    ?>
   </div>
 </div>
 
-<?php
-}
-?>
+
 
 
 <?php

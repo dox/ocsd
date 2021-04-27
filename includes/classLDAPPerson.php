@@ -104,6 +104,10 @@ class LDAPPerson extends LDAP {
   }
 
   public function actionsButton($cudid = null, $class = "btn-sm btn-secondary") {
+		global $db;
+
+		$person = new Person($cudid);
+
     $output  = "<div class=\"dropdown\">";
     $output .= "<button class=\"btn " . $class . " dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">LDAP Actions</button>";
     $output .= "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">";
@@ -114,21 +118,23 @@ class LDAPPerson extends LDAP {
 
     if ($_SESSION["user_type"] == "Administrator") {
 			if (isset($this->samaccountname) && !$this->isEnabled()) {
-				$output .= "<a class=\"dropdown-item ldap_enable_user_resetPwd\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account (reset password)</a>";
-				$output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account</a>";
+				if ($person->isSuspended() == false) {
+					$output .= "<a class=\"dropdown-item ldap_enable_user_resetPwd\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account (reset password)</a>";
+					//$output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account</a>";
+				} else {
+					$output .= "<a class=\"dropdown-item disabled\" href=\"#\"><s>CUD ID Suspended</s></a>";
+				}
       }
 
 			if (isset($this->samaccountname) && $this->isEnabled()) {
         $output .= "<a class=\"dropdown-item ldap_disable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Disable Account</a>";
       }
 
-			if (isset($this->samaccountname)) {
+			if (isset($this->samaccountname) && !$this->isEnabled()) {
         $output .= "<a class=\"dropdown-item text-danger ldap_delete_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Delete Account</a>";
       }
 
-      if ($cudid != null) {
-				$person = new Person($cudid);
-
+      if (!isset($this->samaccountname)) {
         $output .= "<a class=\"dropdown-item ldap_provision_user\" id=\"" . $person->cudid . "\" href=\"#\">Provison Silently</a>";
 				if (isset($person->oxford_email)) {
 					$output .= "<a class=\"dropdown-item ldap_provision_user provision_with_email\" id=\"" . $person->cudid . "\" href=\"#\">Provision and Send Welcome Email</a>";

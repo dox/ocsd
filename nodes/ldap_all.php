@@ -82,7 +82,7 @@ foreach ($users AS $user) {
     $output .= "<td>" . $ldapUser->useraccountcontrolbadge() . "</td>";
     $output .= "<td>" . $ldapUser->pwdlastsetbadge() . "</td>";
     $output .= "<td>" . makeEmail($ldapUser->mail) . "</td>";
-    $output .= "<td>" . $ldapUser->actionsButton() . "</td>";
+    $output .= "<td>" . $ldapUser->actionsButton($CUDPerson['cudid']) . "</td>";
     $output .= "</tr>";
 
     $tableOutput[] = $output;

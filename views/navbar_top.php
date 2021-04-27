@@ -1,5 +1,4 @@
 <?php
-
 $navbarArray['home'] = array(
 	"title" => "Home",
 	"icon" => "home",
@@ -102,121 +101,114 @@ $navbarArray['admin_logs'] = array(
 );
 ?>
 
-<header>
-	<nav class="navbar navbar-light bg-light">
-		<div class="container">
-			<a class="navbar-brand">
-				<svg width="1em" height="1em" class="text-primary">
-					<use xlink:href="images/icons.svg#ocsd-logo"/>
-				</svg> OCSD
-			</a>
-			<div class="d-flex">
-				<div class="nav-item me-2">
-					<form action="./index.php?n=persons_all&filter=search" method="POST" target="_self">
-						<input class="form-control me-2 typeahead" type="search" placeholder="Search CUD" name="navbar_search" id="navbar_search" aria-label="Search" autocomplete="off" spellcheck="false">
-					</form>
-				</div>
-
-				<div class="nav-item dropdown me-2">
-					<a href="#" class="nav-link mx-0" data-bs-toggle="dropdown" tabindex="-1">
-						<svg width="1em" height="1em" class=""><use xlink:href="images/icons.svg#bell"/></svg>
-					</a>
-
-					<div class="dropdown-menu dropdown-menu-end dropdown-menu-card">
-						<div class="card">
-							<div class="card-body">
-								This system is massivley still in development!  It's not even at beta yet.  So don't use it.  You've been warned...
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="nav-item dropdown">
-					<a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-						<img class="avatar avatar-24 rounded-2" src="<?php echo $_SESSION['avatar_url'] ; ?>" />
-						<div class="ps-2">
-							<div><?php echo $_SESSION['username']; ?></div>
-							<div class="mt-1 small text-muted text-end"><?php echo $_SESSION["user_type"]; ?></div>
-						</div>
-					</a>
-					<div class="dropdown-menu dropdown-menu-start dropdown-menu-arrow">
-						<a class="dropdown-item" href="./index.php?n=persons_unique&cudid=<?php echo $_SESSION['cudid'];?>">
-							<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile
-						</a>
-						<a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>">
-							<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> My LDAP Record
-						</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="./index.php?n=admin_logon&logout=true">
-							<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#signout"/></svg> Sign Out
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</nav>
-
-	<nav class="navbar navbar-expand-md navbar-light bg-light">
-		<div class="container">
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<?php
-					foreach ($navbarArray AS $key => $navBarLink) {
-						$icon = "<svg width=\"1em\" height=\"1em\" class=\"me-2\"><use xlink:href=\"images/icons.svg#" . $navBarLink['icon'] . "\"/></svg>";
-
-						if ($key == $_GET['n']) {
-							$active = " active";
-						} else {
-							if (!isset($_GET['n']) && $key == "home") {
-								$active = " active";
-							} else {
-								$active = "";
-							}
-						}
-
-						if (is_array($navBarLink['sublinks'])) {
-							$output  = "<li class=\"nav-item dropdown\">";
-							$output .= "<a class=\"nav-link dropdown-toggle " . $active . "\" href=\"#navbar-base\" role=\"button\" data-bs-toggle=\"dropdown\" >";
-							$output .= $icon;
-							$output .= $navBarLink['title'];
-							$output .= "</a>";
-
-							$output .= "<ul class=\"dropdown-menu\">";
-							foreach ($navBarLink['sublinks'] AS $sublink) {
-								$output .= "<li >";
-								$output .= "<a class=\"dropdown-item\" href=\"" . $sublink['link'] . "\" >" . $sublink['title'] . "</a>";
-								$output .= "</li>";
-							}
-							$output .= "</ul>";
-						} else {
-							$output  = "<li class=\"nav-item\">";
-							$output .= "<a class=\"nav-link" . $active . "\" href=\"" . $navBarLink['link'] . "\" >";
-							$output .= $icon;
-							$output .= $navBarLink['title'];
-							$output .= "</a>";
-							$output .= "</li>";
-						}
-						echo $output;
-					}
-					?>
-				</ul>
-
-
-			</div>
-		</div>
-	</nav>
-</header>
-
 <?php
 if (debug == true) {
 	echo "<button type=\"button\" class=\"btn btn-sm btn-warning\">DEBUG ENABLED</button>";
 }
 ?>
 
+<nav class="py-2 bg-light border-bottom">
+  <div class="container d-flex flex-wrap">
+    <ul class="nav me-auto">
+			<?php
+			foreach ($navbarArray AS $key => $navBarLink) {
+				$icon = "<svg width=\"1em\" height=\"1em\" class=\"me-2\"><use xlink:href=\"images/icons.svg#" . $navBarLink['icon'] . "\"/></svg>";
 
+				if ($key == $_GET['n']) {
+					$active = " active";
+				} else {
+					if (!isset($_GET['n']) && $key == "home") {
+						$active = " active";
+					} else {
+						$active = "";
+					}
+				}
+
+				if (is_array($navBarLink['sublinks'])) {
+					$output  = "<li class=\"nav-item dropdown\">";
+					$output .= "<a class=\"nav-link link-dark px-2 dropdown-toggle " . $active . "\" href=\"#navbar-base\" role=\"button\" data-bs-toggle=\"dropdown\" >";
+					$output .= $icon;
+					$output .= $navBarLink['title'];
+					$output .= "</a>";
+
+					$output .= "<ul class=\"dropdown-menu\">";
+					foreach ($navBarLink['sublinks'] AS $sublink) {
+						$output .= "<li >";
+						$output .= "<a class=\"dropdown-item\" href=\"" . $sublink['link'] . "\" >" . $sublink['title'] . "</a>";
+						$output .= "</li>";
+					}
+					$output .= "</ul>";
+				} else {
+					$output  = "<li class=\"nav-item\">";
+					$output .= "<a class=\"nav-link link-dark px-2 " . $active . "\" href=\"" . $navBarLink['link'] . "\" >";
+					$output .= $icon;
+					$output .= $navBarLink['title'];
+					$output .= "</a>";
+					$output .= "</li>";
+				}
+				echo $output;
+			}
+			?>
+    </ul>
+    <!--<ul class="nav">
+      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Login</a></li>
+      <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Sign up</a></li>
+    </ul>-->
+
+		<div class="nav-item dropdown me-2">
+			<a href="#" class="nav-link link-dark" data-bs-toggle="dropdown" tabindex="-1">
+				<svg width="1em" height="1em" class=""><use xlink:href="images/icons.svg#bell"/></svg>
+			</a>
+
+			<div class="dropdown-menu dropdown-menu-end dropdown-menu-card">
+				<div class="card">
+					<div class="card-body">
+						This system is massivley still in development!  It's not even at beta yet.  So don't use it.  You've been warned...
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="nav-item dropdown">
+			<a href="#" class="nav-link d-flex lh-1 text-reset " data-bs-toggle="dropdown" aria-label="Open user menu">
+				<img class="avatar avatar-24 rounded-2" src="<?php echo $_SESSION['avatar_url'] ; ?>" />
+				<div class="ps-2">
+					<div><?php echo $_SESSION['username']; ?></div>
+					<div class="mt-1 small text-muted text-end"><?php echo $_SESSION["user_type"]; ?></div>
+				</div>
+			</a>
+			<div class="dropdown-menu dropdown-menu-start dropdown-menu-arrow">
+				<a class="dropdown-item" href="./index.php?n=persons_unique&cudid=<?php echo $_SESSION['cudid'];?>">
+					<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile
+				</a>
+				<a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>">
+					<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> My LDAP Record
+				</a>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="./index.php?n=admin_settings">
+					<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> Admin. Settings
+				</a>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="./index.php?n=admin_logon&logout=true">
+					<svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#signout"/></svg> Sign Out
+				</a>
+			</div>
+		</div>
+
+  </div>
+</nav>
+<header class="py-3 mb-4 border-bottom">
+  <div class="container d-flex flex-wrap justify-content-center">
+    <a href="index.php" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none me-3">
+			<svg width="3em" height="3em" class="text-primary me-3">
+				<use xlink:href="images/icons.svg#ocsd-logo"/>
+			</svg> <span class="fs-4">OCSD</span>
+    </a>
+		<form class="col-6 mb-3 mb-lg-0" action="./index.php?n=persons_all&filter=search" method="POST" target="_self">
+			<input class="form-control typeahead" type="search" placeholder="Search CUD" name="navbar_search" id="navbar_search" aria-label="Search" autocomplete="off" spellcheck="false">
+		</form>
+  </div>
+</header>
 
 <script>
 $('#navbar_search').autocomplete({

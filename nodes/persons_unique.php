@@ -28,7 +28,7 @@ echo displayTitle($person->FullName, "CUD Filter: " . $_GET['cudid'], $icons);
 					</div>
 				</div>
 				<?php include("nodes/persons_unique_tabs/ldap.php");?>
-				<div class="card">
+				<div class="card mb-3">
 					<div class="card-body">
 						<div class="media">
 							<div class="media-body">
@@ -38,19 +38,10 @@ echo displayTitle($person->FullName, "CUD Filter: " . $_GET['cudid'], $icons);
 								<p class="text-muted mb-0">Nationality: <?php echo $person->nationality(); ?></p>
 								<ul class="social-links list-inline mb-0 mt-2">
 									<li class="list-inline-item">
-										<a href="javascript:void(0)" title="Phone" data-bs-toggle="tooltip"><i class="fe fe-phone"></i></a>
+										<a href="#" title="Phone" data-bs-toggle="tooltip"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#telephone"/></svg></a>
 									</li>
 									<li class="list-inline-item">
-										<a href="javascript:void(0)" title="Email" data-bs-toggle="tooltip"><i class="fe fe-mail"></i></a>
-									</li>
-									<li class="list-inline-item">
-										<a href="javascript:void(0)" title="1234567890" data-bs-toggle="tooltip"><i class="fe fe-phone"></i></a>
-									</li>
-									<li class="list-inline-item">
-										<a href="javascript:void(0)" title="@skypename" data-bs-toggle="tooltip"><i class="fe fe-mail"></i></a>
-									</li>
-									<li class="list-inline-item">
-										<a href="persons_unique_tabs/signpass.php" title="Signpass" data-bs-toggle="tooltip"><i class="fe fe-credit-card"></i></a>
+										<a href="mailto:<?php echo $person->oxford_email; ?>" title="Email"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#email"/></svg></a>
 									</li>
 								</ul>
 							</div>
