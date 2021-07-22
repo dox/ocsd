@@ -161,11 +161,9 @@ if (debug == true) {
 			</a>
 
 			<div class="dropdown-menu dropdown-menu-end dropdown-menu-card">
-				<div class="card">
 					<div class="card-body">
 						This system is massivley still in development!  It's not even at beta yet.  So don't use it.  You've been warned...
 					</div>
-				</div>
 			</div>
 		</div>
 
