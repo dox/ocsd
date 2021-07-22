@@ -5,6 +5,7 @@ class LDAPPerson extends LDAP {
 
 		$ldap_entries = $ldap_connection->query()
 			->where('samaccountname', '=', $samaccountname)
+			->orWhere('cn', '=', $samaccountname)
 			->orWhere('mail', '=', $mail)
 			->get();
 

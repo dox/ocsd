@@ -210,11 +210,11 @@ class LDAP {
   }
 
   public function deleteUser() {
-    $object = LdapRecord\Models\ActiveDirectory\User::find($this->dn);
+    $object = LdapRecord\Models\ActiveDirectory\Entry::find($this->dn);
 
     $object->delete();
 
-    $logInsert = (new Logs)->insert("ldap","warning",null,"Deleted user account <code>" . $this->samaccountname . "</code>");
+    $logInsert = (new Logs)->insert("ldap","warning",null,"Deleted from LDAP <code>" . $this->samaccountname . "</code>");
 
   	return false;
   }
