@@ -198,7 +198,7 @@ class Person extends Persons {
 		$imgSrc = "photos/UAS_UniversityCard-" . $this->university_card_sysis . ".jpg";
 
 		if (!file_exists($imgSrc)) {
-			$imgSrc = "images/blank_avatar.png";
+			$imgSrc = "images/blank_avatar.jpg";
 		}
 
 		return $imgSrc;
