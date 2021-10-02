@@ -77,8 +77,8 @@ foreach ($users AS $user) {
 
     $output  = "<tr>";
     $output .= "<td>" . $ldapUser->cn . "</td>";
-    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=persons_unique&cudid=" . $CUDPerson['cudid'] . "\">" . $CUDPerson['sso_username'] . "</a>" . "</td>";
-    $output .= "<td class=\"" . $tdClass . "\">" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser->samaccountname . "\">" . $ldapUser->samaccountname . "</a>" . "</td>";
+    $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $CUDPerson['cudid'] . "\">" . $CUDPerson['sso_username'] . "</a>" . "</td>";
+    $output .= "<td>" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser->samaccountname . "\">" . $ldapUser->samaccountname . "</a>" . "</td>";
     $output .= "<td>" . $ldapUser->useraccountcontrolbadge() . "</td>";
     $output .= "<td>" . $ldapUser->pwdlastsetbadge() . "</td>";
     $output .= "<td>" . makeEmail($ldapUser->mail) . "</td>";
@@ -93,7 +93,7 @@ foreach ($users AS $user) {
       $dbOutput = $db->query($sql)->fetchAll();
 
       if ($dbOutput[0]['Stage'] == "Applicant") {
-        $badge = " <span class=\"badge bg-orange float-right\">Applicant</span>";
+        $badge = " <span class=\"badge bg-warning float-end\">Applicant</span>";
       } else {
         $badge = "";
       }

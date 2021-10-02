@@ -151,18 +151,18 @@ class Person extends Persons {
 		$cardType = $this->university_card_type;
 
 		if ($cardType == "GT" || $cardType == "GR" || $cardType == "PT") {
-			$class = "badge-primary";
+			$class = "badge bg-primary";
 		} else if ($cardType == "UG" ) {
-			$class = "badge-success";
+			$class = "badge bg-success";
 		} else if ($cardType == "VR" || $cardType == "VD" || $cardType == "VV" || $cardType == "VC") {
-			$class = "badge-warning";
+			$class = "badge bg--warning";
 		} else if ($cardType == "CS") {
-			$class = "badge-info";
+			$class = "badge bg-info";
 		} else {
-			$class = "badge-secondary";
+			$class = "badge bg-secondary";
 		}
 
-		$output  = "<a href=\"index.php?n=card_types\" class=\"badge " . $class . "\">" . $cardType . "</a>";
+		$output  = "<a href=\"index.php?n=card_types\" class=\"" . $class . "\">" . $cardType . "</a>";
 
 		return $output;
 	}

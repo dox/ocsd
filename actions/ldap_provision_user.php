@@ -24,8 +24,8 @@ try {
 	$user->save();
 	sleep(1);
 
-	$user->userAccountControl = 512;
-	$user->save();
+	//$user->userAccountControl = 512;
+	//$user->save();
 
 	// SEND WELCOMING EMAIL
 	if ($_POST['email'] == 'true') {
