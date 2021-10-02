@@ -40,24 +40,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 			} else {
 				$_SESSION["user_type"] = 'OCSD User';
 			}
-
-			if (isset($_POST['remember'])) {
-				$hash = crypt($_POST['form_password'], salt);
-				$date_created = date('Y-m-d H:i:s');
-				$cookie_duration = time()+3600; // seconds
-
-				setcookie("ocsd_username", $_SESSION["username"], $cookie_duration);
-				setcookie("ocsd_hash", $hash, $cookie_duration);
-
-				$sql  = "INSERT INTO _sessions ";
-				$sql .= " (username, hash, date_created)";
-				$sql .= " VALUES ('" . $_SESSION["username"] . "', '" . $hash . "', '" . $date_created . "') ";
-				$sql .= " ON DUPLICATE KEY UPDATE";
-				$sql .= " username='" . $_SESSION["username"] . "', hash='" . $hash . "', date_created='" . $date_created . "';";
-
-				$db->query($sql);
-			}
-
+			
 			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
 
 			$logInsert = (new Logs)->insert("logon","success",null,"LDAP logon success for {ldap:" . $user['samaccountname'][0] . "}");
@@ -80,7 +63,9 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 	if (isset($_SESSION['username'])) {
 		include_once("views/navbar_top.php");
 	}
-
+	?>
+	<div style="padding-top:90px;"></div>
+	<?php
 	if (isset($_SESSION['username'])) {
 		if (isset($_GET['n'])) {
 			$node = "nodes/" . $_GET['n'] . ".php";
