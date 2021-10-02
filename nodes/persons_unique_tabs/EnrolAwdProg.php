@@ -9,19 +9,21 @@ $dbOutput = $db->query($sql, 'test', 'test')->fetchAll();
 
 <?php if ($dbOutput) { ?>
 
-<div class="card">
-  <div class="card-header">
-    <h3 class="card-title"><?php echo $filename; ?></h3>
-  </div>
-  <div class="card-body">
-    <ul>
-    <?php
-    foreach ($dbOutput AS $output) {
-      printArray($output);
-      //echo "<li>" . $output['CoOwnDptDesc'] . " (" . $output['Code'] . ")</li>";
-    }
-    ?>
-    </ul>
+<div class="col-6">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Enrollment Award Program</h5>
+      <p class="card-text">
+        <ul>
+         <?php
+         foreach ($dbOutput AS $output) {
+           printArray($output);
+           //echo "<li>" . $output['CoOwnDptDesc'] . " (" . $output['Code'] . ")</li>";
+         }
+         ?>
+        </ul>
+      </p>
+    </div>
   </div>
 </div>
 
