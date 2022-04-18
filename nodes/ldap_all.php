@@ -74,11 +74,19 @@ foreach ($users AS $user) {
     } else {
       $CUDPerson = "";
     }
+    
+    $needle = "CN=SCR,OU=SEH Groups,DC=SEH,DC=ox,DC=ac,DC=uk";
+    
+    if (in_array($needle, $ldapUser->memberof)) {
+      $scr = " <span class=\"badge bg-secondary\">SCR</span>";
+    } else {
+      $scr = "";
+    }
 
     $output  = "<tr>";
     $output .= "<td>" . $ldapUser->cn . "</td>";
     $output .= "<td>" . "<a href=\"index.php?n=persons_unique&cudid=" . $CUDPerson['cudid'] . "\">" . $CUDPerson['sso_username'] . "</a>" . "</td>";
-    $output .= "<td>" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser->samaccountname . "\">" . $ldapUser->samaccountname . "</a>" . "</td>";
+    $output .= "<td>" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser->samaccountname . "\">" . $ldapUser->samaccountname . "</a>" . $scr . "</td>";
     $output .= "<td>" . $ldapUser->useraccountcontrolbadge() . "</td>";
     $output .= "<td>" . $ldapUser->pwdlastsetbadge() . "</td>";
     $output .= "<td>" . makeEmail($ldapUser->mail) . "</td>";
