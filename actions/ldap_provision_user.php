@@ -16,7 +16,7 @@ $user->givenname = $person->firstname;
 $user->sn = $person->lastname;
 $user->displayname = $person->FullName;
 $user->objectclass = "User";
-$user->description = "\\\\helium\students$\\" . date('Y') . "\%username%";
+$user->description = "\\\\helium\users\%username%";
 $user->unicodePwd = $randomPassword;
 $user->mail = $person->oxford_email;
 

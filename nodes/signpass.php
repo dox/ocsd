@@ -15,7 +15,7 @@ function monthName($num = 1) {
 <pre>
 {
   "formatVersion" : 1,
-  "passTypeIdentifier" : "pass.seh.ox.ac.uk.testpass",
+  "passTypeIdentifier" : "pass.seh.ox.ac.uk.bodcard",
   "serialNumber" : "<?php echo "bod-" . $person->barcode; ?>",
   "webServiceURL" : "https://www.seh.ox.ac.uk",
   "authenticationToken" : "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
