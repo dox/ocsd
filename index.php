@@ -16,10 +16,12 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 		array_map('strtolower', $userGroups),
 		array_map('strtolower', $allowed)
 	);
-
+	
+	
 	if (count($difference) > 0) {
     // Our user is a member of one of the allowed groups.
     // Continue with authentication.
+	
     if ($ldap_connection->auth()->attempt($user['distinguishedname'][0], $form_password, $stayAuthenticated = true)) {
 			// User has been successfully authenticated.
 			$personsClass = new Persons;
@@ -34,9 +36,11 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 			$_SESSION["avatar_url"] = "photos/UAS_UniversityCard-" . $CUDPerson[0]['university_card_sysis'] . ".jpg";
 			$_SESSION["email"] = $ldap_user['mail'][0];
 			$_SESSION["groups"] = $userGroups;
-
+			
+			
+			
 			if (in_array(LDAP_ADMIN_DN, $_SESSION['groups'])) {
-				$_SESSION["user_type"] = 'Administrator';
+				$_SESSION["user_type"] = 'Administrator';				
 			} else {
 				$_SESSION["user_type"] = 'OCSD User';
 			}
@@ -63,9 +67,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 	if (isset($_SESSION['username'])) {
 		include_once("views/navbar_top.php");
 	}
-	?>
-	<div style="padding-top:90px;"></div>
-	<?php
+
 	if (isset($_SESSION['username'])) {
 		if (isset($_GET['n'])) {
 			$node = "nodes/" . $_GET['n'] . ".php";
@@ -93,7 +95,9 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 	}
 
 	if ($_GET['n'] != 'admin_logon') {
+		echo "<div class=\"container\" role=\"main\">";
 		include_once("views/footer.php");
+		echo "</div>";
 	}
 	?>
 </body>
