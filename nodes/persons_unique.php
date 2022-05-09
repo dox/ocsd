@@ -69,7 +69,6 @@ echo displayTitle($person->FullName, "CUD Filter: " . $_GET['cudid'], $icons);
 	</div>
 </div>
 
-<div class="row mb-3">
 	<?php include("nodes/persons_unique_tabs/Suspensions.php");?>
 	<?php include("nodes/persons_unique_tabs/Supervisors.php");?>
 	<?php include("nodes/persons_unique_tabs/Applications.php");?>
@@ -84,7 +83,6 @@ echo displayTitle($person->FullName, "CUD Filter: " . $_GET['cudid'], $icons);
 	<?php include("nodes/persons_unique_tabs/Member_Intermissions.php");?>
 	<?php include("nodes/persons_unique_tabs/Member_Other.php");?>
 	<?php include("nodes/persons_unique_tabs/Member_Person.php");?>
-</div>
 
 <div class="row mb-3">
 	<div class="col">
