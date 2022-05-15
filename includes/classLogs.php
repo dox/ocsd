@@ -47,21 +47,24 @@ class Logs {
 	public function allByUser($cudid = null, $username = null) {
 		global $db;
 
-		if (empty($cudid)) {
-			$cudid = "never_find";
+		if (!empty($cudid)) {
+			$person = new Person($cudid);
+			$ldapPerson = new LDAPPerson($person->sso_username, $person->oxford_email);
 		}
 
 		if (empty($username)) {
 			$username = "never_find";
 		}
-
+		
 		$sql  = "SELECT * FROM " . self::$table_name;
-		$sql .= " WHERE cudid = '" . $cudid . "'";
+		$sql .= " WHERE cudid = '" . $person->cudid . "'";
 		$sql .= " OR username = '" . $username . "'";
-		$sql .= " OR description LIKE '%{ldap:" . $username . "}%'";
-		$sql .= " OR cudid LIKE '%{cudid:" . $cudid . "}%'";
+		$sql .= " OR description LIKE '%" . $username . "%'";
+		$sql .= " OR description LIKE '%" . $person->oxford_email . "%'";
+		$sql .= " OR description LIKE '%" . $person->sso_username . "%'";
+		$sql .= " OR description LIKE '%" . $ldapPerson->samaccountname . "%'";
 		$sql .= " ORDER BY date_created DESC";
-
+		
 		$logs = $db->query($sql)->fetchAll();
 
 		return $logs;
