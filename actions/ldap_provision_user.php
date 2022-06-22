@@ -3,6 +3,7 @@ include_once("../includes/autoload.php");
 
 $person = new Person($_POST['cudid']);
 $user = (new LdapRecord\Models\ActiveDirectory\User)->inside(LDAP_BASE_DN);
+
 $ldapClass = new LDAP();
 $templatesClass = new Templates();
 
@@ -19,13 +20,15 @@ $user->objectclass = "User";
 $user->description = "\\\\helium\users\%username%";
 $user->unicodePwd = $randomPassword;
 $user->mail = $person->oxford_email;
+//$user->pwdlastset = '-1';
 
+$user->save();
+
+$user->refresh();
+
+$user->userAccountControl = 512;
 try {
 	$user->save();
-	sleep(1);
-
-	//$user->userAccountControl = 512;
-	//$user->save();
 
 	// SEND WELCOMING EMAIL
 	if ($_POST['email'] == 'true') {
