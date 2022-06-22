@@ -13,7 +13,7 @@ foreach ($users AS $ldapUser) {
     $pwdlastsetInDays = $ldapPerson->pwdlastsetage();
     $pwdLastSetDate = date('Y-m-d', strtotime("-" . $pwdlastsetInDays . " days"));
 
-    if ($pwdlastsetInDays <= pwd_warn_age) {
+    if ($pwdlastsetInDays < pwd_warn_age) {
   		//password ok
   	} elseif ($pwdlastsetInDays >= pwd_warn_age) {
       //password expiring within 30 - 60 days
