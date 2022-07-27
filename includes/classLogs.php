@@ -175,17 +175,17 @@ class Logs {
 		}
 
 		if ($log['type'] == "ldap") {
-			$badgeClass = "bg-indigo";
+			$badgeClass = "bg-dark";
 		} else if ($log['type'] == "logon" || $log['type'] == "logoff") {
-			$badgeClass = "bg-green";
+			$badgeClass = "bg-success";
 		} else if ($log['type'] == "view") {
-			$badgeClass = "bg-lime";
+			$badgeClass = "bg-info";
 		} else if ($log['type'] == "cron") {
-			$badgeClass = "bg-blue";
+			$badgeClass = "bg-primary";
 		} else if ($log['type'] == "purge") {
-			$badgeClass = "bg-pink";
+			$badgeClass = "bg-warning";
 		} else if ($log['type'] == "email") {
-			$badgeClass = "bg-yellow";
+			$badgeClass = "bg-warning";
 		} else {
 			$badgeClass = "";
 		}
@@ -194,13 +194,14 @@ class Logs {
 
 		$output  = "<tr class=\"" . $class . "\">";
 		$output .= "<td>" . $logDate . " </td>";
-		$output .= "<td>" . $this->cleanDescription($log['description']) . " <span class=\"badge float-right " . $badgeClass . "\">" . $log['type'] . "</span></td>";
+		$output .= "<td>" . $this->cleanDescription($log['description']) . "</span></td>";
 
 		if (!empty($log['username'])){
 			$ldapLink = "<a href=\"index.php?n=ldap_unique&samaccountname=" . $log['username'] . "\">" . $log['username'] . "</a>";
 		} else {
 			$ldapLink = "";
 		}
+		$output .= "<td><span class=\"badge " . $badgeClass . "\">" . $log['type'] . "</span></td>";
 		$output .= "<td>" . $ldapLink . "</td>";
 		$output .= "<td>" . $log['ip'] . "</td>";
 		$output .= "</tr>";
@@ -216,6 +217,7 @@ class Logs {
 		$output .= "<tr>";
 		$output .= "<th scope=\"col\" style=\"width: 180px\">Date</th>";
 		$output .= "<th scope=\"col\">Description</th>";
+		$output .= "<th scope=\"col\" style=\"width: 100px\">Type</th>";
 		$output .= "<th scope=\"col\" style=\"width: 140px\">Username</th>";
 		$output .= "<th scope=\"col\" style=\"width: 140px\">ip</th>";
 		$output .= "</tr>";
