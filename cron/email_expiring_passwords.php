@@ -37,10 +37,15 @@ foreach ($users AS $ldapUser) {
       } elseif ($password_expiry_in_days == 1) {
         $sendMail = true;
       }
-
+      
+      $recipients = null;
       if ($sendMail == true) {
+        $recipients = array($ldapPerson->mail, "andrew.breakspear@seh.ox.ac.uk");
+        
         echo "\033[33m Emailing " . $ldapPerson->samaccountname . " (" . $ldapPerson->mail . ") the " . $password_expiry_in_days . " day warning" . "\n";
-        sendMail($sendMailSubject, array($ldapPerson->mail), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
+        
+        sendMail($sendMailSubject, $recipients, $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
+        
         $logInsert = (new Logs)->insert("cron","success",null,"Sending password expiry email (" . $password_expiry_in_days . autoPluralise(" day", " days", $password_expiry_in_days) . " warning) to {ldap:" . $ldapPerson->samaccountname . "}");
       }
   	}
@@ -49,6 +54,7 @@ foreach ($users AS $ldapUser) {
   if ($pwdlastsetInDays >= pwd_max_age) {
     //password expired
     echo "\033[31m Disabling " . $ldapPerson->samaccountname . " as the password has expired" . "\n";
+    
     $ldapPerson->disableUser();
 
     $logInsert = (new Logs)->insert("cron","warning",null,"Auto disable user account <code>" . $ldapPerson->samaccountname . "</code>", $ldapPerson->samaccountname);

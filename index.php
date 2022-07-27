@@ -57,8 +57,6 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 		echo "Wrong username/password";
 		$logInsert = (new Logs)->insert("ldap","error",null,"User <code>" . $usernameClean . "</code> failed to authenticate");
 	}
-	
-	
 }
 ?>
 
