@@ -26,6 +26,35 @@ class Person extends Persons {
 		return $imgSrc;
 	}
 	
+	public function ssoButton() {
+		$url = "index.php?n=person_unique&cudid=" . $this->cudid;
+		
+		$output  = "<a href=\"" . $url . "\" class=\"btn btn-light position-relative\">";
+		$output .= $this->sso_username;
+		$output .= $this->cardtypebadge();
+		$output .= "</a>";
+		
+		return $output;
+	}
+	
+	public function cardtypebadge() {
+		  if (in_array($this->university_card_type, array("UG"))) {
+			  $badgeClass = "bg-success";
+		  } elseif (in_array($this->university_card_type, array("PG", "GT", "GR"))) {
+			  $badgeClass = "bg-primary";
+		  } elseif (in_array($this->university_card_type, array("VS", "VD", "VV", "VR", ))) {
+			  $badgeClass = "bg-dark";
+		  } else {
+			  $badgeClass = "bg-warning";
+		  }
+		
+		$output  = "<span class=\"position-absolute top-0 start-100 translate-middle badge rounded-pill " . $badgeClass . "\">";
+		$output .= $this->university_card_type;
+		$output .= "</span>";
+	
+		return $output;
+	  }
+	
 	
 	public function getSuspensions() {
 		global $db;

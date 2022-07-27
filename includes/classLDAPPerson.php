@@ -38,8 +38,19 @@ class LDAPPerson extends LDAP {
       return makeEmail($this->mail);
     }
   }
+  
+  public function ldapButton() {
+    $url = "index.php?n=ldap_unique&samaccountname=" . $this->samaccountname;
+    
+    $output  = "<a href=\"" . $url . "\" class=\"btn btn-light position-relative\">";
+    $output .= $this->samaccountname;
+    $output .= $this->useraccountcontrolbadge();
+    $output .= "</a>";
+    
+    return $output;
+  }
 
-	public function pwdlastsetage () {
+	public function pwdlastsetage() {
   	$pwdlastsetDate = $this->pwdlastsetdate();
 
   	$dateToday = date('U');
@@ -48,7 +59,7 @@ class LDAPPerson extends LDAP {
   	return $pwdlastsetAgeInDays;
   }
 
-	public function pwdlastsetdate () {
+	public function pwdlastsetdate() {
   	$winSecs       = (int)($this->pwdlastset / 10000000); // divide by 10 000 000 to get seconds
   	$unixTimestamp = ($winSecs - 11644473600); // 1.1.1600 -> 1.1.1970 difference in seconds
   	$pwdlastsetDate = date('U', $unixTimestamp);
@@ -56,7 +67,7 @@ class LDAPPerson extends LDAP {
   	return $pwdlastsetDate;
   }
 
-  public function pwdlastsetbadge () {
+  public function pwdlastsetbadge() {
   	$pwdlastsetAgeInDays = $this->pwdlastsetage();
 
   	if ($pwdlastsetAgeInDays <= pwd_warn_age) {
@@ -78,9 +89,9 @@ class LDAPPerson extends LDAP {
   	return $output;
   }
 
-	public function useraccountcontrolbadge () {
-  	if ($this->isEnabled()) {
-  		$badgeClass = "bg-primary";
+	public function useraccountcontrolbadge() {
+  	if (in_array($this->useraccountcontrol, array("512", "544"))) {
+  		$badgeClass = "bg-success";
   	} elseif (in_array($this->useraccountcontrol, array("2", "16", "514", "546", "66050", "66082", "8388608"))) {
   		$badgeClass = "bg-danger";
   	} elseif (in_array($this->useraccountcontrol, array("66048"))) {
@@ -88,8 +99,10 @@ class LDAPPerson extends LDAP {
   	} else {
   		$badgeClass = "bg-dark";
   	}
-
-    $output  = "<a href=\"index.php?n=card_types\" class=\"text-decoration-none badge " . $badgeClass . "\">" . $this->useraccountcontrol . "</a>";
+    
+    $output  = "<span class=\"position-absolute top-0 start-100 translate-middle badge rounded-pill " . $badgeClass . "\">";
+    $output .= $this->useraccountcontrol;
+    $output .= "</span>";
 
   	return $output;
   }

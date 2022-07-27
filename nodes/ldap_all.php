@@ -125,22 +125,18 @@ if (isset($_GET['filter'])) {
 			$ldapUser = new LDAPPerson($ldapUser['samaccountname'][0]);
 			
 			$CUDPerson = $personsClass->search($ldapUser->samaccountname, 2);
+			$CUDPerson = new Person($CUDPerson[0]['cudid']);
 			//printArray($CUDPerson);
 			
-			if (isset($CUDPerson[0]['sso_username'])) {
-			  $CUDPerson = $CUDPerson[0];
-			} else {
-			  $CUDPerson = array();
-			}
 			
 			$output  = "<tr>";
-			$output .= "<td>" . "<a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser->samaccountname . "\">" . $ldapUser->samaccountname . "</a>" . $scr . "</td>";
-			$output .= "<td>" . "<a href=\"index.php?n=person_unique&cudid=" . $CUDPerson['cudid'] . "\">" . $CUDPerson['sso_username'] . "</a>" . "</td>";
+			$output .= "<td>" . $ldapUser->ldapButton() . "</td>";
+			$output .= "<td>" . $CUDPerson->ssoButton() . "</td>";
 			$output .= "<td>" . $ldapUser->cn . "</td>";
 			$output .= "<td>" . $ldapUser->useraccountcontrolbadge() . "</td>";
 			$output .= "<td>" . $ldapUser->pwdlastsetbadge() . "</td>";
 			$output .= "<td>" . makeEmail($ldapUser->mail) . "</td>";
-			$output .= "<td>" . $ldapUser->actionsButton($CUDPerson['cudid']) . "</td>";
+			$output .= "<td>" . $ldapUser->actionsButton($CUDPerson->cudid) . "</td>";
 			$output .= "</tr>";
 			
 			echo $output;
