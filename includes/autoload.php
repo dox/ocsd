@@ -1,8 +1,10 @@
 <?php
 session_start();
-$root = $_SERVER['DOCUMENT_ROOT'];
 
-require_once($root . '/config.php');
+set_include_path('/var/www/html/');
+
+
+require_once('config.php');
 
 if (debug == true) {
 	ini_set('display_errors', 1);
@@ -14,13 +16,19 @@ if (debug == true) {
 	error_reporting(0);
 }
 
-require_once($root . '/vendor/autoload.php');
+require_once('vendor/autoload.php');
 
 use LdapRecord\Container;
 use LdapRecord\Connection;
 use LdapRecord\Models\Entry;
 use LdapRecord\Models\ActiveDirectory\User;
 use LdapRecord\Models\ActiveDirectory\Group;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+$mail = new PHPMailer(true);
 
 // Create a new connection:
 $ldap_connection = new Connection([
@@ -34,14 +42,14 @@ $ldap_connection = new Connection([
 // Add the connection into the container:
 Container::addConnection($ldap_connection);
 
-require_once($root . '/includes/globalFunctions.php');
-require_once($root . '/includes/db.php');
-require_once($root . '/includes/classLogs.php');
-require_once($root . '/includes/classPersons.php');
-require_once($root . '/includes/classPerson.php');
-require_once($root . '/includes/classLDAP.php');
-require_once($root . '/includes/classLDAPPerson.php');
-require_once($root . '/includes/classTemplates.php');
+require_once($root . 'includes/globalFunctions.php');
+require_once($root . 'includes/db.php');
+require_once($root . 'includes/classLogs.php');
+require_once($root . 'includes/classPersons.php');
+require_once($root . 'includes/classPerson.php');
+require_once($root . 'includes/classLDAP.php');
+require_once($root . 'includes/classLDAPPerson.php');
+require_once($root . 'includes/classTemplates.php');
 
 $db = new db(db_host, db_username, db_password, db_name);
 ?>

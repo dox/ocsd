@@ -1,127 +1,128 @@
-$( document ).ready(function() {
-
-$(".emailParcelButton1").click(function() {
-	$(this).parent().dropdown('toggle');
-
-		var cudid = $(this).attr('id');
-
-		var url = 'actions/sendEmail.php';
-
-		// perform the post to the action (take the info and submit to database)
-		$.post(url,{
-		    cudid: cudid
-		}, function(data){
-		    alert("Email sent to cudid:" + cudid);
-		},'html');
-
-	return false;
-});
-
-$(".ldap_delete_user").click(function() {
+function ldap_delete_user(el, samaccountname) {
 	var isGood=confirm('Are you sure you want to delete this user from the LDAP?  This action cannot be undone!');
-
-	if(isGood) {
-		var samaccountname = $(this).attr('id');
-		var url = './actions/ldap_delete_user.php';
-
-		$.post(url,{
-			samaccountname: samaccountname
-		}, function(data){
-			$(this).parent().dropdown('toggle');
-		},'html');
-	}
-
-	return false;
-});
-
-$(".ldap_disable_user").click(function() {
-	var samaccountname = $(this).attr('id');
-	var url = './actions/ldap_disable_user.php';
-
-	$.post(url,{
-		samaccountname: samaccountname
-	}, function(data){
-		alert("Disable User: " + samaccountname);
-	},'html');
-
-	return false;
-});
-
-$(".ldap_enable_user").click(function() {
-	var samaccountname = $(this).attr('id');
-	var url = './actions/ldap_enable_user.php';
-
-	$.post(url,{
-		samaccountname: samaccountname
-	}, function(data){
-		alert("Enable User: " + samaccountname);
-	},'html');
-
-	return false;
-});
-
-$(".ldap_enable_user_resetPwd").click(function() {
-	var samaccountname = $(this).attr('id');
-	var url = './actions/ldap_enable_user.php';
-
-	$.post(url,{
-		samaccountname: samaccountname,
-		reset: true
-	}, function(data){
-		alert("Enable User (and reset password): " + samaccountname);
-	},'html');
-
-	return false;
-});
-
-$(".ldap_provision_user").click(function() {
-	var cudid = $(this).attr('id');
-	var url = 'actions/ldap_provision_user.php';
-
-	if ($(this).hasClass("provision_with_email")) {
-		var email = 'true';
-	} else {
-		var email = 'false';
-	}
-
-	$.post(url,{
-		cudid: cudid,
-		email: email
-	}, function(data){
-		$(this).parent().parent().parent().parent().fadeOut('slow');
-		var pageCount = $('#ldap_count').text();
-		$('#ldap_count').text(pageCount - 1);
-
-		alert("LDAP Result: " + data);
-	},'html');
-
-	return false;
-});
-
-$(".cron_run_task").click(function() {
-	var spinner = "<div class=\"spinner-border\" role=\"status\"></div>";
-	$('#cron_results').append(spinner);
-	//$(this).parent().dropdown('toggle');
-
-	var filename = $(this).attr('id');
-	var url = 'cron/' + filename;
-	//alert(url);
-
-	$.ajax({ type: "GET",
-		url: url,
-		success : function(text) {
-			$('.spinner-border').remove();
-			$('#cron_results').prepend('<div>'+text+'</div>');
-			$('#cron_results').prepend('<div><strong>Execution of ' + filename + ' completed successfully.<strong></div>');
+	
+	if (isGood) {
+		var url = "/actions/ldap_delete_user.php";
+		
+		var xhr = new XMLHttpRequest();
+		var formData = new FormData();
+		xhr.open("POST", url, true);
+		
+		formData.append("samaccountname", samaccountname);
+		
+		xhr.send(formData);
+		
+		xhr.onload = function() {
+			if (xhr.status != 200) { // analyze HTTP status of the response
+				alert("Something went wrong.  Please refresh this page and try again.");
+				alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
+			} else {
+				// check if the word 'Error' appeared
+				var error_check = xhr.responseText.includes("Error");
+				
+				// if the response had an error, alert
+				if (error_check == true) {
+					alert(this.responseText);
+				} else {
+					// success
+					el.parentNode.parentNode.parentNode.parentNode.style.display='none';
+				}
+			}
 		}
-	});
+		
+		xhr.onerror = function() {
+			alert("Request failed");
+		};
+	}
+}
 
-	return false;
-});
+function ldap_toggle_user(el, samaccountname, toggle) {
+	if (toggle == "enable") {
+		var isGood=confirm('Are you sure you want to enable this user in the LDAP?');
+	} else if (toggle == "disable") {
+		var isGood=confirm('Are you sure you want to disable this user in the LDAP?');
+	} else {
+		alert("ERROR!");
+		quit();
+	}
+	
+	if (isGood) {
+		var url = "/actions/ldap_toggle_user.php";
+		
+		var xhr = new XMLHttpRequest();
+		var formData = new FormData();
+		xhr.open("POST", url, true);
+		
+		formData.append("samaccountname", samaccountname);
+		formData.append("toggle", toggle);
+		
+		xhr.send(formData);
+		
+		xhr.onload = function() {
+			if (xhr.status != 200) { // analyze HTTP status of the response
+				alert("Something went wrong.  Please refresh this page and try again.");
+				alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
+			} else {
+				// check if the word 'Error' appeared
+				var error_check = xhr.responseText.includes("Error");
+				
+				// if the response had an error, alert
+				if (error_check == true) {
+					alert(this.responseText);
+				} else {
+					// success
+				}
+			}
+		}
+		
+		xhr.onerror = function() {
+			alert("Request failed");
+		};
+	}
+}
 
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
-
-});
+function ldap_provision_user(el, cudid, email) {
+	if (email == "enable") {
+		var isGood=confirm('Are you sure you want to provision this user in the LDAP, and email them their details?');
+	} else if (email == "disable") {
+		var isGood=confirm('Are you sure you want to provision this user in the LDAP (silently)?');
+	} else {
+		alert("ERROR!");
+		quit();
+	}
+	
+	if (isGood) {
+		var url = "/actions/ldap_provision_user.php";
+		
+		var xhr = new XMLHttpRequest();
+		var formData = new FormData();
+		xhr.open("POST", url, true);
+		
+		formData.append("cudid", cudid);
+		formData.append("email", email);
+		
+		xhr.send(formData);
+		
+		xhr.onload = function() {
+			if (xhr.status != 200) { // analyze HTTP status of the response
+				alert("Something went wrong.  Please refresh this page and try again.");
+				alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
+			} else {
+				// check if the word 'Error' appeared
+				var error_check = xhr.responseText.includes("Error");
+				
+				// if the response had an error, alert
+				if (error_check == true) {
+					alert(this.responseText);
+				} else {
+					// success
+					el.parentNode.parentNode.parentNode.parentNode.style.display='none';
+				}
+			}
+		}
+		
+		xhr.onerror = function() {
+			alert("Request failed");
+		};
+	}
+}

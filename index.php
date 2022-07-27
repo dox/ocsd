@@ -1,74 +1,72 @@
 <?php include_once("views/html_head.php"); ?>
 
 <?php
-//you should look into using PECL filter or some form of filtering here for POST variables
+
 if (isset($_POST["username"]) && isset($_POST["password"])) {
-	$form_username = strtoupper($_POST["username"]); //remove case sensitivity on the username
-	$form_password = $_POST["password"];
-
+	$usernameClean = filter_var($_POST["username"], FILTER_SANITIZE_STRING);
+	$passwordClean = filter_var($_POST["password"], FILTER_SANITIZE_STRING);
+	
 	$user = $ldap_connection->query()
-	->where('samaccountname', '=', $form_username)
-	->first();
-
-	$userGroups = $user['memberof'];
-	$allowed = array(LDAP_ALLOWED_DN);
-	$difference = array_intersect(
-		array_map('strtolower', $userGroups),
-		array_map('strtolower', $allowed)
-	);
+		->where('samaccountname', '=', $usernameClean)
+		->get();
+	$user = $user[0];
 	
 	
-	if (count($difference) > 0) {
-    // Our user is a member of one of the allowed groups.
-    // Continue with authentication.
-	
-    if ($ldap_connection->auth()->attempt($user['distinguishedname'][0], $form_password, $stayAuthenticated = true)) {
-			// User has been successfully authenticated.
-			$personsClass = new Persons;
-			$CUDPerson = $personsClass->search($user['samaccountname'][0]);
-			if (!count($CUDperson) == 1) {
+	if (isset($user['samaccountname'][0])) {
+		// Get the groups from the user.
+		$userGroups = $user['memberof'];
+		
+		// Set up our allowed groups.
+		$allowed = LDAP_ALLOWED_DN;
+		
+		// Normalize the group distinguished names and determine if
+		// the user is a member of any of the allowed groups:
+		$difference = array_intersect(
+			array_map('strtolower', $userGroups),
+			array_map('strtolower', $allowed)
+		);
+		
+		if (count($difference) > 0) {
+			// Our user is a member of one of the allowed groups.
+			// Continue with authentication.
+			$personsClass = new Persons();
+			$CUDPerson = $personsClass->search($user['samaccountname'][0], 2);
+			if (!isset($CUDperson[0]['cudid'])) {
 				$CUDPerson = $personsClass->search($user['mail'][0], 2);
 			}
-
-			$_SESSION["cudid"] = $CUDPerson[0]['cudid'];
-			$_SESSION["bodcard"] = $CUDPerson[0]['barcode7'];
-			$_SESSION["username"] = strtoupper($user['samaccountname'][0]);
-			$_SESSION["avatar_url"] = "photos/UAS_UniversityCard-" . $CUDPerson[0]['university_card_sysis'] . ".jpg";
-			$_SESSION["email"] = $ldap_user['mail'][0];
-			$_SESSION["groups"] = $userGroups;
 			
-			
-			
-			if (in_array(LDAP_ADMIN_DN, $_SESSION['groups'])) {
-				$_SESSION["user_type"] = 'Administrator';				
+			if ($ldap_connection->auth()->attempt($user['distinguishedname'][0], $passwordClean)) {
+				// User has been successfully authenticated.
+				
+				$logInsert = (new Logs)->insert("ldap","success",null,"User <code>" . $user['distinguishedname'][0] . "</code> authenticated, and has access",strtoupper($user['samaccountname'][0]));
+				
+				$_SESSION["authenticated"] = true;
+				$_SESSION["cudid"] = $CUDPerson[0]['cudid'];
+				$_SESSION["bodcard"] = $CUDPerson[0]['barcode7'];
+				$_SESSION["username"] = strtoupper($user['samaccountname'][0]);
+				$_SESSION["avatar_url"] = "photos/UAS_UniversityCard-" . $CUDPerson[0]['university_card_sysis'] . ".jpg";
+				$_SESSION["email"] = $user['mail'][0];
+				$_SESSION["groups"] = $userGroups;
 			} else {
-				$_SESSION["user_type"] = 'OCSD User';
+				// Username or password is incorrect.
+				echo "You do not have access to this resource.  Please contact the IT Office";
+				$logInsert = (new Logs)->insert("ldap","error",null,"User <code>" . $user['distinguishedname'][0] . "</code> authenticated, but does not have access",strtoupper($user['samaccountname'][0]));
 			}
-			
-			$redir = "Location: http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
-
-			$logInsert = (new Logs)->insert("logon","success",null,"LDAP logon success for {ldap:" . $user['samaccountname'][0] . "}");
-
-			header($redir);
-			exit;
-    } else {
-			// Username or password is incorrect.
-			$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.</div>";
-			$logInsert = (new Logs)->insert("logon","error",null,"LDAP logon failed for <code>" . $form_username . "</code>");
-    }
+		}
 	} else {
-		$message = "<div class=\"alert alert-danger\" role=\"alert\"><strong>Warning!</strong> Login attempt failed.  User {ldap:" . $user['samaccountname'][0] . "} not in group</div>";
+		echo "Wrong username/password";
+		$logInsert = (new Logs)->insert("ldap","error",null,"User <code>" . $usernameClean . "</code> failed to authenticate");
 	}
+	
+	
 }
 ?>
 
 <body>
 	<?php
-	if (isset($_SESSION['username'])) {
+	if ($_SESSION['authenticated'] == true) {
 		include_once("views/navbar_top.php");
-	}
-
-	if (isset($_SESSION['username'])) {
+		
 		if (isset($_GET['n'])) {
 			$node = "nodes/" . $_GET['n'] . ".php";
 

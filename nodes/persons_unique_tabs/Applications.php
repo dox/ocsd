@@ -1,20 +1,16 @@
 <?php
-$filename = basename(__FILE__, '.php');
+include_once("../../includes/autoload.php");
 
-$sql  = "SELECT * FROM " . $filename;
-$sql .= " WHERE cudid = '" . $person->cudid . "'";
+$personObject = new Person($_GET['cudid']);
+
+$sql  = "SELECT * FROM Applications";
+$sql .= " WHERE cudid = '" . $personObject->cudid . "'";
 
 $dbOutput = $db->query($sql)->fetchAll();
 ?>
 
-<?php if ($dbOutput) { ?>
 
-<div class="col-6">
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Applications</h5>
-      <p class="card-text">
-        <ul>
+<ul>
           <?php
           foreach ($dbOutput AS $output) {
             printArray($output);
@@ -22,10 +18,3 @@ $dbOutput = $db->query($sql)->fetchAll();
           }
           ?>
         </ul>
-      </p>
-    </div>
-  </div>
-</div>
-
-
-<?php } ?>

@@ -3,10 +3,7 @@ $person = new Person($_GET['cudid']);
 
 
 
-if (obscure == true) {
-	$obscureClass = $class . " obscure";
-	$obscureImgClass = $class . " obscureImg";
-}
+
 
 $icons[] = array("class" => "btn-primary", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#bell\"/></svg> Test Button", "value" => "data-bs-toggle=\"modal\" data-bs-target=\"#deleteMealModal\"");
 $icons[] = array("class" => "btn-warning", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#email\"/></svg> Email", "value" => "onclick=\"window.open('mailto:" . $person->oxford_email . "')\"");

@@ -18,28 +18,39 @@ if (isset($_GET['filter'])) {
 	$persons = $personsClass->all();
 }
 
-$icons[] = array("class" => "btn-primary", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#bell\"/></svg> Test Button", "value" => "data-bs-toggle=\"modal\" data-bs-target=\"#deleteMealModal\"");
-$icons[] = array("class" => "btn-warning", "name" => "<svg width=\"1em\" height=\"1em\"><use xlink:href=\"images/icons.svg#email\"/></svg> Test Button", "value" => "data-bs-toggle=\"modal\" data-bs-target=\"#deleteMealModal\"");
-
-echo displayTitle(count($persons) . " Persons", "Filter: " . $_GET['filter'], $icons);
 ?>
 
-
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col">SSO</th>
+			<th scope="col">LDAP</th>
+			<th scope="col">Lastname</th>
+			<th scope="col">Firstname</th>
+			<th scope="col">Card Type</th>
+		</tr>
+	</thead>
+	
+	<tbody>
 	<?php
-	if ($persons) {
-		foreach ($persons AS $personUnique) {
-			$person = new Person($personUnique['cudid']);
-			//echo "<div class=\"col\">";
-			echo $person->makeListItem();
-			//echo "</div>";
-		}
-	} else {
+	foreach ($persons AS $personUnique) {
+		$ldapUser = new LDAPPerson($personUnique['sso_username'], $personUnique['oxford_email']);
+		
+		//$person = new Person($personUnique['cudid']);
+		//printArray($personUnique);
+		$output  = "<tr>";
+		$output .= "<td><a href=\"index.php?n=person_unique&cudid=" . $personUnique['cudid'] . "\">" . $personUnique['sso_username'] . "</a></td>";
+		$output .= "<td><a href=\"index.php?n=ldap_unique&samaccountname=" . $ldapUser->samaccountname . "\">" . $ldapUser->samaccountname . "</a></td>";
+		$output .= "<td>" . $personUnique['lastname'] . "</td>";
+		$output .= "<td>" . $personUnique['firstname'] . "</td>";
+		$output .= "<td>" . $personUnique['university_card_type'] . "</td>";
+		$output .= "";
+		$output .= "";
+		$output .= "";
+		$output .= "</tr>";
+		
+		echo $output;
+	}
 	?>
-	<div class="empty">
-		<div class="empty-icon">
-			<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-md" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
-		</div>
-		<p class="empty-title h3">No results found</p>
-		<p class="empty-subtitle text-muted">Try adjusting your search or filter to find what you're looking for.</p>
-	</div>
-	<?php } ?>
+	</tbody>
+</table>

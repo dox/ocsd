@@ -10,28 +10,79 @@ class Person extends Persons {
 		}
 
 		$ldapPerson = new LDAPPerson($this->sso_username, $this->oxford_email);
-
-		if (count($ldapPerson)) {
+		if (isset($ldapPerson->samaccountname)) {
 			$this->ldap_samaccountname = $ldapPerson->samaccountname;
 			$this->ldap_isEnabled = $ldapPerson->isEnabled();
 		}
 	}
-
+	
+	public function photoSrc() {
+		$imgSrc = "photos/UAS_UniversityCard-" . $this->university_card_sysis . ".jpg";
+	
+		if (!file_exists($imgSrc)) {
+			$imgSrc = "images/blank_avatar.png";
+		}
+	
+		return $imgSrc;
+	}
+	
+	
+	public function getSuspensions() {
+		global $db;
+	
+		$sql  = "SELECT * FROM Suspensions";
+		$sql .= " WHERE cudid = '" . $this->cudid . "'";
+		$sql .= " ORDER BY SuspendSeq DESC";
+	
+		$suspensions = $db->query($sql)->fetchAll();
+	
+		return $suspensions;
+	}
+	  
 	public function isSuspended() {
 		global $db;
-
+	
 		$sql  = "SELECT * FROM Enrolments";
 		$sql .= " WHERE cudid = '" . $this->cudid . "'";
 		$sql .= " AND Status = 'Suspended'";
-
+	
 		$currentSuspension = $db->query($sql)->fetchArray();
-
+	
 		if (!empty($currentSuspension['cudid'])) {
 			return true;
 		} else {
 			return false;
 		}
 	}
+	
+	public function address($AddressTyp = "C") {
+		global $db;
+	
+		$sql  = "SELECT * FROM Addresses";
+		$sql .= " WHERE cudid = '" . $this->cudid . "'";
+		$sql .= " AND AddressTyp = '" . $AddressTyp . "'";
+		$sql .= " ORDER BY LastUpdateDt DESC";
+		$sql .= " LIMIT 1";
+	
+		$address = $db->query($sql)->fetchArray();
+	
+		return $address;
+	}
+	
+	public function addresses() {
+		global $db;
+	
+		$sql  = "SELECT * FROM Addresses";
+		$sql .= " WHERE cudid = '" . $this->cudid . "'";
+	
+		$addresses = $db->query($sql, 'test', 'test')->fetchAll();
+	
+		return $addresses;
+	}
+	
+	
+
+	/*
 
 	public function bodcardDaysLeft() {
 		$now = time(); // or your date as well
@@ -117,33 +168,6 @@ class Person extends Persons {
 		$output .= "</div>";
 		$output .= "</div>";
 
-		//
-		// NEW STYLE
-		//
-		/*
-		$output  = "<div class=\"card\">";
-		$output .= "<div class=\"card-body\">";
-		$output .= "<div class=\"row\">";
-
-		$output .= "<div class=\"col-auto\">";
-		$output .= $this->avatar();
-		$output .= "</div>"; //end col-auto (avatar)
-
-		$output .= "<div class=\"col\">";
-		$output .= "<div class=\"text-truncate\">";
-		$output .= "<strong>" . $this->FullName . "</strong> in service mode";
-		$output .= "</div>"; //end text-truncate
-		$output .= "<div class=\"text-muted\">yesterday</div>";
-		$output .= "</div>"; // end col
-
-		$output .= "<div class=\"col-auto align-self-center\">";
-		$output .= "<div class=\"badge bg-primary\"></div>";
-		$output .= "</div>"; //end col-auto align-self-center
-
-		$output .= "</div>"; // end row
-		$output .= "</div>"; // end body
-		$output .= "</div>"; //end card
-		*/
 		return $output;
 	}
 
@@ -194,15 +218,7 @@ class Person extends Persons {
 		return $output;
 	}
 
-	public function photo() {
-		$imgSrc = "photos/UAS_UniversityCard-" . $this->university_card_sysis . ".jpg";
-
-		if (!file_exists($imgSrc)) {
-			$imgSrc = "images/blank_avatar.jpg";
-		}
-
-		return $imgSrc;
-	}
+	
 
 	public function bodcardBadge($displayText = false) {
 		if (strtotime($this->University_Card_End_Dt) < strtotime("now")) {
@@ -245,30 +261,7 @@ class Person extends Persons {
 		return $nationality['NatName'];
 	}
 
-	public function address($AddressTyp = "C") {
-		global $db;
-
-		$sql  = "SELECT * FROM Addresses";
-		$sql .= " WHERE cudid = '" . $this->cudid . "'";
-		$sql .= " AND AddressTyp = '" . $AddressTyp . "'";
-		$sql .= " ORDER BY LastUpdateDt DESC";
-		$sql .= " LIMIT 1";
-
-		$addresses = $db->query($sql, 'test', 'test')->fetchArray();
-
-		return $addresses;
-	}
-
-	public function addresses() {
-		global $db;
-
-		$sql  = "SELECT * FROM Addresses";
-		$sql .= " WHERE cudid = '" . $this->cudid . "'";
-
-		$addresses = $db->query($sql, 'test', 'test')->fetchAll();
-
-		return $addresses;
-	}
+	
 
 	public function contactDetails() {
 		global $db;
@@ -281,16 +274,6 @@ class Person extends Persons {
 		return $contactDetails;
 	}
 
-  public function getSuspensions() {
-    global $db;
-
-    $sql  = "SELECT * FROM Suspensions";
-    $sql .= " WHERE cudid = '" . $this->cudid . "'";
-    $sql .= " ORDER BY SuspendSeq DESC";
-
-    $suspensions = $db->query($sql)->fetchAll();
-
-    return $suspensions;
-  }
+  */
 } //end of class Person
 ?>

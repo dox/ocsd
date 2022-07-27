@@ -116,32 +116,31 @@ class LDAPPerson extends LDAP {
 		if (isset($this->mail)) {
 			$output .= "<a class=\"dropdown-item\" href=\"mailto:" . $this->mail . "\">Email</a>";
 		}
-
-    if ($_SESSION["user_type"] == "Administrator") {
+    
+    //if ($_SESSION["user_type"] == "Administrator") {
 			if (isset($this->samaccountname) && !$this->isEnabled()) {
 				if ($person->isSuspended() == false) {
-					$output .= "<a class=\"dropdown-item ldap_enable_user_resetPwd\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account (reset password)</a>";
-					//$output .= "<a class=\"dropdown-item ldap_enable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Enable Account</a>";
+          $output .= "<a class=\"dropdown-item\" href=\"#\" onclick=\"ldap_toggle_user(this, '" . $this->samaccountname . "', 'enable')\">Enable Account</a>";
 				} else {
 					$output .= "<a class=\"dropdown-item disabled\" href=\"#\"><s>CUD ID Suspended</s></a>";
 				}
       }
 
 			if (isset($this->samaccountname) && $this->isEnabled()) {
-        $output .= "<a class=\"dropdown-item ldap_disable_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Disable Account</a>";
+        $output .= "<a class=\"dropdown-item\" href=\"#\" onclick=\"ldap_toggle_user(this, '" . $this->samaccountname . "', 'disable')\">Disable Account</a>";
       }
 
 			if (isset($this->samaccountname) && !$this->isEnabled()) {
-        $output .= "<a class=\"dropdown-item text-danger ldap_delete_user\" id=\"" . $this->samaccountname . "\" href=\"#\">Delete Account</a>";
+        $output .= "<a class=\"dropdown-item text-danger\" href=\"#\" onclick=\"ldap_delete_user(this, '" . $this->samaccountname . "')\">Delete Account</a>";
       }
 
       if (!isset($this->samaccountname)) {
-        $output .= "<a class=\"dropdown-item ldap_provision_user\" id=\"" . $person->cudid . "\" href=\"#\">Provison Silently</a>";
+        $output .= "<a class=\"dropdown-item\" href=\"#\" onclick=\"ldap_provision_user(this, '" . $person->cudid . "', 'disable')\">Provison Silently</a>";
 				if (isset($person->oxford_email)) {
-					$output .= "<a class=\"dropdown-item ldap_provision_user provision_with_email\" id=\"" . $person->cudid . "\" href=\"#\">Provision and Send Welcome Email</a>";
+					$output .= "<a class=\"dropdown-item\" href=\"#\" onclick=\"ldap_provision_user(this, '" . $person->cudid . "', 'enable')\">Provision and Send Welcome Email</a>";
 				}
       }
-    }
+    //}
 
     $output .= "</div>";
     $output .= "</div>";

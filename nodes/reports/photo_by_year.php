@@ -17,7 +17,7 @@ $studentArray = array();
 foreach ($persons AS $personUnique) {
 	$person = new Person($personUnique['cudid']);
 
-	$photo = $person->photo();
+	$photo = $person->photoSrc();
 
 	$subjectName = str_replace("Visiting Non-Matriculated - ", "", $person->rout_name);
 	$subjectName = str_replace("Visiting Non-Matriculated ", "", $subjectName);

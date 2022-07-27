@@ -1,26 +1,29 @@
-<?php if (!empty($person->getSuspensions())) { ?>
+<?php
+include_once("../../includes/autoload.php");
 
-<div class="card">
-  <h4 class="card-header">Suspensions</h4>
-  
-  <div class="card-body">
+$personObject = new Person($_GET['cudid']);
+?>
+
+
+<div class="tab-pane fade show active" id="Suspensions-tab-pane" role="tabpanel" aria-labelledby="Suspensions-tab" tabindex="0">
+<?php if (!empty($personObject->getSuspensions())) { ?>
+
   <?php
-    if ($person->isSuspended()) {
-      echo "<div class=\"alert alert-danger text-center\" role=\"alert\">CURRENTLY SUSPENDED</div>";
-    }
-    ?>
-    
+  if ($personObject->isSuspended()) {
+    echo "<div class=\"alert alert-danger text-center\" role=\"alert\">CURRENTLY SUSPENDED</div>";
+  }
+  ?>
+  
    <ul>
-     <?php
-     foreach ($person->getSuspensions() AS $output) {
-       if (!isset($output['SuspendReason'])) {
-         $output['SuspendReason'] = "Reason Unknown";
-       }
-       echo "<li>" . date('Y-m-d', strtotime($output['SuspendStrDt'])) . " - " . date('Y-m-d', strtotime($output['SuspendExpEndDt'])) . " " . $output['SuspendReason'] . "</li>";
+   <?php
+   foreach ($personObject->getSuspensions() AS $output) {
+     if (!isset($output['SuspendReason'])) {
+     $output['SuspendReason'] = "Reason Unknown";
      }
-     ?>
-     </ul>
-  </div>
-</div>
+     echo "<li>" . date('Y-m-d', strtotime($output['SuspendStrDt'])) . " - " . date('Y-m-d', strtotime($output['SuspendExpEndDt'])) . " " . $output['SuspendReason'] . "</li>";
+   }
+   ?>
+   </ul>
 
 <?php } ?>
+</div>

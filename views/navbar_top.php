@@ -80,10 +80,6 @@ $navbarArray['ldap_all'] = array(
 		array(
 			"title" => "Stale Workstations",
 			"link" => "./index.php?n=ldap_all&filter=stale-workstations"
-		),
-		array(
-			"title" => "All",
-			"link" => "./index.php?n=ldap_all&filter=all"
 		)
 	)
 );
@@ -99,6 +95,7 @@ $navbarArray['admin_logs'] = array(
 	"icon" => "logs",
 	"link" => "./index.php?n=admin_logs"
 );
+
 ?>
 
 <header class="p-3 mb-3 border-bottom bg-light shadow ">
@@ -153,8 +150,21 @@ $navbarArray['admin_logs'] = array(
 				?>
 			</ul>
 			
+			<?php
+			if (debug == true) {
+				$output  = "<button type=\"button\" class=\"btn btn-warning me-3\">";
+
+				//$output .= "<svg width=\"1em\" height=\"1em\" class=\"mx-2\"><use xlink:href=\"images/icons.svg#alert\"/></svg>";
+				$output .= "<strong>DEBUG ENABLED!</strong>";
+				//$output .= "<svg width=\"1em\" height=\"1em\" class=\"mx-2\"><use xlink:href=\"images/icons.svg#alert\"/></svg>";
+				$output .= "</button>";
+				
+				echo $output;
+			}
+			?>
+			
 			<form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" action="./index.php?n=persons_all&filter=search" method="POST" target="_self">
-				<input type="search" class="form-control typeahead" placeholder="Search CUD" name="navbar_search" id="navbar_search" aria-label="Search" autocomplete="off" spellcheck="false">
+				<input type="search" class="form-control" placeholder="Search CUD" name="navbar_search" id="navbar_search" aria-label="Search" autocomplete="off" spellcheck="false">
 			</form>
 			
 			<div class="dropdown text-end">
@@ -167,7 +177,7 @@ $navbarArray['admin_logs'] = array(
 						<?php echo $_SESSION['username']; ?> / <div class="mt-1 small text-muted text-end"><?php echo $_SESSION["user_type"]; ?></div>
 					</li>
 					<li>
-						<a class="dropdown-item" href="./index.php?n=persons_unique&cudid=<?php echo $_SESSION['cudid'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile</a>
+						<a class="dropdown-item" href="./index.php?n=person_unique&cudid=<?php echo $_SESSION['cudid'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile</a>
 					</li>
 					<li>
 						<a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> My LDAP Record</a>
@@ -187,30 +197,41 @@ $navbarArray['admin_logs'] = array(
 	</div>
 </header>
 
+
+
+
+
+
 <?php
-if (debug == true) {
-	$output  = "<div class=\"container text-center alert alert-warning\">";
-	$output .= "<svg width=\"1em\" height=\"1em\" class=\"mx-2\"><use xlink:href=\"images/icons.svg#alert\"/></svg>";
-	$output .= "<strong>DEBUG ENABLED!</strong>";
-	$output .= "<svg width=\"1em\" height=\"1em\" class=\"mx-2\"><use xlink:href=\"images/icons.svg#alert\"/></svg>";
-	$output .= "</div>";
-	
-	echo $output;
+$personSearchArray = array();
+
+$personsClass = new Persons();
+$allPersons = $personsClass->all();
+foreach ($allPersons AS $person) {
+	$cleanName = str_replace("'", "", $person['FullName']);
+	$personSearchArray[] = "['" . $cleanName . "', '" . $person['sso_username'] . "', '" . $person['cudid'] . "']";
 }
 ?>
-
 <script>
-$('#navbar_search').autocomplete({
-	serviceUrl: 'api/person/navbar_search.php',
-	lookupLimit: 5,
-	type: "POST",
-	dataType: "json",
-	params: {
-		"api_token": "<?php echo api_token; ?>",
+// initialize
+var demo2 = new autoComplete({
+	selector: '#navbar_search',
+	minChars: 1,
+	source: function(term, suggest){
+		term = term.toLowerCase();
+		var choices = <?php echo "[", implode(",", $personSearchArray) , "]"; ?>;
+		var suggestions = [];
+		for (i=0;i<choices.length;i++)
+			if (~(choices[i][0]+' '+choices[i][1]+ ' '+choices[i][2]).toLowerCase().indexOf(term)) suggestions.push(choices[i]);
+		suggest(suggestions);
 	},
-	paramName: "navbar_search",
-	onSelect: function (suggestion) {
-		window.location.href='index.php?n=persons_unique&cudid=' + suggestion.data;
+	renderItem: function (item, search){
+		search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&amp;');
+		var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
+		return '<div class="autocomplete-suggestion" data-langname="'+item[0]+'" data-cudid="'+item[2]+'" data-lang="'+item[1]+'" data-val="'+search+'"> '+item[0].replace(re, "<b>$1</b>")+'</div>';
+	},
+	onSelect: function(e, term, item){
+		window.location = "index.php?n=person_unique&cudid=" + item.getAttribute('data-cudid');
 	}
 });
 </script>

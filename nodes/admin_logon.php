@@ -2,7 +2,7 @@
 if (isset($_GET['logout'])) {
 	if ($_GET['logout'] == "true" && isset($_SESSION["username"])) { //destroy the session
 		$message = "<div class=\"alert alert-success\" role=\"alert\"><strong>Success!</strong> You have been logged out.</div>";
-		$logInsert = (new Logs)->insert("logoff","success",null,"Logoff success");
+		$logInsert = (new Logs)->insert("ldap","success",null,"User <code>" . strtoupper($_SESSION["username"]) . "</code> logged off",strtoupper($_SESSION["username"]));
 
 		$_SESSION = array();
 		session_destroy();

@@ -1,21 +1,15 @@
 <?php
-$filename = basename(__FILE__, '.php');
+include_once("../../includes/autoload.php");
 
-$sql  = "SELECT * FROM " . $filename;
-$sql .= " WHERE cudid = '" . $person->cudid . "'";
+$personObject = new Person($_GET['cudid']);
 
-$dbOutput = $db->query($sql, 'test', 'test')->fetchAll();
+$sql  = "SELECT * FROM Qualifications";
+$sql .= " WHERE cudid = '" . $personObject->cudid . "'";
+
+$dbOutput = $db->query($sql)->fetchAll();
 ?>
 
-<?php if ($dbOutput) { ?>
 
-
-
-<div class="card">
-  <div class="card-header">
-    <h4 class="card-title">Qualifications</h4>
-  </div>
-  <div class="table-responsive">
     <table class="table card-table table-vcenter">
       <tbody>
         <?php
@@ -42,7 +36,3 @@ $dbOutput = $db->query($sql, 'test', 'test')->fetchAll();
         ?>
       </tbody>
     </table>
-  </div>
-</div>
-
-<?php } ?>

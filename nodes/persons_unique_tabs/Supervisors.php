@@ -1,30 +1,27 @@
 <?php
-$filename = basename(__FILE__, '.php');
+include_once("../../includes/autoload.php");
 
-$sql  = "SELECT * FROM " . $filename;
-$sql .= " WHERE cudid = '" . $person->cudid . "'";
+$personObject = new Person($_GET['cudid']);
 
-$dbOutput = $db->query($sql, 'test', 'test')->fetchAll();
+$sql  = "SELECT * FROM Supervisors";
+$sql .= " WHERE cudid = '" . $personObject->cudid . "'";
+
+$dbOutput = $db->query($sql)->fetchAll();
 ?>
 
-<?php if ($dbOutput) { ?>
 
-<div class="card">
-  <div class="card-header">
-    <h3 class="card-title"><?php echo $filename; ?></h3>
-  </div>
-  <div class="card-body">
+
     <?php
     foreach ($dbOutput AS $output) {
-      $outputCard  = "<div class=\"card\">";
+      $outputCard  = "<div class=\"card mb-3\">";
       $outputCard .= "<div class=\"card-body\">";
       $outputCard .= "<div class=\"row row-sm align-items-center\">";
       $outputCard .= "<div class=\"col-auto\">";
-      $outputCard .= "<span class=\"avatar avatar-lg\" style=\"background-image: url(./images/blank_avatar.png)\"></span>";
+      $outputCard .= "<span class=\"avatar avatar-lg\" style=\"background-image: url(/images/blank_avatar.png)\"></span>";
       $outputCard .= "</div>";
       $outputCard .= "<div class=\"col\">";
       $outputCard .= "<h4 class=\"card-title m-0\">";
-      $outputCard .= "<a href=\"#\">" . $output['SuperFullName'] . "</a>";
+      $outputCard .= "" . $output['SuperFullName'] . "";
       $outputCard .= "</h4>";
       $outputCard .= "<div class=\"text-muted\">";
 
@@ -48,7 +45,7 @@ $dbOutput = $db->query($sql, 'test', 'test')->fetchAll();
       $outputCard .= "</div>";
       $outputCard .= "</div>";
       $outputCard .= "<div class=\"col-auto\">";
-      $outputCard .= "<a href=\"mailto:" . $output['SuperEmail'] . "\" class=\"btn btn-sm btn-white d-none d-md-inline-block\">Email</a>";
+      $outputCard .= "<a href=\"mailto:" . $output['SuperEmail'] . "\" class=\"btn btn-sm btn-info d-none d-md-inline-block\">Email</a>";
       $outputCard .= "</div>";
       $outputCard .= "</div>";
       $outputCard .= "</div>";
@@ -57,7 +54,3 @@ $dbOutput = $db->query($sql, 'test', 'test')->fetchAll();
       echo $outputCard;
     }
     ?>
-  </div>
-</div>
-
-<?php } ?>

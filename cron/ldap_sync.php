@@ -7,18 +7,23 @@ include_once("../includes/autoload.php");
 $ldapClass = new LDAP;
 
 $users = $ldapClass->all_users_enabled();
+$personsClass = new Persons;
 
+echo "\n\033[39m ldap_sync running for " . count($users) . " users" . "\n";
+
+$i = 0;
+$j = 0;
 foreach ($users AS $ldapUser) {
-  $userdata = null;
-
-  $personsClass = new Persons;
-  $CUDPerson = $personsClass->search($ldapUser['samaccountname'][0], 2);
-  if (!count($CUDperson) == 1) {
-    $CUDPerson = $personsClass->search($ldapUser['mail'][0], 2);
+  $userdata = array();
+  
+  $CUDPerson = $personsClass->searchStrict($ldapUser['samaccountname'][0]);
+  if (!isset($CUDPerson[0]['cudid'])) {
+    $CUDPerson = $personsClass->searchStrict($ldapUser['mail'][0]);
   }
 
-  if (isset($CUDPerson[0]['cudid']) == 1) {
-    //echo "<p>Checking CUD/LDAP details match on " . $ldapUser['samaccountname'][0] . " with mail: " . $CUDPerson[0]['oxford_email'] . "</p>";
+  if (isset($CUDPerson[0]['cudid'])) {
+    $i++;
+    //echo "\033[39m Checking CUD/LDAP details match on " . $ldapUser['samaccountname'][0] . " with mail: " . $CUDPerson[0]['oxford_email'] . "\n";
 
     if ($ldapUser['pager'][0] != $CUDPerson[0]['MiFareID']) {
       $userdata["pager"] = $CUDPerson[0]['MiFareID'];
@@ -29,11 +34,12 @@ foreach ($users AS $ldapUser) {
     # update names?
 
     if (count($userdata) > 0) {
-      echo "<p>Actioning on " . $ldapUser['samaccountname'][0] . " (" . $ldapUser['cn'][0]  . ")</p>";
-      printArray($userdata);
+      $j ++;
+      echo "\033[32m Updating " . implode(', ', array_keys($userdata)) . " on " . $ldapUser['samaccountname'][0] . " to " . implode(', ', $userdata) . "\n";
       $ldapClass->ldap_mod_replace($ldapUser['dn'], $userdata);
-      echo "<hr />";
     }
   }
 }
+
+echo "\033[39m ldap_sync complete.  Matched on " . $i . " users out of a total of " . count($users) . " ldap users.  " . $j . " users updated" . "\n";
 ?>

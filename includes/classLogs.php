@@ -18,16 +18,33 @@ class Logs {
 
 	public function all($limit = null) {
 		global $db;
-
+	
 		$sql  = "SELECT * FROM " . self::$table_name;
 		$sql .= " ORDER BY date_created DESC";
-
+	
 		if ($limit != null) {
 			$sql .= " LIMIT " . $limit;
 		}
-
+	
 		$logs = $db->query($sql)->fetchAll();
-
+	
+		return $logs;
+	}
+	
+	public function allSearch($search) {
+		global $db;
+	
+		$sql  = "SELECT * FROM " . self::$table_name;
+		$sql .= " WHERE date_created LIKE '%" . $search . "%'";
+		$sql .= " OR type LIKE '%" . $search . "%'";
+		$sql .= " OR result LIKE '%" . $search . "%'";
+		$sql .= " OR cudid LIKE '%" . $search . "%'";
+		$sql .= " OR description LIKE '%" . $search . "%'";
+		$sql .= " OR username LIKE '%" . $search . "%'";
+		$sql .= " ORDER BY date_created DESC";
+	
+		$logs = $db->query($sql)->fetchAll();
+	
 		return $logs;
 	}
 
@@ -92,7 +109,7 @@ class Logs {
 			"type" => $type,
 			"result" => $result,
 			"cudid" => $cudid,
-			"description" => $description,
+			"description" => addslashes($description),
 			"username" => $username,
 			"ip" => $_SERVER['REMOTE_ADDR']
 		);
@@ -109,21 +126,24 @@ class Logs {
 		$lastPurge = $db->query($sql)->fetchArray();
 
 		if (empty($lastPurge)) {
-			$sql = "SELECT * FROM " . self::$table_name . " WHERE UNIX_TIMESTAMP(date_created) < '" . strtotime('-' . logs_retention . ' days') . "'";
+			$sql = "SELECT * FROM _logs WHERE DATEDIFF(NOW(),date_created) > " . logs_retention;
+			
 			$logsToDelete = $db->query($sql)->fetchAll();
+			printArray($sql);
 
 			if (count($logsToDelete) > 0) {
-				$sql = "DELETE FROM " . self::$table_name . " WHERE UNIX_TIMESTAMP(date_created) < '" . strtotime('-' . logs_retention . ' days') . "'";
+				$sql = "DELETE FROM _logs WHERE DATEDIFF(NOW(),date_created) > " . logs_retention;
 				$logsToDelete = $db->query($sql)->fetchAll();
 
 				$logInsert = (new Logs)->insert("purge","success",null,count($logsToDelete) . " log(s) purged");
 			}
 		}
 	}
+	
 	private function cleanDescription($description = null) {
 		//cudid preg_replace
 		$pattern = "/\{cudid:(.+?)\}/";
-		$cudURL = "./index.php?n=persons_unique&cudid=$1";
+		$cudURL = "./index.php?n=person_unique&cudid=$1";
 		$replacement = "<a href=\"" . $cudURL . "\">$1</a> ";
 		$cleanDescription = preg_replace($pattern, $replacement, $description);
 
@@ -258,7 +278,7 @@ class Logs {
       $logsCountBlocks = ceil($logsCount / $this->logsPerPage);
 
 			if ($_GET['offset'] == $offset) {
-				$output .= "<li class=\"page-item active\"><a class=\"page-link\" href=\"" . $url . "\">" . $i . " <span class=\"sr-only\">(current)</span></a></li>";
+				$output .= "<li class=\"page-item active\"><a class=\"page-link\" href=\"" . $url . "\">" . $i . "</a></li>";
 			} else {
 				$output .= "<li class=\"page-item\"><a class=\"page-link\" href=\"" . $url . "\">" . $i . "</a></li>";
 			}
