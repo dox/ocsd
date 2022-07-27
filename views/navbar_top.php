@@ -163,9 +163,11 @@ $navbarArray['admin_logs'] = array(
 			}
 			?>
 			
-			<form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" action="./index.php?n=persons_all&filter=search" method="POST" target="_self">
-				<input type="search" class="form-control" placeholder="Search CUD" name="navbar_search" id="navbar_search" aria-label="Search" autocomplete="off" spellcheck="false">
-			</form>
+			<!--<form class="" action="./index.php?n=persons_all&filter=search" method="POST" target="_self">-->
+				<div class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 auto-search-wrapper max-height loupe">
+
+				  <input type="text" class="form-control" id="basic" placeholder="Search CUD" aria-label="Search" autocomplete="off" spellcheck="false">
+				</div>
 			
 			<div class="dropdown text-end">
 				<a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -200,38 +202,28 @@ $navbarArray['admin_logs'] = array(
 
 
 
-
-
-<?php
-$personSearchArray = array();
-
-$personsClass = new Persons();
-$allPersons = $personsClass->all();
-foreach ($allPersons AS $person) {
-	$cleanName = str_replace("'", "", $person['FullName']);
-	$personSearchArray[] = "['" . $cleanName . "', '" . $person['sso_username'] . "', '" . $person['cudid'] . "']";
-}
-?>
 <script>
-// initialize
-var demo2 = new autoComplete({
-	selector: '#navbar_search',
-	minChars: 1,
-	source: function(term, suggest){
-		term = term.toLowerCase();
-		var choices = <?php echo "[", implode(",", $personSearchArray) , "]"; ?>;
-		var suggestions = [];
-		for (i=0;i<choices.length;i++)
-			if (~(choices[i][0]+' '+choices[i][1]+ ' '+choices[i][2]).toLowerCase().indexOf(term)) suggestions.push(choices[i]);
-		suggest(suggestions);
+new Autocomplete("basic", {
+	onSearch: ({ currentValue }) => {
+		const api = `actions/search.php?search=${encodeURI(currentValue)}`;
+		
+		return new Promise((resolve) => {
+			fetch(api)
+			.then((response) => response.json())
+			.then((data) => {
+				resolve(data);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+		});
 	},
-	renderItem: function (item, search){
-		search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&amp;');
-		var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-		return '<div class="autocomplete-suggestion" data-langname="'+item[0]+'" data-cudid="'+item[2]+'" data-lang="'+item[1]+'" data-val="'+search+'"> '+item[0].replace(re, "<b>$1</b>")+'</div>';
+	onResults: ({ matches }) =>
+	matches.map((el) => `<li>${el.name}</li>`).join(""),
+	onSubmit: ({ index, element, object }) => {
+		const { name, cudid } = object;
+		
+		window.location = "index.php?n=person_unique&cudid=" + cudid;
 	},
-	onSelect: function(e, term, item){
-		window.location = "index.php?n=person_unique&cudid=" + item.getAttribute('data-cudid');
-	}
 });
 </script>
