@@ -166,7 +166,7 @@ $navbarArray['admin_logs'] = array(
 			<!--<form class="" action="./index.php?n=persons_all&filter=search" method="POST" target="_self">-->
 				<div class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 auto-search-wrapper max-height loupe">
 
-				  <input type="text" class="form-control" id="basic" placeholder="Search CUD" aria-label="Search" autocomplete="off" spellcheck="false">
+				  <input type="text" class="form-control" id="basic" placeholder="Quick Search" aria-label="Quick Search" autocomplete="off" spellcheck="false">
 				</div>
 			
 			<div class="dropdown text-end">

@@ -11,7 +11,7 @@ class Logs {
 	public $ip;
 
 	public $data;
-	public $logsPerPage = 100;
+	public $logsPerPage = 500;
 
 	function __construct() {
 	}
@@ -121,23 +121,20 @@ class Logs {
 
 	public function purge() {
 		global $db;
-
-		$sql = "SELECT * FROM " . self::$table_name . " WHERE type = 'purge' AND DATE(date_created) = '" . date('Y-m-d') . "' LIMIT 1";
-		$lastPurge = $db->query($sql)->fetchArray();
-
-		if (empty($lastPurge)) {
-			$sql = "SELECT * FROM _logs WHERE DATEDIFF(NOW(),date_created) > " . logs_retention;
-			
-			$logsToDelete = $db->query($sql)->fetchAll();
-			printArray($sql);
-
-			if (count($logsToDelete) > 0) {
-				$sql = "DELETE FROM _logs WHERE DATEDIFF(NOW(),date_created) > " . logs_retention;
-				$logsToDelete = $db->query($sql)->fetchAll();
-
-				$logInsert = (new Logs)->insert("purge","success",null,count($logsToDelete) . " log(s) purged");
-			}
-		}
+		
+		// purge statistics older than logs_retention
+		$sql = "DELETE FROM _logs WHERE DATEDIFF(NOW(),date_created) > " . logs_retention;
+		$logsToDelete = $db->query($sql);
+		
+		debug($sql);
+				
+		// also purge statistics older than 1 year
+		$sql = "DELETE FROM _stats WHERE DATEDIFF(NOW(),date_created) > 365";
+		$statsToDelete = $db->query($sql);
+		
+		debug($sql);
+		
+		return true;
 	}
 	
 	private function cleanDescription($description = null) {

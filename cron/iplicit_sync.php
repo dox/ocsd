@@ -185,7 +185,10 @@ foreach ($allCUDUsers AS $CUDUser) {
         $logInsert = (new Logs)->insert("iplicit","error",null,"Error updating iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ") - " . json_encode($data));
       } else {
         echo "\033[32m Updated iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")\n";
-        $logInsert = (new Logs)->insert("iplicit","success",null,"Updated iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")");
+        
+        if (debug) {
+          $logInsert = (new Logs)->insert("iplicit","success",null,"Updated iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")");
+        }
       }
       
       //$emailOutput[] = "Updated iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")";

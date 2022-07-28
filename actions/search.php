@@ -5,7 +5,7 @@ $personSearchArray = array();
 
 $personsClass = new Persons();
 
-$persons = $personsClass->search($_GET['search']);
+$persons = $personsClass->search($_GET['search'], 10);
 
 foreach ($persons AS $person) {
 	$personArray = array();
