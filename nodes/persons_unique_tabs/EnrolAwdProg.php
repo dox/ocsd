@@ -9,13 +9,7 @@ $sql .= " WHERE cudid = '" . $personObject->cudid . "'";
 $dbOutput = $db->query($sql)->fetchAll();
 ?>
 
-<?php if ($dbOutput) { ?>
 
-<div class="col-6">
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Enrollment Award Program</h5>
-      <p class="card-text">
         <ul>
          <?php
          foreach ($dbOutput AS $output) {
@@ -24,9 +18,3 @@ $dbOutput = $db->query($sql)->fetchAll();
          }
          ?>
         </ul>
-      </p>
-    </div>
-  </div>
-</div>
-
-<?php } ?>

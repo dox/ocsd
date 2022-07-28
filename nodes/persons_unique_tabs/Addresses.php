@@ -8,36 +8,23 @@ $sql .= " WHERE cudid = '" . $personObject->cudid . "'";
 
 $dbOutput = $db->query($sql)->fetchAll();
 
-
-$addressTypesToDisplay = array('C' => 'Contact', 'T' => 'Term-Time', 'H' => 'Home');
-
 foreach ($dbOutput AS $address) {
-  printArray($address);
-  $output  = "<div class=\"card\">";
-  $output .= makeAddress($address);
-  
-  if ($addressTypeName == 'Contact') {
-    foreach ($person->contactDetails() AS $contact) {
-      //$contact['SubType']
-      $output .= "<p><i class=\"fe fe-phone\"></i> " .  $contact['Value'] . "</p>";
-    }
-    
-    if (isset($personJSON->internal_tel)) {
-      $output .= "<p><i class=\"fe fe-phone\"></i> " . $personJSON->internal_tel . "</p>";
-    }
-  }
-  $output .= "</div>";
-  
-  echo $output;
+  //printArray($address);
+  echo makeAddress($address);
 }
 ?>
 
 
 <?php
 function makeAddress($address) {
-
-
-  $output  = "<a href=\"" . $url . "\">" . $icon . "</a>";
+  $output  = "<div class=\"card\" style=\"width: 18rem;\">";
+  $output .= "<div class=\"card-body\">";
+  $output .= "<h5 class=\"card-title\">Address Type: " . $address['AddressTyp'] . "</h5>";
+  $output .= "<p class=\"card-text\">Last updated: " . date('Y-m-d', strtotime($address['LastUpdateDt'])) . " by " . $address['AddressEntity'] . "</p>";
+  $output .= "</div>";
+  
+  $output .= "<ul class=\"list-group list-group-flush\">";
+  $output .= "<li class=\"list-group-item\">";
     if ($address["Line1"]) { $output .= $address["Line1"] . "<br />"; }
     if ($address["Line2"]) { $output .= $address["Line2"] . "<br />"; }
     if ($address["Line3"]) { $output .= $address["Line3"] . "<br />"; }
@@ -48,12 +35,14 @@ function makeAddress($address) {
     if ($address["State"]) { $output .= $address["State"] . "<br />"; }
     if ($address["County"]) { $output .= $address["County"] . "<br />"; }
     if ($address["AddressCtryDesc"]) { $output .= $address["AddressCtryDesc"] . "<br />"; }
-  $output .= "<ul >";
-    if ($address["AddressEmail"]) { $output .= "<li>" . makeEmail($address["AddressEmail"]) . "</li>"; }
-    if ($address["TelNo"]) { $output .= "<li>" . $address["TelNo"] . "</li>"; }
-    if ($address["MobileNo"]) { $output .= "<li >" . $address["MobileNo"] . "</li>"; }
+  $output .= "</li>";
+  
+    if ($address["AddressEmail"]) { $output .= "<li class=\"list-group-item\">" . makeEmail($address["AddressEmail"]) . "</li>"; }
+    if ($address["TelNo"]) { $output .= "<li class=\"list-group-item\">" . $address["TelNo"] . "</li>"; }
+    if ($address["MobileNo"]) { $output .= "<li class=\"list-group-item\">" . $address["MobileNo"] . "</li>"; }
   $output .= "</ul>";
-
+  $output .= "</div>";
+  
   return $output;
 }
 ?>

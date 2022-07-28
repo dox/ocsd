@@ -14,8 +14,7 @@ $ldapPerson = new LDAPPerson($personObject->sso_username, $personObject->oxford_
 		
 		<h4 class="mb-3">Core Credentials</h4>
 		SSO: <strong><?php echo $personObject->sso_username; ?></strong><br>
-		Bodcard: <strong><?php echo $personObject->barcode; ?></strong><br>
-		Card Type: <strong><?php echo $personObject->university_card_type; ?></strong><br>
+		Bodcard: <strong><?php echo $personObject->barcode7; ?></strong><br>
 		DOB: <strong><?php echo $personObject->dob; ?></strong><br>
 		Gender: <strong><?php echo $personObject->gnd; ?></strong><br>
 		Email: <strong><?php echo $personObject->oxford_email; ?></strong><br>
@@ -28,8 +27,13 @@ $ldapPerson = new LDAPPerson($personObject->sso_username, $personObject->oxford_
 	</div>
 	<div class="col-md-8">
 		<div class="profile-head">
+			<h2><span class="badge bg-secondary float-end"><?php echo $personObject->university_card_type; ?></span></h2>
 			<h2><?php echo $personObject->FullName; ?></h2>
-			<h4><?php echo $personObject->rout_name; ?>, <?php echo $personObject->div_desc; ?></h4>
+			<?php
+			if (isset($personObject->rout_name) || isset($personObject->div_desc)) {
+				echo "<h4>" . $personObject->rout_name . ", " . $personObject->div_desc . "</h4>";
+			}
+			?>
 			  
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
 			<?php

@@ -4,10 +4,7 @@ include_once("../../includes/autoload.php");
 $personObject = new Person($_GET['cudid']);
 ?>
 
-
 <div class="tab-pane fade show active" id="Suspensions-tab-pane" role="tabpanel" aria-labelledby="Suspensions-tab" tabindex="0">
-<?php if (!empty($personObject->getSuspensions())) { ?>
-
   <?php
   if ($personObject->isSuspended()) {
     echo "<div class=\"alert alert-danger text-center\" role=\"alert\">CURRENTLY SUSPENDED</div>";
@@ -24,6 +21,4 @@ $personObject = new Person($_GET['cudid']);
    }
    ?>
    </ul>
-
-<?php } ?>
 </div>
