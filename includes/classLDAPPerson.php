@@ -47,7 +47,9 @@ class LDAPPerson extends LDAP {
     $output .= $this->useraccountcontrolbadge();
     $output .= "</a>";
     
-    return $output;
+    if (isset($this->samaccountname)) {
+      return $output;
+    }
   }
 
 	public function pwdlastsetage() {

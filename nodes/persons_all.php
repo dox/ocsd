@@ -37,8 +37,6 @@ if (isset($_GET['filter'])) {
 		$personObject = new Person($person['cudid']);
 		$ldapUser = new LDAPPerson($personObject->sso_username, $personObject->oxford_email);
 		
-		//$person = new Person($personUnique['cudid']);
-		//printArray($personUnique);
 		$output  = "<tr>";
 		$output .= "<td>" . $personObject->ssoButton() . "</td>";
 		$output .= "<td>" . $ldapUser->ldapButton() . "</td>";

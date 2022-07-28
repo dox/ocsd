@@ -100,21 +100,16 @@ if (isset($_GET['filter'])) {
 		foreach ($noldapUsers AS $noldapUser) {
 			$ldapUser = new LDAPPerson($noldapUser);
 			$CUDPerson = $personsClass->search($noldapUser, 2);
-			
-			if (isset($CUDPerson[0]['sso_username'])) {
-			  $CUDPerson = $CUDPerson[0];
-			} else {
-			  $CUDPerson = array();
-			}
+			$CUDPerson = new Person($CUDPerson[0]['cudid']);
 			
 			$output  = "<tr>";
 			$output .= "<td>" . "</td>";
-			$output .= "<td>" . "<a href=\"index.php?n=person_unique&cudid=" . $CUDPerson['cudid'] . "\">" . $CUDPerson['sso_username'] . "</a>" . "</td>";
-			$output .= "<td>" . $CUDPerson['FullName'] . "</td>";
+			$output .= "<td>" . $CUDPerson->ssoButton() . "</td>";
+			$output .= "<td>" . $CUDPerson->FullName . "</td>";
 			$output .= "<td>" . "</td>";
 			$output .= "<td>" . "</td>";
-			$output .= "<td>" . makeEmail($CUDPerson['oxford_email']) . "</td>";
-			$output .= "<td>" . $ldapUser->actionsButton($CUDPerson['cudid']) . "</td>";
+			$output .= "<td>" . makeEmail($CUDPerson->oxford_email) . "</td>";
+			$output .= "<td>" . $ldapUser->actionsButton($CUDPerson->cudid) . "</td>";
 			$output .= "</tr>";
 			
 			echo $output;
@@ -125,9 +120,7 @@ if (isset($_GET['filter'])) {
 			$ldapUser = new LDAPPerson($ldapUser['samaccountname'][0]);
 			
 			$CUDPerson = $personsClass->search($ldapUser->samaccountname, 2);
-			$CUDPerson = new Person($CUDPerson[0]['cudid']);
-			//printArray($CUDPerson);
-			
+			$CUDPerson = new Person($CUDPerson[0]['cudid']);			
 			
 			$output  = "<tr>";
 			$output .= "<td>" . $ldapUser->ldapButton() . "</td>";

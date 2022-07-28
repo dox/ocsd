@@ -33,8 +33,10 @@ class Person extends Persons {
 		$output .= $this->sso_username;
 		$output .= $this->cardtypebadge();
 		$output .= "</a>";
-		
-		return $output;
+
+		if (isset($this->sso_username)) {
+		  return $output;
+		}
 	}
 	
 	public function cardtypebadge() {
