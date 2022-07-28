@@ -1,21 +1,23 @@
 <?php
 include_once("../includes/autoload.php");
 
-$personSearchArray = array();
-
-$personsClass = new Persons();
-
-$persons = $personsClass->search($_GET['search'], 10);
-
-foreach ($persons AS $person) {
-	$personArray = array();
-	$personArray['cudid'] = $person['cudid'];
-	$personArray['sso'] = $person['sso_username'];
-	$personArray['bodcard'] = $person['barcode7'];
-	$personArray['name'] = $person['FullName'];
+if ($_SESSION['authenticated'] == true) {
+	$personSearchArray = array();
 	
-	$personSearchArray[] = $personArray;
+	$personsClass = new Persons();
+	
+	$persons = $personsClass->search($_GET['search'], 10);
+	
+	foreach ($persons AS $person) {
+		$personArray = array();
+		$personArray['cudid'] = $person['cudid'];
+		$personArray['sso'] = $person['sso_username'];
+		$personArray['bodcard'] = $person['barcode7'];
+		$personArray['name'] = $person['FullName'];
+		
+		$personSearchArray[] = $personArray;
+	}
+	
+	echo json_encode($personSearchArray);
 }
-
-echo json_encode($personSearchArray);
 ?>
