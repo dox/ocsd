@@ -57,7 +57,7 @@ foreach ($users AS $ldapUser) {
     
     $ldapPerson->disableUser();
 
-    $logInsert = (new Logs)->insert("cron","warning",null,"Auto disable user account <code>" . $ldapPerson->samaccountname . "</code>", $ldapPerson->samaccountname);
+    $logInsert = (new Logs)->insert("cron","warning",null,"Auto disable user account <code>" . $ldapPerson->samaccountname . "</code>");
   }
 }
 ?>
