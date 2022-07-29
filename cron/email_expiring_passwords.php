@@ -40,7 +40,7 @@ foreach ($users AS $ldapUser) {
       
       $recipients = null;
       if ($sendMail == true) {
-        $recipients = array($ldapPerson->mail, "andrew.breakspear@seh.ox.ac.uk");
+        $recipients = array($ldapPerson->mail);
         
         echo "\033[33m Emailing " . $ldapPerson->samaccountname . " (" . $ldapPerson->mail . ") the " . $password_expiry_in_days . " day warning" . "\n";
         
