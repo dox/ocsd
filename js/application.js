@@ -34,6 +34,8 @@ function ldap_delete_user(el, samaccountname) {
 			alert("Request failed");
 		};
 	}
+	
+	return false;
 }
 
 function ldap_toggle_user(el, samaccountname, toggle) {
@@ -79,6 +81,8 @@ function ldap_toggle_user(el, samaccountname, toggle) {
 			alert("Request failed");
 		};
 	}
+	
+	return false;
 }
 
 function ldap_provision_user(el, cudid, email) {
@@ -125,4 +129,6 @@ function ldap_provision_user(el, cudid, email) {
 			alert("Request failed");
 		};
 	}
+	
+	return false;
 }

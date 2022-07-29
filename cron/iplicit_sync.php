@@ -182,12 +182,12 @@ foreach ($allCUDUsers AS $CUDUser) {
       if (isset($data->type)) {
        echo "\033[31m Error updating iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")\n";
         debug(json_encode($data));
-        $logInsert = (new Logs)->insert("iplicit","error",null,"Error updating iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ") - " . json_encode($data));
+        $logInsert = (new Logs)->insert("cron","error",null,"Error updating iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ") - " . json_encode($data));
       } else {
         echo "\033[32m Updated iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")\n";
         
         if (debug) {
-          $logInsert = (new Logs)->insert("iplicit","success",null,"Updated iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")");
+          $logInsert = (new Logs)->insert("cron","success",null,"Updated iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")");
         }
       }
       
@@ -208,10 +208,10 @@ foreach ($allCUDUsers AS $CUDUser) {
       if (isset($data->type)) {
        echo "\033[31m Error creating iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")\n";
         debug(json_encode($data));
-        $logInsert = (new Logs)->insert("iplicit","error",null,"Error creating iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ") - " . json_encode($data));
+        $logInsert = (new Logs)->insert("cron","error",null,"Error creating iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ") - " . json_encode($data));
       } else {
         echo "\033[33m Created iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")\n";
-        $logInsert = (new Logs)->insert("iplicit","success",null,"Created iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ") - " . json_encode($data));
+        $logInsert = (new Logs)->insert("cron","success",null,"Created iPlicit record for " . $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ") - " . json_encode($data));
         
         $emailOutput[] = $CUDUser->FullName . " (" . $CUDUser->sits_student_code . ")";
       }

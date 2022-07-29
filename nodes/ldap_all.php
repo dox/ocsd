@@ -119,7 +119,7 @@ if (isset($_GET['filter'])) {
 			
 			$ldapUser = new LDAPPerson($ldapUser['samaccountname'][0]);
 			
-			$CUDPerson = $personsClass->search($ldapUser->samaccountname, 2);
+			$CUDPerson = $personsClass->search($ldapUser->mail, 2);
 			$CUDPerson = new Person($CUDPerson[0]['cudid']);			
 			
 			$output  = "<tr>";

@@ -49,7 +49,7 @@ if ($_SESSION['authenticated'] == true) {
 			//sendMail($sendMailSubject, array("andrew.breakspear@seh.ox.ac.uk"), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
 		}
 		
-		$logInsert = (new Logs)->insert("ldap","success",null,"Created user account <code>" . $user->samaccountname . "</code>");
+		$logInsert = (new Logs)->insert("ldap","success",null,"Created user account <code>" . $person->sso_username . "</code>");
 	} catch (\LdapRecord\LdapRecordException $e) {
 		// Failed saving user.
 		echo "Error";
