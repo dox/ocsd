@@ -318,15 +318,16 @@ class Logs {
 	
 	public function totalPersons() {
 		global $db;
-		$sql = "SELECT * FROM _stats WHERE name = 'person_rows_total' ORDER BY date_created DESC";
+		$sql = "SELECT value, DATE(date_created) AS date_created FROM _stats WHERE name = 'person_rows_total' ORDER BY date_created DESC LIMIT 20";
 		
 		$statsPersonsTotals = $db->query($sql)->fetchAll();
 		foreach ($statsPersonsTotals AS $personTotal) {
-			$personTotalArray["'" . date('Y-m-d', strtotime($personTotal['date_created'])) . "'"] = $personTotal['value'];
+			$personTotalArray["'" . $personTotal['date_created'] . "'"] = $personTotal['value'];
 		}
-		//$personTotalArray = array_reverse($personTotalArray);
+		$personTotalArray = array_reverse($personTotalArray);
 		
 		return $personTotalArray;
+
 	}
 } //end of class Logs
 ?>
