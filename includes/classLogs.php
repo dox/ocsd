@@ -324,7 +324,7 @@ class Logs {
 		foreach ($statsPersonsTotals AS $personTotal) {
 			$personTotalArray["'" . $personTotal['date_created'] . "'"] = $personTotal['value'];
 		}
-		$personTotalArray = array_reverse($personTotalArray);
+		//$personTotalArray = array_reverse($personTotalArray);
 		
 		return $personTotalArray;
 
