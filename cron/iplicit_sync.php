@@ -104,13 +104,15 @@ foreach ($allCUDUsers AS $CUDUser) {
     $customerUpdateArray['contact']['middleName'] = $CUDUser->middlenames;
     $customerUpdateArray['contact']['lastName'] = $CUDUser->lastname;
     
+    $emaili = 0;
     if (isset($CUDUser->oxford_email)) {
-      $customerUpdateArray['contact']['emails'][0]['type'] = "R";
-      $customerUpdateArray['contact']['emails'][0]['email'] = $CUDUser->oxford_email;
+      $customerUpdateArray['contact']['emails'][$emaili]['type'] = "R";
+      $customerUpdateArray['contact']['emails'][$emaili]['email'] = $CUDUser->oxford_email;
+      $emaili++;
     }
     if (isset($CUDUser->alt_email)) {
-      $customerUpdateArray['contact']['emails'][1]['type'] = "P";
-      $customerUpdateArray['contact']['emails'][1]['email'] = $CUDUser->alt_email;
+      $customerUpdateArray['contact']['emails'][$emaili]['type'] = "P";
+      $customerUpdateArray['contact']['emails'][$emaili]['email'] = $CUDUser->alt_email;
     }
     
     $cudAddress = $CUDUser->address('C');
