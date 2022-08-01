@@ -47,6 +47,11 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 				$_SESSION["avatar_url"] = "photos/UAS_UniversityCard-" . $CUDPerson[0]['university_card_sysis'] . ".jpg";
 				$_SESSION["email"] = $user['mail'][0];
 				$_SESSION["groups"] = $userGroups;
+				
+				// check if user is in LDAP_ADMIN_DN, if so, make them an admin
+				if (in_array(LDAP_ADMIN_DN, $user['memberof'])) {
+					$_SESSION["user_type"] = "Administrator";
+				}
 			} else {
 				// Username or password is incorrect.
 				echo "You do not have access to this resource.  Please contact the IT Office";

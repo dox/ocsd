@@ -169,31 +169,22 @@ $navbarArray['admin_logs'] = array(
 				  <input type="text" class="form-control" id="basic" placeholder="Quick Search" aria-label="Quick Search" autocomplete="off" spellcheck="false">
 				</div>
 			
+			
 			<div class="dropdown text-end">
-				<a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-					<img src="<?php echo $_SESSION['avatar_url'] ; ?>" alt="mdo" width="32" height="32" class="rounded-circle">
-				</a>
-				
-				<ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-					<li>
-						<?php echo $_SESSION['username']; ?> / <div class="mt-1 small text-muted text-end"><?php echo $_SESSION["user_type"]; ?></div>
-					</li>
-					<li>
-						<a class="dropdown-item" href="./index.php?n=person_unique&cudid=<?php echo $_SESSION['cudid'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile</a>
-					</li>
-					<li>
-						<a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> My LDAP Record</a>
-					</li>
-					<li>
-						<a class="dropdown-item" href="./index.php?n=admin_settings"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> Admin. Settings</a>
-					</li>
-					<li>
-						<hr class="dropdown-divider">
-					</li>
-					<li>
-						<a class="dropdown-item" href="./index.php?n=admin_logon&logout=true"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#signout"/></svg> Sign out</a>
-					</li>
-				</ul>
+			  <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true">
+				<img src="<?php echo $_SESSION['avatar_url'] ; ?>" alt="User Profile Picture" width="32" height="32" class="rounded-circle">
+			  </a>
+			  <ul class="dropdown-menu text-small" data-popper-placement="top-start" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(0px, -34px);">
+				<li><a class="dropdown-item" href="#"><?php echo $_SESSION['username'] . "<br />" . $_SESSION["user_type"]; ?></a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" href="./index.php?n=person_unique&cudid=<?php echo $_SESSION['cudid'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile</a></li>
+				<li><a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> My LDAP Record</a></li>
+				<li>
+					<a class="dropdown-item" href="./index.php?n=admin_settings"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#settings"/></svg> Admin. Settings</a>
+				</li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" href="./index.php?n=admin_logon&logout=true"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#signout"/></svg> Sign out</a></li>
+			  </ul>
 			</div>
 		</div>
 	</div>
