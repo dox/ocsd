@@ -87,6 +87,7 @@ foreach ($allCUDUsers AS $CUDUser) {
     curl_setopt($curl_check, CURLOPT_URL, $searchContactURLSpecific);
     curl_setopt($curl_check, CURLOPT_HTTPHEADER, $headers2);
     curl_setopt($curl_check, CURLOPT_RETURNTRANSFER, true );
+    debug($searchContactURLSpecific);
     $existingUser = json_decode(curl_exec($curl_check));
     //printArray($existingUser);
     curl_close($curl_check);

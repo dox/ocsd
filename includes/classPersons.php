@@ -64,7 +64,7 @@ class Persons {
 	
 		if (!empty($searchTerm)) {
 			$sql  = "SELECT * FROM " . self::$table_name;
-			$sql .= " WHERE lastname LIKE '%" . $searchTerm . "%'";
+			$sql .= " WHERE fullname LIKE '%" . $searchTerm . "%'";
 			$sql .= " OR sso_username LIKE '%" . $searchTerm . "%'";
 			$sql .= " OR cudid LIKE '%" . $searchTerm . "%'";
 			$sql .= " OR barcode7 LIKE '%" . $searchTerm . "%'";
