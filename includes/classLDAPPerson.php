@@ -135,14 +135,14 @@ class LDAPPerson extends LDAP {
     //if ($_SESSION["user_type"] == "Administrator") {
 			if (isset($this->samaccountname) && !$this->isEnabled()) {
 				if ($person->isSuspended() == false) {
-          $output .= "<a class=\"dropdown-item\" href=\"#\" onclick=\"ldap_toggle_user(this, '" . $this->samaccountname . "', 'enable')\">Enable Account</a>";
+          $output .= "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick=\"ldap_toggle_user(this, '" . $this->samaccountname . "', 'enable')\">Enable Account</a>";
 				} else {
 					$output .= "<a class=\"dropdown-item disabled\" href=\"#\"><s>CUD ID Suspended</s></a>";
 				}
       }
 
 			if (isset($this->samaccountname) && $this->isEnabled()) {
-        $output .= "<a class=\"dropdown-item\" href=\"#\" onclick=\"ldap_toggle_user(this, '" . $this->samaccountname . "', 'disable')\">Disable Account</a>";
+        $output .= "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick=\"ldap_toggle_user(this, '" . $this->samaccountname . "', 'disable')\">Disable Account</a>";
       }
 
 			if (isset($this->samaccountname) && !$this->isEnabled()) {

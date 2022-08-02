@@ -43,9 +43,6 @@ function ldap_toggle_user(el, samaccountname, toggle) {
 		var isGood=confirm('Are you sure you want to enable this user in the LDAP?');
 	} else if (toggle == "disable") {
 		var isGood=confirm('Are you sure you want to disable this user in the LDAP?');
-	} else {
-		alert("ERROR!");
-		quit();
 	}
 	
 	if (isGood) {
@@ -62,7 +59,6 @@ function ldap_toggle_user(el, samaccountname, toggle) {
 		
 		xhr.onload = function() {
 			if (xhr.status != 200) { // analyze HTTP status of the response
-				alert("Something went wrong.  Please refresh this page and try again.");
 				alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
 			} else {
 				// check if the word 'Error' appeared
@@ -73,6 +69,9 @@ function ldap_toggle_user(el, samaccountname, toggle) {
 					alert(this.responseText);
 				} else {
 					// success
+					if (toggle == "disable") {
+						el.parentNode.parentNode.parentNode.parentNode.style.display='none';	
+					}
 				}
 			}
 		}
