@@ -255,4 +255,6 @@ if ($i_created > 0) {
   sendMail($mail_subject, $mail_recipients, $mail_body);
   debug("Sending email to: " . implode(", ", $mail_recipients));
 }
+
+$logInsert = (new Logs)->insert("cron","success",null,"iPlicit syn complete for " . $i_users . " user(s)");
 ?>
