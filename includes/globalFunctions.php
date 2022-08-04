@@ -290,7 +290,12 @@ function cudCardTypeToiPlicitGroup($cudCardType) {
 
 function debug($message, $linebreak = false) {
 	if (debug == true) {
-		echo "<code>" . $message . "</code><br />";
+		if (is_array($message) || is_object($message)) {
+			printArray($message);
+		} else {
+			echo "<code>" . $message . "</code><br />";
+		}
+		
 		
 		if ($linebreak == true) {
 			echo "<br />\n";
@@ -555,5 +560,31 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 	);
 	
 	return $countryArray[$countryCode];
+}
+
+function cliOutput($message = null, $colour = null) {
+	if ($colour == "black") {
+		$colour = "30m";
+	} elseif ($colour == "red") {
+		$colour = "31m";
+	} elseif ($colour == "green") {
+		$colour = "32m";
+	} elseif ($colour == "yellow") {
+		$colour = "33m";
+	} elseif ($colour == "blue") {
+		$colour = "34m";
+	} elseif ($colour == "magenta") {
+		$colour = "35m";
+	} elseif ($colour == "cyan") {
+		$colour = "36m";
+	} elseif ($colour == "white") {
+		$colour = "97m";
+	} else {
+		$colour = "39m";
+	}
+	
+	$message = "\033[" . $colour . $message . "\n";
+	
+	echo $message;
 }
 ?>
