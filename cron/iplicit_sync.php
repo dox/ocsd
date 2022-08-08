@@ -32,7 +32,7 @@ foreach ($cudPersons AS $cudPerson) {
 			
 		} else { // contact needs to be crated in iPlicit
 			$i_created++;
-						
+			
 			// add additional fields
 			$iPlicitFriendlyCUDArray['customer']['paymentMethodId'] = "BC";
 			
@@ -157,7 +157,7 @@ class iPlicitAPI {
 		
 		$data = json_decode(curl_exec($curl));
 		
-		if (isset($data->type)) {
+		if (isset($data->type) || isset($data->message)) {
 			cliOutput("Error updating iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ")", "red");
 			debug(json_encode($data));
 			$logInsert = (new Logs)->insert("cron","error",null,"Error updating iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ") - " . json_encode($data));
@@ -172,8 +172,8 @@ class iPlicitAPI {
 		curl_close($curl);
 	}
 	
-	public function createContactAccount($idOrCode, $contactArray) {
-		$url = "https://api.iplicit.com/api/ContactAccount/" . $idOrCode;
+	public function createContactAccount($contactArray) {
+		$url = "https://api.iplicit.com/api/ContactAccount/";
 		
 		$curl = curl_init();
 		
@@ -185,15 +185,15 @@ class iPlicitAPI {
 		
 		$data = json_decode(curl_exec($curl));
 		
-		if (isset($data->type)) {
-			echo "\033[31m Error creating iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ")\n";
+		if (isset($data->type) || isset($data->message)) {
+			echo "\033[31m Error creating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ")\n";
 			debug(json_encode($data));
-			$logInsert = (new Logs)->insert("cron","error",null,"Error creating iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ") - " . json_encode($data));
+			$logInsert = (new Logs)->insert("cron","error",null,"Error creating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data));
 		} else {
-			echo "\033[33m Created iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ")\n";
+			echo "\033[33m Created iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ")\n";
 			$logInsert = (new Logs)->insert("cron","success",null,"Created iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ") - " . json_encode($data));
 			
-			$emailOutput[] = $contactArray['description'] . " (" . $idOrCode . ")";
+			$emailOutput[] = $contactArray['description'] . " (" . $contactArray['code'] . ")";
 		}
 		
 		curl_close($curl);
@@ -243,15 +243,20 @@ class iPlicitAPI {
 		  if (isset($cudAddress['Line5'])) {
 			$cleanAddress = $cleanAddress . ", " . $cudAddress['Line5'];
 		  }
-		  /*
+		  
+		  if (!empty($cudAddress['PostCode'])) {
+			  $cleanPostcode = $cudAddress['PostCode'];
+		  } else {
+			  $cleanPostcode = "Unknown";
+		  }
+		  
 		  $iplicitContact['contact']['addresses'][0]['type'] = "R";
 		  $iplicitContact['contact']['addresses'][0]['address'] = $cleanAddress;
-		  $iplicitContact['contact']['addresses'][0]['postcode'] = $cudAddress['PostCode'];
+		  $iplicitContact['contact']['addresses'][0]['postcode'] = $cleanPostcode;
 		  $iplicitContact['contact']['addresses'][0]['city'] = $cudAddress['City'] . " " . $cudAddress['State'];
 		  $iplicitContact['contact']['addresses'][0]['county'] = $cudAddress['County'];
 		  $iplicitContact['contact']['addresses'][0]['countryCode'] = cudCountryCodeToiPlicitCountyCode($cudAddress['AddressCtryCd']);
 		  $iplicitContact['contact']['addresses'][0]['description'] = "Last updated: " . $cudAddress['LastUpdateDt'];
-		  */
 		}
 		
 		if (!empty($cudAddress['TelNo'])) {
@@ -269,67 +274,74 @@ class iPlicitAPI {
 		  $iplicitContact['customer']['ext']['Activestatus'] = $cudPersonEnrolments['SCJStatusName'];
 		}
 		
-		
 		$iplicitContact['customer']['contactGroupCustomerId'] = cudCardTypeToiPlicitGroup($cudPerson->university_card_type);
 		
 		return $iplicitContact;
 	}
 	
-	public function updateRequired($authoritative, $check) {
+	public function updateRequired($cud, $iplicit) {
 		$update = false;
 		$changeFields = array();
 		
-		if ($authoritative['description'] != $check->description) {
-			$changeFields['description'] = $authoritative['description'] . " != " . $check->description;
+		//printArray($iplicit);
+		
+		if ($cud['description'] != $iplicit->description) {
+			$changeFields['description'] = $cud['description'] . " != " . $iplicit->description;
 			$update = true;
 		}
-		if ($authoritative['contact']['title'] != $check->contact->title) {
+		if ($cud['contact']['title'] != $iplicit->contact->title) {
 			$update = true;
-			$changeFields['title'] = $authoritative['contact']['title'] . " != " . $check->contact->title;
+			$changeFields['title'] = $cud['contact']['title'] . " != " . $iplicit->contact->title;
 		}
-		if ($authoritative['contact']['firstName'] != $check->contact->firstName) {
+		if ($cud['contact']['firstName'] != $iplicit->contact->firstName) {
 			$update = true;
-			$changeFields['firstName'] = $authoritative['contact']['firstName'] . " != " . $check->contact->firstName;
+			$changeFields['firstName'] = $cud['contact']['firstName'] . " != " . $iplicit->contact->firstName;
 		}
-		if ($authoritative['contact']['middleName'] != $check->contact->middleName) {
+		if ($cud['contact']['middleName'] != $iplicit->contact->middleName) {
 			$update = true;
-			$changeFields['middleName'] = $authoritative['contact']['middleName'] . " != " . $check->contact->middleName;
+			$changeFields['middleName'] = $cud['contact']['middleName'] . " != " . $iplicit->contact->middleName;
 		}
-		if ($authoritative['contact']['lastName'] != $check->contact->lastName) {
+		if ($cud['contact']['lastName'] != $iplicit->contact->lastName) {
 			$update = true;
-			$changeFields['lastName'] = $authoritative['contact']['lastName'] . " != " . $check->contact->lastName;
+			$changeFields['lastName'] = $cud['contact']['lastName'] . " != " . $iplicit->contact->lastName;
 		}
 		
-		if ($authoritative['contact']['emails'][0]['email'] != $check->contact->emails[0]->email) {
+		if ($cud['contact']['emails'][0]['email'] != $iplicit->contact->emails[0]->email) {
 			$update = true;
-			$changeFields['email0'] = $authoritative['contact']['emails'][0]['email'] . " != " . $check->contact->emails[0]->email;
+			$changeFields['email0'] = $cud['contact']['emails'][0]['email'] . " != " . $iplicit->contact->emails[0]->email;
 		}
-		if ($authoritative['contact']['emails'][1]['email'] != $check->contact->emails[1]->email) {
+		if ($cud['contact']['emails'][1]['email'] != $iplicit->contact->emails[1]->email) {
 			$update = true;
-			$changeFields['email1'] = $authoritative['contact']['emails'][1]['email'] . " != " . $check->contact->emails[1]->email;
-		}
-		
-		if ($authoritative['contact']['phones'][0]['phone'] != $check->contact->phones[0]->phone) {
-			$update = true;
-			$changeFields['phone0'] = $authoritative['contact']['phones'][0]['phone'] . " != " . $check->contact->phones[0]->phone;
-		}
-		if ($authoritative['contact']['phones'][1]['phone'] != $check->contact->phones[1]->phone) {
-			$update = true;
-			$changeFields['phone1'] = $authoritative['contact']['phones'][1]['phone'] . " != " . $check->contact->phones[1]->phone;
+			$changeFields['email1'] = $cud['contact']['emails'][1]['email'] . " != " . $iplicit->contact->emails[1]->email;
 		}
 		
-		if ($authoritative['customer']['ext']['SSO'] != $check->customer->ext->SSO) {
+		if ($cud['contact']['phones'][0]['phone'] != $iplicit->contact->phones[0]->phone) {
 			$update = true;
-			$changeFields['email1'] = $authoritative['contact']['ext']['sso'] . " != " . $check->contact->ext->sso;
+			$changeFields['phone0'] = $cud['contact']['phones'][0]['phone'] . " != " . $iplicit->contact->phones[0]->phone;
+		}
+		if ($cud['contact']['phones'][1]['phone'] != $iplicit->contact->phones[1]->phone) {
+			$update = true;
+			$changeFields['phone1'] = $cud['contact']['phones'][1]['phone'] . " != " . $iplicit->contact->phones[1]->phone;
 		}
 		
-		if ($authoritative['customer']['ext']['SCJStatusName'] != $check->customer->ext->SCJStatusName) {
+		if ($cud['customer']['ext']['SSO'] != $iplicit->customer->ext->SSO) {
 			$update = true;
-			$changeFields['SCJStatusName'] = $authoritative['contact']['ext']['SCJStatusName'] . " != " . $check->contact->ext->SCJStatusName;
+			$changeFields['email1'] = $cud['contact']['ext']['sso'] . " != " . $iplicit->contact->ext->sso;
 		}
 		
-		if ($authoritative['customer']['contactGroupCustomerId'] != $check->customer->contactGroupCustomerId) {
-			//$returnArray['customer']['contactGroupCustomerId'] = $authoritative['customer']['contactGroupCustomerId'];
+		if ($cud['customer']['ext']['SCJStatusName'] != $iplicit->customer->ext->SCJStatusName) {
+			$update = true;
+			$changeFields['SCJStatusName'] = $cud['contact']['ext']['SCJStatusName'] . " != " . $iplicit->contact->ext->SCJStatusName;
+		}
+		
+		if ($cud['customer']['contactGroupCustomerId'] != $iplicit->customer->contactGroupCustomerId) {
+			//$update = true;
+			//$changeFields['contactGroupCustomerId'] = $cud['customer']['contactGroupCustomerId'] . " != " . $iplicit->customer->contactGroupCustomerId;
+		}
+		
+		if ($cud['contact']['addresses'][0]['address'] != $iplicit->contact->addresses[0]->address) {
+			$update = true;
+			$changeFields['address'] = $cud['contact']['addresses'][0]['address'] . " != " . $iplicit->contact->addresses[0]->address;
 		}
 		
 		if (!empty($changeFields)){
