@@ -14,6 +14,7 @@ if ($_SESSION['authenticated'] == true) {
 		$personArray['sso'] = $person['sso_username'];
 		$personArray['bodcard'] = $person['barcode7'];
 		$personArray['name'] = $person['FullName'];
+		$personArray['sits_student_code'] = $person['sits_student_code'];
 		
 		$personSearchArray[] = $personArray;
 	}

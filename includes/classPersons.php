@@ -69,6 +69,7 @@ class Persons {
 			$sql .= " OR cudid LIKE '%" . $searchTerm . "%'";
 			$sql .= " OR barcode7 LIKE '%" . $searchTerm . "%'";
 			$sql .= " OR oxford_email LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR sits_student_code LIKE '" . $searchTerm . "%'";
 	
 			if (!$limit == null) {
 				$sql .= " LIMIT " . $limit;
