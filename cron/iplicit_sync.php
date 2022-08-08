@@ -191,7 +191,7 @@ class iPlicitAPI {
 			$logInsert = (new Logs)->insert("cron","error",null,"Error creating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data));
 		} else {
 			echo "\033[33m Created iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ")\n";
-			$logInsert = (new Logs)->insert("cron","success",null,"Created iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ") - " . json_encode($data));
+			$logInsert = (new Logs)->insert("cron","success",null,"Created iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data));
 			
 			$emailOutput[] = $contactArray['description'] . " (" . $contactArray['code'] . ")";
 		}
