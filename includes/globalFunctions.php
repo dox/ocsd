@@ -86,11 +86,11 @@ function sendMail($subject = "No Subject Specified", $recipients = NULL, $body =
 	$mail->Subject = $subject;
 	$mail->Body    = $body;
 	//$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
+	
 	if($mail->Send()) {
-		$logInsert = (new Logs)->insert("email","success",null,"Email sent to " . implode(", ",$recipients) . ". Subject: " . $subject);
+		$logInsert = (new Logs)->insert("email","success",null,"Email sent to " . implode(", ",array_keys($mail->getAllRecipientAddresses())) . ". Subject: " . $subject);
 	} else {
-		$logInsert = (new Logs)->insert("email","error",null,"Email could not be sent to " . implode(", ",$recipients) . " <code>" . $mail->ErrorInfo . "</code>");
+		$logInsert = (new Logs)->insert("email","error",null,"Email could not be sent to " . implode(", ",array_keys($mail->getAllRecipientAddresses())) . " <code>" . $mail->ErrorInfo . "</code>");
 		echo 'Message could not be sent.';
 		echo 'Mailer Error: ' . $mail->ErrorInfo;
 		exit;
