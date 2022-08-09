@@ -52,9 +52,10 @@ $icons[] = array("class" => "btn-warning", "name" => "<svg width=\"1em\" height=
 echo displayTitle("Dashboard", "Overview", $icons);
 ?>
 
-<canvas id="myChart" width="100%"></canvas>
+<canvas id="totalPersons" width="100%"></canvas>
+<canvas id="totalLogs" width="100%" height="20"></canvas>
 <script>
-const ctx = document.getElementById('myChart').getContext('2d');
+const ctx = document.getElementById('totalPersons').getContext('2d');
 const myChart = new Chart(ctx, {
 	type: 'bar',
 	data: {
@@ -70,6 +71,36 @@ const myChart = new Chart(ctx, {
 			y: {
 				min: <?php echo min($personTotalArray)-1; ?>,
 				max: <?php echo max($personTotalArray)+1; ?>
+			}
+		}
+	}
+});
+</script>
+
+<?php
+$totalLogs = $logsClass->allByDay();
+foreach ($totalLogs AS $log) {
+	$totalLogsArray["'" . date('Y-m-d', strtotime($log['dateGroup'])) . "'"] = $log['totalCount'];
+}
+?>
+
+<script>
+const ctx2 = document.getElementById('totalLogs').getContext('2d');
+const myChart2 = new Chart(ctx2, {
+	type: 'line',
+	data: {
+		labels: [<?php echo implode(", ", array_keys($totalLogsArray)); ?>],
+		datasets: [{
+			label: 'Total Logs By Day',
+			data: [<?php echo implode(", ", $totalLogsArray); ?>],
+			borderWidth: 1
+		}]
+	},
+	options: {
+		scales: {
+			y: {
+				min: <?php echo min($totalLogsArray)-1; ?>,
+				max: <?php echo max($totalLogsArray)+1; ?>
 			}
 		}
 	}

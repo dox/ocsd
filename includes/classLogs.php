@@ -89,13 +89,24 @@ class Logs {
 
 	public function allByType($type = null, $ageLimitDay = 7) {
 		global $db;
-
+	
 		$sql  = "SELECT * FROM " . self::$table_name;
 		$sql .= " WHERE type = '" . $type . "'";
 		$sql .= " AND date_created BETWEEN CURDATE() - INTERVAL " . $ageLimitDay . " DAY AND CURDATE()";
 		$sql .= " ORDER BY date_created DESC";
 		$logs = $db->query($sql)->fetchAll();
-
+	
+		return $logs;
+	}
+	
+	public function allByDay() {
+		global $db;
+	
+		$sql  = "SELECT COUNT(*) AS totalCount, DATE(date_created) AS dateGroup FROM " . self::$table_name;
+		$sql .= " GROUP BY dateGroup";
+		$sql .= " ORDER BY dateGroup DESC";
+		$logs = $db->query($sql)->fetchAll();
+	
 		return $logs;
 	}
 
