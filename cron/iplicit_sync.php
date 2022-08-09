@@ -1,13 +1,8 @@
 <?php
 include_once("../includes/autoload.php");
 
-$i_persons = 0;		// total CUD persons
-$i_students = 0;	// total CUD students
-$i_updated = 0; 	// total iPlicit contacts updated
-$i_created = 0; 	// total iPlicit contacts created
-
 $cudPersons = (new Persons)->allStudents(); // get all students from CUD
-$i_persons = count($cudPersons);
+$i_students = 0;
 
 $iplicit = new iPlicitAPI();
 
@@ -21,52 +16,56 @@ foreach ($cudPersons AS $cudPerson) {
 		if (isset($exisitingiplicitContact->id)) { // contact already exists in iPlicit
 			//only update if something is different
 			if ($iplicit->updateRequired($iPlicitFriendlyCUDArray, $exisitingiplicitContact)){
-				$i_updated++;
-				//printArray($exisitingiplicitContact);
-				//printArray($iPlicitFriendlyCUDArray);
-				
 				$iplicit->updateContactAccount($exisitingiplicitContact->code, $iPlicitFriendlyCUDArray);
 			} else {
 				cliOutput("Skipping update for " . $cudPerson['FullName'] . " (" . $cudPerson['sits_student_code'] . ")", "white");
 			}
 			
 		} else { // contact needs to be crated in iPlicit
-			$i_created++;
-			
 			// add additional fields
 			$iPlicitFriendlyCUDArray['customer']['paymentMethodId'] = "BC";
 			
 			$iplicit->createContactAccount($iPlicitFriendlyCUDArray);
-			
-			$emailOutput[] = $cudPerson->FullName . " (" . $cudPerson->sits_student_code . ")";
 		}
 	}
 }
 
-cliOutput($i_students . " students processed of " . $i_persons . " CUD persons", "green");
-cliOutput($i_updated . " students updated", "green");
-cliOutput($i_created . " students created", "green");
+cliOutput($i_students . " students processed of " . count($cudPersons) . " CUD persons", "green");
+cliOutput($iplicit->i_updated . " students updated", "green");
+cliOutput($iplicit->i_created . " students created", "green");
+cliOutput($iplicit->i_error . " errors encountered", "red");
 
 # ----------------------------------------------- #
 #           PROCESS EMAIL NOTIFICATION            #
 # ----------------------------------------------- #
 //email here!
 $mail_body  = "<p>iPlicit/CUD sync complete for " . $i_students . autoPluralise(" user ", " users ", $i_students) . "with SITS IDs (of a total of " . $i_persons . " CUD persons) at " . date('Y-m-d H:i:s') . "</p>";
-$mail_body .= "<p>" . $i_updated . autoPluralise(" account was ", " accounts were ", $i_updated) . "updated.</p>";
-$mail_body .= "<p>The following " . $i_created . autoPluralise(" account was ", " accounts were ", $i_created) . "created:</p>";
+$mail_body .= "<p>" . $iplicit->i_updated . autoPluralise(" account was ", " accounts were ", $iplicit->i_updated) . "updated.</p>";
+$mail_body .= "<p>The following " . $iplicit->i_created . autoPluralise(" account was ", " accounts were ", $i_created) . "created:</p>";
 $mail_body .= "<ul>";
 
-foreach ($emailOutput AS $transaction) {
+foreach ($iplicit->createLog AS $transaction) {
   $mail_body .= "<li>" . $transaction . "</li>";
 }
 $mail_body . "</ul>";
 
+if ($iplicit->i_error > 0) {
+	$mail_body .= "<hr />";
+	$mail_body .= "<p>The following " . $iplicit->i_error . autoPluralise(" error was ", " errors were ", $iplicit->i_error) . "encountered:</p>";
+	$mail_body .= "<ul>";
+	
+	foreach ($iplicit->errorLog AS $transaction) {
+	  $mail_body .= "<li>" . $transaction . "</li>";
+	}
+	$mail_body . "</ul>";
+	$mail_body .= "<hr />";
+}
+
 $mail_subject = "iPlicit/CUD sync";
 $mail_recipients = iplicit_api_notifications;
-$mail_recipients = array("andrew.breakspear@seh.ox.ac.uk");
 
 // only email if accounts were created
-if ($i_created > 0) {
+if ($iplicit->i_created > 0 || $iplicit->i_error > 0) {
   sendMail($mail_subject, $mail_recipients, $mail_body);
   cliOutput("Sending email to: " . implode(", ", $mail_recipients), "green");
 }
@@ -83,6 +82,14 @@ $logInsert = (new Logs)->insert("cron","success",null,"iPlicit sync complete for
 class iPlicitAPI {
 	public $sessionToken;
 	public $tokenDue;
+	
+	public $i_updated = 0; 	// total iPlicit contacts updated
+	public $i_created = 0; 	// total iPlicit contacts created
+	public $i_error = 0; 	// total iPlicit errors encountered
+
+	public $updateLog = array(); 	// array of iPlicit updates
+	public $createLog = array(); 	// array of iPlicit creations
+	public $errorLog = array(); 	// array of iPlicit errors
 	
 	function __construct() {
 		$url = 'https://api.iplicit.com/api/session/create/api';
@@ -158,14 +165,25 @@ class iPlicitAPI {
 		$data = json_decode(curl_exec($curl));
 		
 		if (isset($data->type) || isset($data->message)) {
-			cliOutput("Error updating iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ")", "red");
-			debug(json_encode($data));
-			$logInsert = (new Logs)->insert("cron","error",null,"Error updating iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ") - " . json_encode($data));
+			$this->i_error++;
+			
+			$event = "Error updating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data);
+			
+			$this->errorLog[] = $event;
+			cliOutput($event, "red");
+			debug($event);
+			$logInsert = (new Logs)->insert("cron","error",null,$event);
 		} else {
-			cliOutput("Updated iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ")", "green");
+			$this->i_updated++;
+			
+			$event = "Updated iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data);
+			
+			$this->updateLog[] = $event;
+			cliOutput($event, "green");
+			debug($event);
 			
 			if (debug) {
-				$logInsert = (new Logs)->insert("cron","success",null,"Updated iPlicit record for " . $contactArray['description'] . " (" . $idOrCode . ") - " . json_encode($data));
+				$logInsert = (new Logs)->insert("cron","success",null,$event);
 			}
 		}
 		
@@ -186,14 +204,23 @@ class iPlicitAPI {
 		$data = json_decode(curl_exec($curl));
 		
 		if (isset($data->type) || isset($data->message)) {
-			echo "\033[31m Error creating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ")\n";
-			debug(json_encode($data));
-			$logInsert = (new Logs)->insert("cron","error",null,"Error creating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data));
-		} else {
-			echo "\033[33m Created iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ")\n";
-			$logInsert = (new Logs)->insert("cron","success",null,"Created iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data));
+			$this->i_error++;
 			
-			$emailOutput[] = $contactArray['description'] . " (" . $contactArray['code'] . ")";
+			$event = "Error creating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data);
+			
+			$this->errorLog[] = $event;
+			cliOutput($event, "red");
+			debug($event);
+			$logInsert = (new Logs)->insert("cron","error",null,$event);
+		} else {
+			$this->i_created++;
+			
+			$event = "Created iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data);
+			
+			$this->updateLog[] = $event;
+			cliOutput($event, "green");
+			debug($event);
+			$logInsert = (new Logs)->insert("cron","success",null,$event);
 		}
 		
 		curl_close($curl);
@@ -347,7 +374,6 @@ class iPlicitAPI {
 		if (!empty($changeFields)){
 			debug($changeFields);
 		}
-		
 		
 		return $update;
 	}
