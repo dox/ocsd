@@ -57,7 +57,7 @@ if ($iplicit->i_error > 0) {
 	foreach ($iplicit->errorLog AS $transaction) {
 	  $mail_body .= "<li>" . $transaction . "</li>";
 	}
-	$mail_body . "</ul>";
+	$mail_body .= "</ul>";
 	$mail_body .= "<hr />";
 }
 
