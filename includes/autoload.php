@@ -49,6 +49,7 @@ require_once($root . 'includes/classPersons.php');
 require_once($root . 'includes/classPerson.php');
 require_once($root . 'includes/classLDAP.php');
 require_once($root . 'includes/classLDAPPerson.php');
+require_once($root . 'includes/classSettings.php');
 require_once($root . 'includes/classTemplates.php');
 
 $db = new db(db_host, db_username, db_password, db_name);

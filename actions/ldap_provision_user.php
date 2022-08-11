@@ -45,8 +45,13 @@ if ($_SESSION['authenticated'] == true) {
 			);
 			$emailMessageBody = $templatesClass->oneBodyWithReplaceFields('user_ldap_provision', $replaceFields);
 			$sendMailSubject = "Your SEH IT account has been provisioned";
-			sendMail($sendMailSubject, array($person->oxford_email, "andrew.breakspear@seh.ox.ac.uk"), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
-			//sendMail($sendMailSubject, array("andrew.breakspear@seh.ox.ac.uk"), $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
+			
+			// build an array of the new user, and ldap_provision_recipients...
+			$sendMailRecipients = array();
+			$sendMailRecipients[] = $person->oxford_email;
+			$sendMailRecipients = array_merge($sendMailRecipients, explode(",", $settingsClass->value('ldap_provision_recipients')));
+			
+			sendMail($sendMailSubject, $sendMailRecipients, $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
 		}
 		
 		$logInsert = (new Logs)->insert("ldap","success",null,"Created user account <code>" . $person->sso_username . "</code>");
