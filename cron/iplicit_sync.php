@@ -217,7 +217,7 @@ class iPlicitAPI {
 			
 			$event = "Created iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data);
 			
-			$this->updateLog[] = $event;
+			$this->$createLog[] = $event;
 			cliOutput($event, "green");
 			debug($event);
 			$logInsert = (new Logs)->insert("cron","success",null,$event);
