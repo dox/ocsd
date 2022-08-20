@@ -47,7 +47,7 @@ $mail_body .= "<ul>";
 foreach ($iplicit->createLog AS $transaction) {
   $mail_body .= "<li>" . $transaction . "</li>";
 }
-$mail_body . "</ul>";
+$mail_body .= "</ul>";
 
 if ($iplicit->i_error > 0) {
 	$mail_body .= "<hr />";
