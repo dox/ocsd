@@ -39,7 +39,7 @@ cliOutput($iplicit->i_error . " errors encountered", "red");
 #           PROCESS EMAIL NOTIFICATION            #
 # ----------------------------------------------- #
 //email here!
-$mail_body  = "<p>iPlicit/CUD sync complete for " . $i_students . autoPluralise(" user ", " users ", $i_students) . "with SITS IDs (of a total of " . $i_persons . " CUD persons) at " . date('Y-m-d H:i:s') . "</p>";
+$mail_body  = "<p>iPlicit/CUD sync complete for " . $i_students . autoPluralise(" user ", " users ", $i_students) . "with SITS IDs (of a total of " . count($cudPersons) . " CUD persons) at " . date('Y-m-d H:i:s') . "</p>";
 $mail_body .= "<p>" . $iplicit->i_updated . autoPluralise(" account was ", " accounts were ", $iplicit->i_updated) . "updated.</p>";
 $mail_body .= "<p>The following " . $iplicit->i_created . autoPluralise(" account was ", " accounts were ", $i_created) . "created:</p>";
 $mail_body .= "<ul>";
