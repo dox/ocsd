@@ -498,7 +498,7 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 		'803' => 'ST',
 		'743' => 'SA',
 		'785' => 'SN',
-		'780' => 'QN',
+		'780' => 'QN', //serbia?
 		'744' => 'SC',
 		'745' => 'SL',
 		'746' => 'SG',
