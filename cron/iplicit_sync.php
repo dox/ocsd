@@ -217,7 +217,7 @@ class iPlicitAPI {
 			
 			$event = "Created iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data);
 			
-			$this->$createLog[] = $event;
+			$this->createLog[] = $event;
 			cliOutput($event, "green");
 			debug($event);
 			$logInsert = (new Logs)->insert("cron","success",null,$event);
@@ -254,7 +254,7 @@ class iPlicitAPI {
 		$cudAddress = $cudPerson->address('C');
 		
 		$cleanAddress = null;
-		if (isset($cudAddress)) {
+		if (isset($cudAddress['AddressCtryCd']) || isset($cudAddress['Line1']) || isset($cudAddress['Line2'])) {
 		  if (isset($cudAddress['Line1'])) {
 			$cleanAddress = $cudAddress['Line1'];
 		  }
