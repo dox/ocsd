@@ -243,7 +243,8 @@ class iPlicitAPI {
 		$iplicitContact['contact']['firstName'] = $cudPerson->firstname;
 		$iplicitContact['contact']['middleName'] = $cudPerson->middlenames;
 		$iplicitContact['contact']['lastName'] = $cudPerson->lastname;
-		
+		$iplicitContact['customer']['ext']['Altref'] = $cudPerson->unit_set_cd;
+
 		if (isset($cudPerson->oxford_email)) {
 		  $iplicitContact['contact']['emails'][] = array("type" => "R", "email" => $cudPerson->oxford_email);
 		}
@@ -359,6 +360,11 @@ class iPlicitAPI {
 		if ($cud['customer']['ext']['SCJStatusName'] != $iplicit->customer->ext->SCJStatusName) {
 			$update = true;
 			$changeFields['SCJStatusName'] = $cud['contact']['ext']['SCJStatusName'] . " != " . $iplicit->contact->ext->SCJStatusName;
+		}
+		
+		if ($cud['customer']['ext']['Altref'] != $iplicit->customer->ext->Altref) {
+			$update = true;
+			$changeFields['Altref'] = $cud['contact']['ext']['Altref'] . " != " . $iplicit->contact->ext->Altref;
 		}
 		
 		if ($cud['customer']['contactGroupCustomerId'] != $iplicit->customer->contactGroupCustomerId) {
