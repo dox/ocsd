@@ -49,6 +49,7 @@ if ($_SESSION['authenticated'] == true) {
 			// build an array of the new user, and ldap_provision_recipients...
 			$sendMailRecipients = array();
 			$sendMailRecipients[] = $person->oxford_email;
+			$sendMailRecipients[] = $person->alt_email;
 			$sendMailRecipients = array_merge($sendMailRecipients, explode(",", $settingsClass->value('ldap_provision_recipients')));
 			
 			sendMail($sendMailSubject, $sendMailRecipients, $emailMessageBody, "noreply@seh.ox.ac.uk", "SEH IT Office");
