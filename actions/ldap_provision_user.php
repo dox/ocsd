@@ -43,7 +43,13 @@ if ($_SESSION['authenticated'] == true) {
 				"firstname" => $person->firstname,
 				"password" => $randomPassword
 			);
-			$emailMessageBody = $templatesClass->oneBodyWithReplaceFields('user_ldap_provision', $replaceFields);
+			
+			// send student or staff template, depending on card_type
+			if ($person->isStudent()) {
+				$emailMessageBody = $templatesClass->oneBodyWithReplaceFields('user_ldap_provision-student', $replaceFields);
+			} else {
+				$emailMessageBody = $templatesClass->oneBodyWithReplaceFields('user_ldap_provision-staff', $replaceFields);
+			}
 			$sendMailSubject = "Your SEH IT account has been provisioned";
 			
 			// build an array of the new user, and ldap_provision_recipients...

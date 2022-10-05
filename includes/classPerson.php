@@ -86,6 +86,17 @@ class Person extends Persons {
 		}
 	}
 	
+	public function isStudent() {
+		// returns 'true' for students, false for everyone else
+		// uses the studentArrayTypes array to determine who is a student or not
+		
+		if (in_array($this->university_card_type, $this->studentArrayTypes)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public function address($AddressTyp = "C") {
 		global $db;
 	

@@ -1,7 +1,7 @@
 <?php
 class Persons {
 	protected static $table_name = "Person";
-	private $studentArrayTypes = array('GT', 'GR', 'UG', 'VR', 'PT', 'VD', 'VV', 'VC');
+	public $studentArrayTypes = array('GT', 'GR', 'UG', 'VR', 'PT', 'VD', 'VV', 'VC');
 	
 	public function all() {
 		global $db;
