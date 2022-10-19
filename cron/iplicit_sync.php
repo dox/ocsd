@@ -62,7 +62,12 @@ if ($iplicit->i_error > 0) {
 }
 
 $mail_subject = "iPlicit/CUD sync";
-$mail_recipients = iplicit_api_notifications;
+
+if (debug == true) {
+	$mail_recipients = site_admin_email;
+} else {
+	$mail_recipients = iplicit_api_notifications;
+}
 
 // only email if accounts were created
 if ($iplicit->i_created > 0 || $iplicit->i_error > 0) {
@@ -243,7 +248,7 @@ class iPlicitAPI {
 		$iplicitContact['contact']['firstName'] = $cudPerson->firstname;
 		$iplicitContact['contact']['middleName'] = $cudPerson->middlenames;
 		$iplicitContact['contact']['lastName'] = $cudPerson->lastname;
-		$iplicitContact['customer']['ext']['Altref'] = $cudPerson->unit_set_cd;
+		$iplicitContact['customer']['ext']['Currentyear'] = $cudPerson->unit_set_cd;
 
 		if (isset($cudPerson->oxford_email)) {
 		  $iplicitContact['contact']['emails'][] = array("type" => "R", "email" => $cudPerson->oxford_email);
@@ -357,14 +362,14 @@ class iPlicitAPI {
 			$changeFields['email1'] = $cud['contact']['ext']['sso'] . " != " . $iplicit->contact->ext->sso;
 		}
 		
-		if ($cud['customer']['ext']['SCJStatusName'] != $iplicit->customer->ext->SCJStatusName) {
+		if ($cud['customer']['ext']['SCJStatusName'] != $iplicit->customer->ext->Activestatus) {
 			$update = true;
-			$changeFields['SCJStatusName'] = $cud['contact']['ext']['SCJStatusName'] . " != " . $iplicit->contact->ext->SCJStatusName;
+			$changeFields['Activestatus'] = $cud['contact']['ext']['SCJStatusName'] . " != " . $iplicit->contact->ext->Activestatus;
 		}
 		
-		if ($cud['customer']['ext']['Altref'] != $iplicit->customer->ext->Altref) {
+		if ($cud['customer']['ext']['Currentyear'] != $iplicit->customer->ext->Currentyear) {
 			$update = true;
-			$changeFields['Altref'] = $cud['contact']['ext']['Altref'] . " != " . $iplicit->contact->ext->Altref;
+			$changeFields['Currentyear'] = $cud['contact']['ext']['Currentyear'] . " != " . $iplicit->contact->ext->Currentyear;
 		}
 		
 		if ($cud['customer']['contactGroupCustomerId'] != $iplicit->customer->contactGroupCustomerId) {
