@@ -542,7 +542,6 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 		'770' => 'UY',
 		'846' => 'UZ',
 		'713' => 'VU',
-		'678' => 'VA',
 		'773' => 'VE',
 		'774' => 'VN',
 		'822' => 'WF',
