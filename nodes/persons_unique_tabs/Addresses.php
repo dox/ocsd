@@ -3,24 +3,28 @@ include_once("../../includes/autoload.php");
 
 $personObject = new Person($_GET['cudid']);
 
+$c_Address = $personObject->address("C");
+$t_Address = $personObject->address("T");
+$h_Address = $personObject->address("H");
+
 $sql  = "SELECT * FROM Addresses";
 $sql .= " WHERE cudid = '" . $personObject->cudid . "'";
 
 $dbOutput = $db->query($sql)->fetchAll();
 
-foreach ($dbOutput AS $address) {
-  //printArray($address);
-  echo makeAddress($address);
-}
+echo makeAddress($c_Address);
+echo makeAddress($t_Address);
+echo makeAddress($h_Address);
+
 ?>
 
 
 <?php
 function makeAddress($address) {
-  $output  = "<div class=\"card\" style=\"width: 18rem;\">";
+  $output  = "<div class=\"card mb-3\">";
   $output .= "<div class=\"card-body\">";
   $output .= "<h5 class=\"card-title\">Address Type: " . $address['AddressTyp'] . "</h5>";
-  $output .= "<p class=\"card-text\">Last updated: " . date('Y-m-d', strtotime($address['LastUpdateDt'])) . " by " . $address['AddressEntity'] . "</p>";
+  $output .= "<p class=\"card-subtitle text-muted\">Last updated: " . date('Y-m-d', strtotime($address['LastUpdateDt'])) . " by " . $address['AddressEntity'] . "</p>";
   $output .= "</div>";
   
   $output .= "<ul class=\"list-group list-group-flush\">";
