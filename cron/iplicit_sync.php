@@ -357,9 +357,9 @@ class iPlicitAPI {
 			$changeFields['email1'] = $cud['contact']['ext']['sso'] . " != " . $iplicit->contact->ext->sso;
 		}
 		
-		if ($cud['customer']['ext']['SCJStatusName'] != $iplicit->customer->ext->SCJStatusName) {
+		if ($cud['customer']['ext']['Activestatus'] != $iplicit->customer->ext->Activestatus) {
 			$update = true;
-			$changeFields['SCJStatusName'] = $cud['contact']['ext']['SCJStatusName'] . " != " . $iplicit->contact->ext->SCJStatusName;
+			$changeFields['Activestatus'] = $cud['contact']['ext']['Activestatus'] . " != " . $iplicit->contact->ext->Activestatus;
 		}
 		
 		if ($cud['customer']['ext']['Altref'] != $iplicit->customer->ext->Altref) {
