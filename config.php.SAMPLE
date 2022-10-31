@@ -1,5 +1,6 @@
 <?php
 define ("site_url", "http://ocsd.somedomain.ox.ac.uk");
+define ("site_admin_email", "someone.technical@somedomain.ox.ac.uk");
 
 define("db_host", "localhost");
 define("db_name", "database");
