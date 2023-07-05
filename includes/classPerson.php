@@ -103,7 +103,7 @@ class Person extends Persons {
 		$sql  = "SELECT * FROM Addresses";
 		$sql .= " WHERE cudid = '" . $this->cudid . "'";
 		$sql .= " AND AddressTyp = '" . $AddressTyp . "'";
-		$sql .= " ORDER BY LastUpdateDt DESC";
+		$sql .= " ORDER BY AddressSeq DESC";
 		$sql .= " LIMIT 1";
 	
 		$address = $db->query($sql)->fetchArray();
@@ -116,8 +116,9 @@ class Person extends Persons {
 	
 		$sql  = "SELECT * FROM Addresses";
 		$sql .= " WHERE cudid = '" . $this->cudid . "'";
+		$sql .= " ORDER BY AddressSeq DESC";
 	
-		$addresses = $db->query($sql, 'test', 'test')->fetchAll();
+		$addresses = $db->query($sql)->fetchAll();
 	
 		return $addresses;
 	}
