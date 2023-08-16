@@ -14,11 +14,11 @@ $ldapPerson = new LDAPPerson($personObject->sso_username, $personObject->oxford_
 		
 		<h4 class="mb-3">Core Credentials</h4>
 		SSO: <strong><?php echo $personObject->sso_username; ?></strong><br>
-		Bodcard: <strong><?php echo $personObject->barcode7; ?></strong><br>
-		DOB: <strong><?php echo $personObject->dob; ?></strong><br>
+		Bodcard: <strong><?php echo $personObject->barcode7; ?></strong> <i><?php echo "Expires " . date('Y-m-d', strtotime($personObject->University_Card_End_Dt)); ?></i><br>
+		DOB: <strong><?php echo date('Y-m-d', strtotime($personObject->dob)); ?></strong> <i><?php echo "Age " . age($personObject->dob); ?></i><br>
 		Gender: <strong><?php echo $personObject->gnd; ?></strong><br>
-		Email: <strong><?php echo $personObject->oxford_email; ?></strong><br>
-		Email2: <strong><?php echo $personObject->alt_email; ?></strong><br>
+		Email: <strong><?php echo makeEmail($personObject->oxford_email); ?></strong><br>
+		Email2: <strong><?php echo makeEmail($personObject->alt_email); ?></strong><br>
 		MiFare: <strong><?php echo $personObject->MiFareID; ?></strong><br>
 		Paxon: <strong><?php echo $personObject->PaxonID; ?></strong><br>
 		SITS: <strong><?php echo $personObject->sits_student_code; ?></strong><br>
