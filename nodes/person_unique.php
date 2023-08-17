@@ -15,8 +15,34 @@ $ldapPerson = new LDAPPerson($personObject->sso_username, $personObject->oxford_
 		<h4 class="mb-3">Core Credentials</h4>
 		SSO: <strong><?php echo $personObject->sso_username; ?></strong><br>
 		Bodcard: <strong><?php echo $personObject->barcode7; ?></strong> <i><?php echo "Expires " . date('Y-m-d', strtotime($personObject->University_Card_End_Dt)); ?></i><br>
-		DOB: <strong><?php echo date('Y-m-d', strtotime($personObject->dob)); ?></strong> <i><?php echo "Age " . age($personObject->dob); ?></i><br>
-		Gender: <strong><?php echo $personObject->gnd; ?></strong><br>
+		<?php
+		if (!empty($personObject->dob)) {
+			echo "DOB: <strong>" . date('Y-m-d', strtotime($personObject->dob)) . "</strong> <i> Age " . age($personObject->dob) . "</i><br>";
+		}
+		
+		if (!empty($personObject->gnd)) {
+			if ($personObject->gnd == "M") {
+				$colour = "gender-male";
+			} elseif ($personObject->gnd == "F") {
+				$colour = "gender-female";
+			} else {
+				$colour = "gender-other";
+			}
+			
+			echo "Gender: <span class=\"badge " . $colour . "\">" . $personObject->gnd . "</span><br>";
+		}
+		?>
+		<style>
+		.gender-male {
+			background-color: #0d6efd;
+		}
+		.gender-female {
+			background-color: #d63384;
+		}
+		.gender-other {
+			background-color: #adb5bd;
+		}
+		</style>
 		Email: <strong><?php echo makeEmail($personObject->oxford_email); ?></strong><br>
 		Email2: <strong><?php echo makeEmail($personObject->alt_email); ?></strong><br>
 		MiFare: <strong><?php echo $personObject->MiFareID; ?></strong><br>
