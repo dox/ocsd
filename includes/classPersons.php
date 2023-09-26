@@ -63,7 +63,7 @@ class Persons {
 		global $db;
 	
 		if (!empty($searchTerm)) {
-			$sql  = "SELECT * FROM Person LEFT JOIN Addresses ON Person.cudid = Addresses.cudid";
+			$sql  = "SELECT Person.* FROM Person LEFT JOIN Addresses ON Person.cudid = Addresses.cudid";
 			$sql .= " WHERE Person.fullname LIKE '%" . $searchTerm . "%'";
 			$sql .= " OR Person.sso_username LIKE '%" . $searchTerm . "%'";
 			$sql .= " OR Person.cudid LIKE '%" . $searchTerm . "%'";
