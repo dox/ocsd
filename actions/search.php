@@ -16,9 +16,17 @@ if ($_SESSION['authenticated'] == true) {
 		$personArray['name'] = $person['FullName'];
 		$personArray['sits_student_code'] = $person['sits_student_code'];
 		
-		$personSearchArray[] = $personArray;
+		$personSearchArray[$person['cudid']] = $personArray;
 	}
 	
-	echo json_encode($personSearchArray);
+	$uniquePersons = array();
+	
+	foreach($personSearchArray as $personSearchResult) {
+		$needle = $personSearchResult['cudid'];
+		if(array_key_exists($needle, $uniquePersons)) continue;
+		$uniquePersons[] = $personSearchResult;
+	  }
+	
+	echo json_encode($uniquePersons);
 }
 ?>

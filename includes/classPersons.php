@@ -63,14 +63,16 @@ class Persons {
 		global $db;
 	
 		if (!empty($searchTerm)) {
-			$sql  = "SELECT * FROM " . self::$table_name;
-			$sql .= " WHERE fullname LIKE '%" . $searchTerm . "%'";
-			$sql .= " OR sso_username LIKE '%" . $searchTerm . "%'";
-			$sql .= " OR cudid LIKE '%" . $searchTerm . "%'";
-			$sql .= " OR barcode7 LIKE '%" . $searchTerm . "%'";
-			$sql .= " OR oxford_email LIKE '%" . $searchTerm . "%'";
-			$sql .= " OR sits_student_code LIKE '" . $searchTerm . "%'";
-	
+			$sql  = "SELECT * FROM Person LEFT JOIN Addresses ON Person.cudid = Addresses.cudid";
+			$sql .= " WHERE Person.fullname LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR Person.sso_username LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR Person.cudid LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR Person.barcode7 LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR Person.oxford_email LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR Person.sits_student_code LIKE '" . $searchTerm . "%'";
+			$sql .= " OR Addresses.TelNo LIKE '%" . $searchTerm . "%'";
+			$sql .= " OR Addresses.MobileNo LIKE '%" . $searchTerm . "%'";
+			
 			if (!$limit == null) {
 				$sql .= " LIMIT " . $limit;
 			}
