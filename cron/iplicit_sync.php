@@ -233,7 +233,7 @@ class iPlicitAPI {
 		
 		$cudPerson = new Person($cudid);
 		
-		$sql  = "SELECT * FROM Enrolments WHERE cudid = '" . $cudPerson->cudid . "'";
+		$sql  = "SELECT * FROM Enrolments WHERE cudid = '" . $cudPerson->cudid . "' ORDER BY SCJSequence DESC";
 		$cudPersonEnrolments = $db->query($sql)->fetchAll()[0];
 		
 		$iplicitContact['description'] = $cudPerson->FullName;
