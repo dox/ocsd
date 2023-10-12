@@ -111,6 +111,9 @@ $iconsArray = array(
   "bell" => "",
   "geo" => "",
   "telephone" => "",
+  "dark-mode" => "",
+  "light-mode" => "",
+  "auto-mode" => "",
   "settings" => "Admin. Settings (navigation)"
 );
 

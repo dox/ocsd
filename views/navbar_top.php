@@ -98,14 +98,15 @@ $navbarArray['admin_logs'] = array(
 
 ?>
 
-<header class="p-3 mb-3 border-bottom bg-light shadow ">
+<nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Eleventh navbar example">
 	<div class="container">
-		<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-			<a href="index.php" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-				<svg class="me-2 text-primary" width="2em" height="2em" role="img" aria-label="OCSD"><use xlink:href="images/icons.svg#ocsd-logo"/></svg>
-			</a>
-			
-			<ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+		<a class="navbar-brand" href="index.php"><svg class="me-2 text-primary" width="2em" height="2em" role="img" aria-label="OCSD"><use xlink:href="images/icons.svg#ocsd-logo"/></svg></a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		
+		<div class="collapse navbar-collapse" id="navbarsExample09">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<?php
 				foreach ($navbarArray AS $key => $navBarLink) {
 					$icon = "<svg width=\"1em\" height=\"1em\" class=\"me-2\"><use xlink:href=\"images/icons.svg#" . $navBarLink['icon'] . "\"/></svg>";
@@ -121,8 +122,8 @@ $navbarArray['admin_logs'] = array(
 					}
 					
 					if (is_array($navBarLink['sublinks'])) {
-						$output  = "<li>";
-						$output .= "<a class=\"nav-link px-2 link-dark dropdown-toggle " . $active . "\" href=\"#navbar-base\" role=\"button\" data-bs-toggle=\"dropdown\" >";
+						$output  = "<li class=\"nav-item dropdown\">";
+						$output .= "<a class=\"nav-link px-2 dropdown-toggle " . $active . "\" href=\"#navbar-base\" role=\"button\" data-bs-toggle=\"dropdown\" >";
 						$output .= $icon;
 						$output .= $navBarLink['title'];
 						$output .= "</a>";
@@ -131,14 +132,14 @@ $navbarArray['admin_logs'] = array(
 						
 						foreach ($navBarLink['sublinks'] AS $sublink) {
 							$output .= "<li>";
-							$output .= "<a class=\"nav-link px-2 link-dark dropdown-item\" href=\"" . $sublink['link'] . "\" >" . $sublink['title'] . "</a>";
+							$output .= "<a class=\"dropdown-item px-2\" href=\"" . $sublink['link'] . "\" >" . $sublink['title'] . "</a>";
 							$output .= "</li>";
 						}
 						
 						$output .= "</ul>";
 					} else {
 						$output  = "<li>";
-						$output .= "<a class=\"nav-link link-dark px-2 " . $active . "\" href=\"" . $navBarLink['link'] . "\" >";
+						$output .= "<a class=\"nav-link px-2 " . $active . "\" href=\"" . $navBarLink['link'] . "\" >";
 						$output .= $icon;
 						$output .= $navBarLink['title'];
 						$output .= "</a>";
@@ -150,48 +151,64 @@ $navbarArray['admin_logs'] = array(
 				?>
 			</ul>
 			
-			<?php
-			if (debug == true) {
-				$output  = "<button type=\"button\" class=\"btn btn-warning me-3\">";
-
-				//$output .= "<svg width=\"1em\" height=\"1em\" class=\"mx-2\"><use xlink:href=\"images/icons.svg#alert\"/></svg>";
-				$output .= "<strong>DEBUG ENABLED!</strong>";
-				//$output .= "<svg width=\"1em\" height=\"1em\" class=\"mx-2\"><use xlink:href=\"images/icons.svg#alert\"/></svg>";
-				$output .= "</button>";
-				
-				echo $output;
-			}
-			?>
+			<div class="d-flex">
+				<ul class="navbar-nav me-auto mb-2 mb-md-0">
+				  <li class="nav-item dropdown me-2">
+					<a class="nav-link dropdown-toggle d-print-none theme-icon-active" id="bd-theme" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<svg width="1em" height="1em" class="text-muted">
+							<use xlink:href="images/icons.svg#dark-mode"/>
+						</svg><span class="visually-hidden" id="bd-theme-text">Toggle theme</span></a>
+					<ul class="dropdown-menu">
+					  <li><button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+							  <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em"><use href="images/icons.svg#light-mode"></use></svg>
+							  Light
+							  <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+							</button>
+						</li>
+						<li>
+							<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+								<svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em"><use href="images/icons.svg#dark-mode"></use></svg>
+								Dark
+								<svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+							  </button>
+						</li>
+						<li>
+							<button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+								<svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em"><use href="images/icons.svg#auto-mode"></use></svg>
+								Auto
+								<svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+							  </button>
+						</li>
+					</ul>
+				  </li>
+				</ul>
+				  
+			</div>
 			
-			<!--<form class="" action="./index.php?n=persons_all&filter=search" method="POST" target="_self">-->
-				<div class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 auto-search-wrapper max-height loupe">
-
-				  <input type="text" class="form-control" id="basic" placeholder="Quick Search" aria-label="Quick Search" autocomplete="off" spellcheck="false">
+			<form role="search">
+				<div class="auto-search-wrapper">
+					<input class="form-control" type="search" placeholder="Quick Search" aria-label="Quick Search" id="basic" autocomplete="off" spellcheck="false">
 				</div>
+			</form>
 			
-			
-			<div class="dropdown text-end">
-			  <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true">
-				<img src="<?php echo $_SESSION['avatar_url'] ; ?>" alt="User Profile Picture" width="32" height="32" class="rounded-circle">
-			  </a>
-			  <ul class="dropdown-menu text-small" data-popper-placement="top-start" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(0px, -34px);">
-				<li><a class="dropdown-item" href="#"><?php echo $_SESSION['username'] . "<br />" . $_SESSION["user_type"]; ?></a></li>
-				<li><hr class="dropdown-divider"></li>
-				<li><a class="dropdown-item" href="./index.php?n=person_unique&cudid=<?php echo $_SESSION['cudid'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile</a></li>
-				<li><a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> My LDAP Record</a></li>
-				<li>
-					<a class="dropdown-item" href="./index.php?n=admin_settings"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#settings"/></svg> Admin. Settings</a>
+			<div class="d-flex">
+			  <ul class="navbar-nav mr-auto">
+				<li class="nav-item dropdown">
+				  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><?php echo $_SESSION['username']; ?></a>
+				  <ul class="dropdown-menu">
+					<li><a class="dropdown-item" href="#"><?php echo $_SESSION['username'] . "<br />" . $_SESSION["user_type"]; ?></a></li>
+					<li><a class="dropdown-item" href="./index.php?n=person_unique&cudid=<?php echo $_SESSION['cudid'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile</a></li>
+					<li><a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> My LDAP Record</a></li>
+					<li><a class="dropdown-item" href="./index.php?n=admin_settings"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#settings"/></svg> Admin. Settings</a></li>
+					<li><a class="dropdown-item" href="./index.php?n=admin_logon&logout=true"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#signout"/></svg> Sign out</a></li>
+					<li><a class="dropdown-item" href="logon.php?logout=true">Logout</a></li>
+				  </ul>
 				</li>
-				<li><hr class="dropdown-divider"></li>
-				<li><a class="dropdown-item" href="./index.php?n=admin_logon&logout=true"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#signout"/></svg> Sign out</a></li>
 			  </ul>
 			</div>
 		</div>
 	</div>
-</header>
-
-
-
+</nav>
 
 <script>
 new Autocomplete("basic", {
