@@ -192,16 +192,16 @@ $navbarArray['admin_logs'] = array(
 			</form>
 			
 			<div class="d-flex">
+				
 			  <ul class="navbar-nav mr-auto">
 				<li class="nav-item dropdown">
-				  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><?php echo $_SESSION['username']; ?></a>
+				  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><img class="rounded-circle me-1" width="32" height="32" src="<?php echo $_SESSION['avatar_url'] ; ?>" alt=""></a>
 				  <ul class="dropdown-menu">
 					<li><a class="dropdown-item" href="#"><?php echo $_SESSION['username'] . "<br />" . $_SESSION["user_type"]; ?></a></li>
 					<li><a class="dropdown-item" href="./index.php?n=person_unique&cudid=<?php echo $_SESSION['cudid'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile</a></li>
 					<li><a class="dropdown-item" href="./index.php?n=ldap_unique&samaccountname=<?php echo $_SESSION['username'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#ldap"/></svg> My LDAP Record</a></li>
 					<li><a class="dropdown-item" href="./index.php?n=admin_settings"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#settings"/></svg> Admin. Settings</a></li>
 					<li><a class="dropdown-item" href="./index.php?n=admin_logon&logout=true"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#signout"/></svg> Sign out</a></li>
-					<li><a class="dropdown-item" href="logon.php?logout=true">Logout</a></li>
 				  </ul>
 				</li>
 			  </ul>
