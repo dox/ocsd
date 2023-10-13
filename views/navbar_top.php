@@ -195,7 +195,7 @@ $navbarArray['admin_logs'] = array(
 				
 			  <ul class="navbar-nav mr-auto">
 				<li class="nav-item dropdown">
-				  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><img class="rounded-circle me-1" width="32" height="32" src="<?php echo $_SESSION['avatar_url'] ; ?>" alt=""></a>
+				  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><img class="rounded-circle me-1" style="object-fit: cover;" width="32" height="32" src="<?php echo $_SESSION['avatar_url'] ; ?>" alt=""></a>
 				  <ul class="dropdown-menu">
 					<li><a class="dropdown-item" href="#"><?php echo $_SESSION['username'] . "<br />" . $_SESSION["user_type"]; ?></a></li>
 					<li><a class="dropdown-item" href="./index.php?n=person_unique&cudid=<?php echo $_SESSION['cudid'];?>"><svg width="1em" height="1em" class="me-2"><use xlink:href="images/icons.svg#person"/></svg> My CUD Profile</a></li>

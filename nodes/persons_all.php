@@ -51,3 +51,15 @@ if (isset($_GET['filter'])) {
 	?>
 	</tbody>
 </table>
+
+
+
+<div class="row">
+	<?php
+	foreach ($persons AS $person) {
+		$personObject = new Person($person['cudid']);
+		
+		echo $personObject->displayCard(); 
+	}
+	?>
+</div>

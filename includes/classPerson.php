@@ -318,5 +318,41 @@ class Person extends Persons {
 	}
 
   */
+  
+  public function ldap_record() {
+	  $ldapPerson = new LDAPPerson($this->sso_username, $this->oxford_email);
+	  return $ldapPerson;
+  }
+  
+  public function ldap_username() {
+	  $ldapRecord = $this->ldap_record();
+	  
+	  return $ldapRecord->samaccountname;
+  }
+  
+  
+  public function displayCard() {
+	  $output  = "<div class=\"col-sm-3 pb-3 mb-3 mb-sm-0\">";
+	  $output .= "<div class=\"card\">";
+	  $output .= "<img src=\"" . $this->photoSrc() . "\" class=\"card-img-top\" alt=\"...\">";
+	  $output .= "<div class=\"card-img-overlay text-center\">";
+	  if ($this->isSuspended()) {
+		  $output .= "<span class=\"badge rounded-pill text-bg-danger\">Suspended</span>";
+	  }
+	  $output .= $this->cardtypebadge();
+	  $output .= "</div>";
+	  $output .= "<div class=\"card-body\">";
+	  $output .= "<h5 class=\"card-title text-truncate\">" . $this->FullName . "</h5>";
+	  $output .= "<p class=\"card-text\">" . $this->sso_username . "</p>";
+	  $output .= "<div class=\"btn-group\" role=\"group\" aria-label=\"Basic example\">";
+	  $output .= "<a href=\"index.php?n=person_unique&cudid=" . $this->cudid . "\" class=\"btn btn-sm btn-primary\">CUD</a>";
+	  $output .= "<a href=\"index.php?n=ldap_unique&samaccountname=" . $this->ldap_username() . "\" class=\"btn btn-sm btn-primary\">LDAP</a>";
+	  $output .= "</div>";
+	  $output .= "</div>";
+	  $output .= "</div>";
+	  $output .= "</div>";
+	  
+	  return $output;
+  }
 } //end of class Person
 ?>
