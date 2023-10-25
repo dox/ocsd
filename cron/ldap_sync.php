@@ -32,7 +32,18 @@ foreach ($users AS $ldapUser) {
       $userdata["mail"] = $CUDPerson[0]['oxford_email'];
     }
     # update names?
-
+    if ($ldapUser['givenname'][0] != $CUDPerson[0]['firstname']) {
+      $userdata["givenname"] = $CUDPerson[0]['firstname'];
+    }
+    if ($ldapUser['sn'][0] != $CUDPerson[0]['lastname']) {
+      $userdata["sn"] = $CUDPerson[0]['lastname'];
+    }
+    if ($ldapUser['cn'][0] != $CUDPerson[0]['FullName']) {
+      //$userdata["cn"] = $CUDPerson[0]['FullName'];
+    }
+    
+    //printArray($ldapUser);
+    
     if (count($userdata) > 0) {
       $j ++;
       echo "\033[32m Updating " . implode(', ', array_keys($userdata)) . " on " . $ldapUser['samaccountname'][0] . " to " . implode(', ', $userdata) . "\n";

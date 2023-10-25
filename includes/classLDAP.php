@@ -22,7 +22,7 @@ class LDAP {
 	  public function all_users_enabled() {
 			global $ldap_connection;
 		
-			$records = $ldap_connection->query()->select('samaccountname', 'mail', 'pager')->orFilter(function (LdapRecord\Query\Builder $q) {
+			$records = $ldap_connection->query()->select('samaccountname', 'mail', 'pager', 'givenname', 'sn', 'cn')->orFilter(function (LdapRecord\Query\Builder $q) {
 			  $q->where('useraccountcontrol', '=', '512')
 			  ->where('useraccountcontrol', '=', '544');
 			})->paginate(10000);
@@ -33,7 +33,7 @@ class LDAP {
 		public function all_users_disabled() {
 			global $ldap_connection;
 		
-			$records = $ldap_connection->query()->select('samaccountname', 'mail')->andFilter(function (LdapRecord\Query\Builder $q) {
+			$records = $ldap_connection->query()->select('samaccountname', 'mail', 'givenname', 'sn', 'cn')->andFilter(function (LdapRecord\Query\Builder $q) {
 			  $q->where('useraccountcontrol', '!', '512')
 			  ->where('useraccountcontrol', '!', '544');
 			})->get();
