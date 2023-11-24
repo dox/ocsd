@@ -29,7 +29,11 @@ $ldapPerson = new LDAPPerson($personObject->sso_username, $personObject->oxford_
 				$colour = "gender-other";
 			}
 			
-			echo "Gender: <span class=\"badge " . $colour . "\">" . $personObject->gnd . "</span><br>";
+			$pronouns = "";
+			if (isset($personObject->consolidated_pronouns)) {
+				$pronouns = " <i>(" . $personObject->consolidated_pronouns . ")</i>";
+			}
+			echo "Gender: <span class=\"badge " . $colour . "\">" . $personObject->gnd . "</span>" . $pronouns . "<br>";
 		}
 		?>
 		<style>
