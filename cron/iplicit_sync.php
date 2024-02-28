@@ -236,6 +236,9 @@ class iPlicitAPI {
 		$sql  = "SELECT * FROM Enrolments WHERE cudid = '" . $cudPerson->cudid . "' ORDER BY SCJSequence DESC";
 		$cudPersonEnrolments = $db->query($sql)->fetchAll()[0];
 		
+		$sql2  = "SELECT * FROM EnrolAwdProg WHERE cudid = '" . $cudPerson->cudid . "' ORDER BY Code DESC";
+		$cudPersonEnrolAwdProg = $db->query($sql2)->fetchAll()[0];
+		
 		$iplicitContact['description'] = $cudPerson->FullName;
 		$iplicitContact['code'] = $cudPerson->sits_student_code;
 		$iplicitContact['contact']['intRef'] = $cudPerson->sits_student_code;
@@ -243,7 +246,11 @@ class iPlicitAPI {
 		$iplicitContact['contact']['firstName'] = $cudPerson->firstname;
 		$iplicitContact['contact']['middleName'] = $cudPerson->middlenames;
 		$iplicitContact['contact']['lastName'] = $cudPerson->lastname;
-		$iplicitContact['customer']['ext']['Altref'] = $cudPerson->unit_set_cd;
+		$iplicitContact['customer']['ext']['Currentyear'] = $cudPerson->unit_set_cd;
+		
+		$iplicitContact['customer']['ext']['AwardProgrammeTitle'] = $cudPersonEnrolAwdProg['AwdName'];
+		$iplicitContact['customer']['ext']['AwardProgrammeCode'] = $cudPersonEnrolAwdProg['CrsCd'];
+		$iplicitContact['customer']['ext']['ExpectedEndDate'] = $cudPersonEnrolments['CrsExpEndDt'];
 
 		if (isset($cudPerson->oxford_email)) {
 		  $iplicitContact['contact']['emails'][] = array("type" => "R", "email" => $cudPerson->oxford_email);
@@ -311,7 +318,7 @@ class iPlicitAPI {
 		$update = false;
 		$changeFields = array();
 		
-		//printArray($iplicit);
+		
 		
 		if ($cud['description'] != $iplicit->description) {
 			$changeFields['description'] = $cud['description'] . " != " . $iplicit->description;
@@ -362,9 +369,9 @@ class iPlicitAPI {
 			$changeFields['Activestatus'] = $cud['contact']['ext']['Activestatus'] . " != " . $iplicit->contact->ext->Activestatus;
 		}
 		
-		if ($cud['customer']['ext']['Altref'] != $iplicit->customer->ext->Altref) {
+		if ($cud['customer']['ext']['Currentyear'] != $iplicit->customer->ext->Currentyear) {
 			$update = true;
-			$changeFields['Altref'] = $cud['contact']['ext']['Altref'] . " != " . $iplicit->contact->ext->Altref;
+			$changeFields['Currentyear'] = $cud['contact']['ext']['Currentyear'] . " != " . $iplicit->contact->ext->Currentyear;
 		}
 		
 		if ($cud['customer']['contactGroupCustomerId'] != $iplicit->customer->contactGroupCustomerId) {
@@ -372,6 +379,17 @@ class iPlicitAPI {
 			//$changeFields['contactGroupCustomerId'] = $cud['customer']['contactGroupCustomerId'] . " != " . $iplicit->customer->contactGroupCustomerId;
 		}
 		
+		if ($cud['customer']['ext']['AwardProgrammeTitle'] != $iplicit->customer->ext->AwardProgrammeTitle ||
+			$cud['customer']['ext']['AwardProgrammeCode'] != $iplicit->customer->ext->AwardProgrammeCode ||
+			$cud['customer']['ext']['ExpectedEndDate'] != $iplicit->customer->ext->ExpectedEndDate) {
+			
+			$update = true;
+			$changeFields['AwardProgrammeTitle'] = $cud['customer']['ext']['AwardProgrammeTitle'];
+			$changeFields['AwardProgrammeCode'] = $cud['customer']['ext']['AwardProgrammeCode'];
+			$changeFields['ExpectedEndDate'] = $cud['customer']['ext']['ExpectedEndDate'];
+		}
+
+
 		if ($cud['contact']['addresses'][0]['address'] != $iplicit->contact->addresses[0]->address) {
 			$update = true;
 			$changeFields['address'] = $cud['contact']['addresses'][0]['address'] . " != " . $iplicit->contact->addresses[0]->address;
