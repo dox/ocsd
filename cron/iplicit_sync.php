@@ -7,6 +7,12 @@ $i_students = 0;
 $iplicit = new iPlicitAPI();
 
 foreach ($cudPersons AS $cudPerson) {
+	$tokenTimeRemaining = strtotime($iplicit->tokenDue) - strtotime(gmdate('c'));
+	
+	if ($tokenTimeRemaining <= 1) {
+		cliOutput("Updating token, as it has expired", "green");
+		$iplicit->getSession();
+	}
 	if (isset($cudPerson['sits_student_code'])) { // only perform lookup on CUD persons with a SITS code
 		$i_students++; // count how many students we're processing
 
@@ -92,6 +98,10 @@ class iPlicitAPI {
 	public $errorLog = array(); 	// array of iPlicit errors
 	
 	function __construct() {
+		$this->getSession();
+	}
+	
+	public function getSession() {
 		$url = 'https://api.iplicit.com/api/session/create/api';
 		
 		$sessionFields = array(
