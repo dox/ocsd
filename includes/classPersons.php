@@ -73,6 +73,31 @@ class Persons {
 			$sql .= " OR Addresses.TelNo LIKE '%" . $searchTerm . "%'";
 			$sql .= " OR Addresses.MobileNo LIKE '%" . $searchTerm . "%'";
 			
+			$sql  = "SELECT
+				Person.cudid,
+				MAX(Person.FullName) AS FullName,
+				MAX(Person.sso_username) AS sso_username,
+				MAX(Person.barcode7) AS barcode7,
+				MAX(Person.oxford_email) AS oxford_email,
+				MAX(Person.sits_student_code) AS sits_student_code,
+				MAX(Addresses.TelNo) AS TelNo,
+				MAX(Addresses.MobileNo) AS MobileNo
+			FROM
+				Person
+			LEFT JOIN
+				Addresses ON Person.cudid = Addresses.cudid
+			WHERE
+				Person.FullName LIKE '%" . $searchTerm . "%' OR
+				Person.sso_username LIKE '%" . $searchTerm . "%' OR
+				Person.cudid LIKE '%" . $searchTerm . "%' OR
+				Person.barcode7 LIKE '%" . $searchTerm . "%' OR
+				Person.oxford_email LIKE '%" .$searchTerm . "%' OR
+				Person.sits_student_code LIKE '%" .$searchTerm . "%' OR
+				Addresses.TelNo LIKE '%" .$searchTerm . "%' OR
+				Addresses.MobileNo LIKE '%" .$searchTerm . "%'
+			GROUP BY
+				Person.cudid";
+			
 			if (!$limit == null) {
 				$sql .= " LIMIT " . $limit;
 			}

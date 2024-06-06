@@ -1,12 +1,15 @@
 <?php
 include_once("../includes/autoload.php");
 
+header('Content-Type: application/json');
+
 if ($_SESSION['authenticated'] == true) {
 	$personSearchArray = array();
 	
 	$personsClass = new Persons();
+	$persons = $personsClass->search($_GET['search'], 5);
 	
-	$persons = $personsClass->search($_GET['search'], 10);
+	$data = array();
 	
 	foreach ($persons AS $person) {
 		$personArray = array();
@@ -16,17 +19,9 @@ if ($_SESSION['authenticated'] == true) {
 		$personArray['name'] = $person['FullName'];
 		$personArray['sits_student_code'] = $person['sits_student_code'];
 		
-		$personSearchArray[$person['cudid']] = $personArray;
+		$data[] = $personArray;
 	}
 	
-	$uniquePersons = array();
-	
-	foreach($personSearchArray as $personSearchResult) {
-		$needle = $personSearchResult['cudid'];
-		if(array_key_exists($needle, $uniquePersons)) continue;
-		$uniquePersons[] = $personSearchResult;
-	  }
-	
-	echo json_encode($uniquePersons);
+	echo json_encode(['data' => $data]);
 }
 ?>

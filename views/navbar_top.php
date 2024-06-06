@@ -1,3 +1,12 @@
+<style>
+	#quick_search_results {
+		position: absolute;
+		z-index: 1;
+		max-height: 200px;
+		overflow-y: auto;
+	}
+</style>
+
 <?php
 $navbarArray['home'] = array(
 	"title" => "Home",
@@ -187,7 +196,9 @@ $navbarArray['admin_logs'] = array(
 			
 			<form role="search">
 				<div class="auto-search-wrapper">
-					<input class="form-control" type="search" placeholder="Quick Search" aria-label="Quick Search" id="basic" autocomplete="off" spellcheck="false">
+					<input type="text" id="quick_search" class="form-control" placeholder="Quick search" autocomplete="off" spellcheck="false">
+					<ul id="quick_search_results" class="list-group"></ul>
+					
 				</div>
 			</form>
 			
@@ -211,27 +222,49 @@ $navbarArray['admin_logs'] = array(
 </nav>
 
 <script>
-new Autocomplete("basic", {
-	onSearch: ({ currentValue }) => {
-		const api = `actions/search.php?search=${encodeURI(currentValue)}`;
+	document.getElementById('quick_search').addEventListener('keyup', function() {
+		let query = this.value;
 		
-		return new Promise((resolve) => {
-			fetch(api)
-			.then((response) => response.json())
-			.then((data) => {
-				resolve(data);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-		});
-	},
-	onResults: ({ matches }) =>
-	matches.map((el) => `<li>${el.name}</li>`).join(""),
-	onSubmit: ({ index, element, object }) => {
-		const { name, cudid } = object;
+		// Create a new XMLHttpRequest object
+		let xhr = new XMLHttpRequest();
 		
-		window.location = "index.php?n=person_unique&cudid=" + cudid;
-	},
-});
+		// Configure it: GET-request for the URL with the query
+		xhr.open('GET', 'actions/search.php?search=' + encodeURIComponent(query), true);
+		
+		// Set up the callback function
+		xhr.onload = function() {
+			if (xhr.status === 200) {
+				// Parse JSON response
+				let response = JSON.parse(xhr.responseText);
+				
+				// Display the results
+				let resultsDiv = document.getElementById('quick_search_results');
+				resultsDiv.innerHTML = '';
+		
+				if (response.data.length === 0) {
+					let listItem = document.createElement('li');
+					listItem.className = "list-group-item";
+					listItem.textContent = 'No results found';
+					
+					resultsDiv.appendChild(listItem);
+				} else {
+					response.data.forEach(function(item) {
+						let listItem = document.createElement('li');
+						listItem.className = "list-group-item";
+						var link = document.createElement("a");
+						link.className = "text-truncate";
+						link.href = "index.php?n=person_unique&cudid=" + item.cudid;
+						link.textContent = item.name;
+						listItem.appendChild(link);
+						
+						resultsDiv.appendChild(listItem);
+					});
+				}
+			}
+		};
+		
+		// Send the request
+		xhr.send();
+	});
 </script>
+
