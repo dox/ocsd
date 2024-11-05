@@ -59,6 +59,20 @@ class Persons {
 		return $persons;
 	}
 	
+	public function under18Persons() {
+		global $db;
+		
+		$date = date('Y-m-d', strtotime('-18 years'));
+	
+		$sql  = "SELECT * FROM " . self::$table_name;
+		$sql .= " WHERE dob IS NOT NULL";
+		$sql .= " AND DATE(dob) > '" . $date . "'";
+	
+		$persons = $db->query($sql)->fetchAll();
+	
+		return $persons;
+	}
+	
 	public function search($searchTerm = null, $limit = null) {
 		global $db;
 	

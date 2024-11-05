@@ -10,6 +10,8 @@ if (isset($_GET['filter'])) {
 		$persons = $personsClass->search($_POST['navbar_search']);
 	} elseif ($_GET['filter'] == "suspended") {
 		$persons = $personsClass->suspendedPersons();
+	} elseif ($_GET['filter'] == "underage") {
+		$persons = $personsClass->under18Persons();
 	} else {
 		$persons = $personsClass->all();
 	}

@@ -19,20 +19,24 @@ $navbarArray['persons_all'] = array(
 	"icon" => "person",
 	"sublinks" => array(
 		array(
-			"title" => "Suspended",
-			"link" => "./index.php?n=persons_all&filter=suspended"
-		),
-		array(
-			"title" => "Students",
-			"link" => "./index.php?n=persons_all&filter=students"
+			"title" => "All",
+			"link" => "./index.php?n=persons_all&filter=all"
 		),
 		array(
 			"title" => "Staff",
 			"link" => "./index.php?n=persons_all&filter=staff"
 		),
 		array(
-			"title" => "All",
-			"link" => "./index.php?n=persons_all&filter=all"
+			"title" => "Students",
+			"link" => "./index.php?n=persons_all&filter=students"
+		),
+		array(
+			"title" => "Suspended",
+			"link" => "./index.php?n=persons_all&filter=suspended"
+		),
+		array(
+			"title" => "Under 18",
+			"link" => "./index.php?n=persons_all&filter=underage"
 		)
 	)
 );
