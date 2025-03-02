@@ -12,7 +12,7 @@ if ($_SESSION['authenticated'] == true) {
 	$ldapClass = new LDAP();
 	$templatesClass = new Templates();
 	
-	$randomPassword = $ldapClass->randomPassword(5);
+	$randomPassword = $ldapClass->randomPassword(8);
 	
 	$user->cn = $person->FullName;
 	$user->samaccountname = strtolower($person->sso_username);
