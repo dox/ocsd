@@ -1,5 +1,5 @@
 <?php
-include_once("../includes/autoload.php");
+include_once("../inc/autoload.php");
 
 # SALTO ACTIONS TABLE
 # 1 = Create new record.
@@ -11,10 +11,6 @@ include_once("../includes/autoload.php");
 $createCount = 0;
 $updateCount = 0;
 
-// BUILD ARRAY OF CUD PERSONS
-$cudPersons = (new Persons)->all();
-cliOutput("Connection to CUD db established", "white");
-
 // CONNECT TO SALTO DB
 $connectionInfo = array( "Database"=>salto_db_name, "UID"=>salto_db_username, "PWD"=>salto_db_password, "TrustServerCertificate"=>"Yes");
 $conn = sqlsrv_connect(salto_db_host, $connectionInfo);
@@ -23,11 +19,16 @@ if($conn) {
 	cliOutput("Connection to SALTO db established", "white");
 	
 	cliOutput("Removing expired records from StagingTable!", "yellow");
-	$sql = sqlsrv_query($conn, "DELETE FROM StagingTable WHERE [UserExpiration.ExpDate] < '" . date('Y-m-d') . "'");
+	$sql = sqlsrv_query($conn, "DELETE FROM " . salto_db_table . " WHERE [UserExpiration.ExpDate] < '" . date('Y-m-d') . "'");
 	
-	$records = sqlsrv_query($conn, "SELECT * FROM StagingTable");
+	$records = sqlsrv_query($conn, "SELECT * FROM " . salto_db_table);
 	if ($records === false) {
-		$logInsert = (new Logs)->insert("cron","error",null,"Connection to Staging Table on SALTO could not be established to SALTO db");
+		$logData = [
+			'category' => 'cron',
+			'result'   => 'error',
+			'description' => 'Connection to " . salto_db_table . " could not be established'
+		];
+		$log->create($logData);
 		die(printArray(sqlsrv_errors(), true));
 	}
 	
@@ -37,19 +38,25 @@ if($conn) {
 	}
 } else {
 	cliOutput("Connection could not be established to SALTO db", "red");
-	$logInsert = (new Logs)->insert("cron","error",null,"Connection to SALTO db could not be established");
+	$logData = [
+		'category' => 'cron',
+		'result'   => 'error',
+		'description' => 'Connection to SALTO db could not be established'
+	];
+	$log->create($logData);
 	die(printArray(sqlsrv_errors(), true));
 }
 
-//printArray($cudPersons);
-//printArray($saltoUsers);
 
-
+// BUILD ARRAY OF CUD PERSONS
+$sql = "SELECT * FROM Person";
+$cudPersons = $db->get($sql);
+cliOutput("Connection to CUD db established", "green");
 
 foreach ($cudPersons AS $cudPerson) {
 	$updateArray = array();
 	$columns = array();
-	
+
 	if (!empty($cudPerson['sso_username'])) {
 		if (array_key_exists($cudPerson['sso_username'], $saltoUsers)) {
 			// CHECK MULTIPLE VALUES TO SEE IF UPDATE NEEDED
@@ -97,10 +104,22 @@ foreach ($cudPersons AS $cudPerson) {
 				}
 				
 				$update = sqlsrv_query($conn, $sql);
-				$logInsert = (new Logs)->insert("cron","success",null,$cudPerson['sso_username'] . " (" . $cudPerson['FullName'] . ") updated " . implode(", ", array_keys($updateArray)) . " on SALTO staging table");
+				
+				$name = mb_convert_encoding($cudPerson['FullName'], "UTF-8", "ISO-8859-1");
+				$logData = [
+					'category' => 'cron',
+					'result'   => 'success',
+					'description' => $cudPerson['sso_username'] . ' updated ' . implode(', ', array_keys($updateArray)) . ' on SALTO staging table'
+				];
+				$log->create($logData);
 				$updateCount ++;
 				if ($update === false) {
-					$logInsert = (new Logs)->insert("cron","error",null,"Error updating " . $cudPerson['sso_username'] . " (" . $cudPerson['FullName'] . ") on SALTO staging table");
+					$logData = [
+						'category' => 'cron',
+						'result'   => 'error',
+						'description' => 'Error updating ' . $cudPerson['sso_username'] . ' on SALTO staging table'
+					];
+					$log->create($logData);
 					die(printArray(sqlsrv_errors(), true));
 				}
 			}
@@ -158,11 +177,22 @@ foreach ($cudPersons AS $cudPerson) {
 			}
 			
 			$create = sqlsrv_query($conn, $sql);
-			$logInsert = (new Logs)->insert("cron","success",null,$cudPerson['sso_username'] . " (" . $cudPerson['FullName'] . ") created on SALTO staging table");
+			$name = mb_convert_encoding($cudPerson['FullName'], "UTF-8", "ISO-8859-1");
+			$logData = [
+				'category' => 'cron',
+				'result'   => 'success',
+				'description' => $cudPerson['sso_username'] . ' created on SALTO staging table'
+			];
+			$log->create($logData);
 
 			$createCount ++;
 			if ($create === false) {
-				$logInsert = (new Logs)->insert("cron","error",null,"Error creating " . $cudPerson['sso_username'] . " (" . $cudPerson['FullName'] . ") on SALTO staging table");
+				$logData = [
+					'category' => 'cron',
+					'result'   => 'error',
+					'description' => 'Error creating ' . $cudPerson['sso_username'] . ' on SALTO staging table'
+				];
+				$log->create($logData);
 				die(printArray(sqlsrv_errors(), true));
 			}
 		}	
@@ -171,5 +201,10 @@ foreach ($cudPersons AS $cudPerson) {
 }
 
 $event = "SALTO sync complete.  Created: " . $createCount . " / Updated: " . $updateCount;
-$logInsert = (new Logs)->insert("cron","success",null,$event);
+$logData = [
+	'category' => 'cron',
+	'result'   => 'success',
+	'description' => $event
+];
+$log->create($logData);
 ?>

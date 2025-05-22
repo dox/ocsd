@@ -1,30 +1,33 @@
 <?php
-include_once("../includes/autoload.php");
+include_once("../inc/autoload.php");
 
-$cudPersons = (new Persons)->allStudents(); // get all students from CUD
+$sql  = "SELECT cudid FROM Person WHERE university_card_type IN ('PG', 'GT', 'GR')";
+$cudPersons = $db->get($sql);
+
 $i_students = 0;
-
 $iplicit = new iPlicitAPI();
 
 foreach ($cudPersons AS $cudPerson) {
+	$cudPerson = new Person($cudPerson['cudid']);
+	
 	$tokenTimeRemaining = strtotime($iplicit->tokenDue) - strtotime(gmdate('c'));
 	
 	if ($tokenTimeRemaining <= 1) {
 		cliOutput("Updating token, as it has expired", "green");
 		$iplicit->getSession();
 	}
-	if (isset($cudPerson['sits_student_code'])) { // only perform lookup on CUD persons with a SITS code
+	if (isset($cudPerson->sits_student_code)) { // only perform lookup on CUD persons with a SITS code
 		$i_students++; // count how many students we're processing
 
-		$exisitingiplicitContact = $iplicit->getContactAccount($cudPerson['sits_student_code']);
-		$iPlicitFriendlyCUDArray = $iplicit->cudidToiPlicitContact($cudPerson['cudid']);
+		$exisitingiplicitContact = $iplicit->getContactAccount($cudPerson->sits_student_code);
+		$iPlicitFriendlyCUDArray = $iplicit->cudidToiPlicitContact($cudPerson->cudid);
 		
 		if (isset($exisitingiplicitContact->id)) { // contact already exists in iPlicit
 			//only update if something is different
 			if ($iplicit->updateRequired($iPlicitFriendlyCUDArray, $exisitingiplicitContact)){
 				$iplicit->updateContactAccount($exisitingiplicitContact->code, $iPlicitFriendlyCUDArray);
 			} else {
-				cliOutput("Skipping update for " . $cudPerson['FullName'] . " (" . $cudPerson['sits_student_code'] . ")", "white");
+				cliOutput("Skipping update for " . $cudPerson->FullName . " (" . $cudPerson->sits_student_code . ")", "white");
 			}
 			
 		} else { // contact needs to be crated in iPlicit
@@ -244,10 +247,10 @@ class iPlicitAPI {
 		$cudPerson = new Person($cudid);
 		
 		$sql  = "SELECT * FROM Enrolments WHERE cudid = '" . $cudPerson->cudid . "' ORDER BY SCJSequence DESC";
-		$cudPersonEnrolments = $db->query($sql)->fetchAll()[0];
+		$cudPersonEnrolments = $db->get($sql);
 		
 		$sql2  = "SELECT * FROM EnrolAwdProg WHERE cudid = '" . $cudPerson->cudid . "' ORDER BY Code DESC";
-		$cudPersonEnrolAwdProg = $db->query($sql2)->fetchAll()[0];
+		$cudPersonEnrolAwdProg = $db->get($sql);
 		
 		$iplicitContact['description'] = $cudPerson->FullName;
 		$iplicitContact['code'] = $cudPerson->sits_student_code;
@@ -269,7 +272,7 @@ class iPlicitAPI {
 		  $iplicitContact['contact']['emails'][] = array("type" => "P", "email" => $cudPerson->alt_email);
 		}
 		
-		$cudAddress = $cudPerson->address('C');
+		$cudAddress = $cudPerson->addresses()->getContactAddress();
 		
 		$cleanAddress = null;
 		if (isset($cudAddress['AddressCtryCd']) || isset($cudAddress['Line1']) || isset($cudAddress['Line2'])) {
@@ -406,10 +409,280 @@ class iPlicitAPI {
 		}
 		
 		if (!empty($changeFields)){
-			debug($changeFields);
+			printArray($changeFields);
 		}
 		
 		return $update;
 	}
+}
+
+
+
+function cudCountryCodeToiPlicitCountyCode($countryCode) {
+	
+	$countryArray = array(
+		'602' => 'AF',
+		'651' => 'AX',
+		'603' => 'AL',
+		'604' => 'DZ',
+		'605' => 'AD',
+		'606' => 'AO',
+		'607' => 'AG',
+		'608' => 'AR',
+		'836' => 'AM',
+		'637' => 'AW',
+		'609' => 'AU',
+		'610' => 'AT',
+		'837' => 'AZ',
+		'611' => 'BS',
+		'612' => 'BH',
+		'787' => 'BD',
+		'613' => 'BB',
+		'838' => 'BY',
+		'614' => 'BE',
+		'668' => 'BZ',
+		'640' => 'BJ',
+		'615' => 'BM',
+		'616' => 'BT',
+		'617' => 'BO',
+		'848' => 'BA',
+		'618' => 'BW',
+		'619' => 'BR',
+		'776' => 'VG',
+		'620' => 'BN',
+		'621' => 'BG',
+		'769' => 'BF',
+		'622' => 'MM',
+		'623' => 'BI',
+		'624' => 'KH',
+		'625' => 'CM',
+		'626' => 'CA',
+		'751' => 'IC',
+		'788' => 'CV',
+		'789' => 'KY',
+		'627' => 'CF',
+		'629' => 'TD',
+		'826' => 'XL',
+		'630' => 'CL',
+		'631' => 'CN',
+		'652' => 'TW',
+		'632' => 'CO',
+		'804' => 'KM',
+		'634' => 'CG',
+		'633' => 'CD',
+		'714' => 'CK',
+		'635' => 'CR',
+		'834' => 'HR',
+		'636' => 'CU',
+		'638' => 'XA',
+		'849' => 'CZ',
+		'641' => 'DK',
+		'749' => 'DJ',
+		'642' => 'DM',
+		'643' => 'DO',
+		'786' => 'TL',
+		'645' => 'EC',
+		'768' => 'EG',
+		'646' => 'SV',
+		'790' => 'GQ',
+		'851' => 'ER',
+		'831' => 'EE',
+		'648' => 'ET',
+		'649' => 'FK',
+		'865' => 'FO',
+		'650' => 'FJ',
+		'651' => 'FI',
+		'653' => 'FR',
+		'791' => 'GF',
+		'822' => 'PF',
+		'654' => 'GA',
+		'655' => 'GM',
+		'847' => 'GE',
+		'656' => 'DE',
+		'658' => 'GH',
+		'659' => 'GI',
+		'661' => 'GR',
+		'828' => 'GL',
+		'662' => 'GD',
+		'653' => 'GP',
+		'796' => 'GU',
+		'663' => 'GT',
+		'593' => 'GG',
+		'664' => 'GN',
+		'802' => 'GW',
+		'665' => 'GY',
+		'666' => 'HT',
+		'667' => 'HN',
+		'669' => 'HK',
+		'670' => 'HU',
+		'671' => 'IS',
+		'672' => 'IN',
+		'673' => 'ID',
+		'674' => 'IR',
+		'675' => 'IQ',
+		'676' => 'IE',
+		'595' => 'IM',
+		'677' => 'IL',
+		'678' => 'IT',
+		'679' => 'CI',
+		'680' => 'JM',
+		'681' => 'JP',
+		'594' => 'JE',
+		'682' => 'JO',
+		'839' => 'KZ',
+		'683' => 'KE',
+		'660' => 'KI',
+		'685' => 'KP',
+		'684' => 'KR',
+		'686' => 'KW',
+		'840' => 'KG',
+		'687' => 'LA',
+		'832' => 'LV',
+		'688' => 'LB',
+		'690' => 'LS',
+		'691' => 'LR',
+		'692' => 'LY',
+		'827' => 'LI',
+		'833' => 'LT',
+		'693' => 'LU',
+		'694' => 'MO',
+		'852' => 'MK',
+		'695' => 'MG',
+		'696' => 'MW',
+		'698' => 'MY',
+		'793' => 'MV',
+		'699' => 'ML',
+		'700' => 'MT',
+		'861' => 'MH',
+		'653' => 'MQ',
+		'701' => 'MR',
+		'702' => 'MU',
+		'821' => 'YT',
+		'703' => 'MX',
+		'862' => 'FM',
+		'841' => 'MD',
+		'825' => 'MC',
+		'704' => 'MN',
+		'705' => 'MS',
+		'706' => 'MA',
+		'707' => 'MZ',
+		'798' => 'NA',
+		'805' => 'NR',
+		'709' => 'NP',
+		'710' => 'NL',
+		'637' => 'AN',
+		'711' => 'NC',
+		'714' => 'NZ',
+		'715' => 'NI',
+		'716' => 'NE',
+		'717' => 'NG',
+		'714' => 'NU',
+		'771' => 'MP',
+		'718' => 'NO',
+		'782' => 'ZZ',
+		'708' => 'OM',
+		'721' => 'PK',
+		'796' => 'PW',
+		'722' => 'PA',
+		'712' => 'PG',
+		'723' => 'PG',
+		'724' => 'PY',
+		'725' => 'PE',
+		'726' => 'PH',
+		'823' => 'PN',
+		'727' => 'PL',
+		'728' => 'PT',
+		'730' => 'PR',
+		'731' => 'QA',
+		'653' => 'RE',
+		'733' => 'RO',
+		'842' => 'RU',
+		'734' => 'RW',
+		'741' => 'WS',
+		'826' => 'SM',
+		'803' => 'ST',
+		'743' => 'SA',
+		'785' => 'SN',
+		'780' => 'RS', //serbia?
+		'744' => 'SC',
+		'745' => 'SL',
+		'746' => 'SG',
+		'850' => 'SK',
+		'835' => 'SI',
+		'747' => 'SB',
+		'748' => 'SO',
+		'750' => 'ZA',
+		'751' => 'ES',
+		'628' => 'LK',
+		'735' => 'SH',
+		'736' => 'KN',
+		'737' => 'LC',
+		'653' => 'PM',
+		'738' => 'VC',
+		'783' => 'AA',
+		'752' => 'SD',
+		'753' => 'SR',
+		'718' => 'SJ',
+		'754' => 'SZ',
+		'755' => 'SE',
+		'756' => 'CH',
+		'757' => 'SY',
+		'843' => 'TJ',
+		'759' => 'TZ',
+		'760' => 'TH',
+		'762' => 'TG',
+		'714' => 'TK',
+		'784' => 'TO',
+		'763' => 'TT',
+		'765' => 'TN',
+		'766' => 'TR',
+		'844' => 'TM',
+		'799' => 'TC',
+		'647' => 'TV',
+		'767' => 'UG',
+		'845' => 'UA',
+		'772' => 'XN',
+		'764' => 'AE',
+		'000' => 'GB',
+		'771' => 'US',
+		'800' => 'VI',
+		'770' => 'UY',
+		'846' => 'UZ',
+		'713' => 'VU',
+		'773' => 'VE',
+		'774' => 'VN',
+		'822' => 'WF',
+		'706' => 'EH',
+		'601' => 'YE',
+		'781' => 'ZM',
+		'732' => 'ZW'
+	);
+	
+	return $countryArray[$countryCode];
+}
+
+function cudCardTypeToiPlicitGroup($cudCardType) {
+  // accepts any Oxford University card type code (e.g. 'PT') and converts it to one of
+  // 'Undergraduate', 'Postgraduate', 'Visiting' or 'Staff' iPlicit codes
+  // defaults to 'Customer' if it fails
+  
+  $undergradCardTypes = array("UG", "PT", );
+  $postgradCardTypes = array("GT", "GR");
+  $visitingCardTypes = array("VR", "VD", "VV", "VC");
+  $staffCardTypes = array("MC", "US", "FS", "FR", "FB", "AV", "DS", "CS", "CL", "CB", "VA", "VX");
+  
+  if (in_array($cudCardType, $undergradCardTypes)) {
+	$iPlicitGroup = "U";
+  } elseif (in_array($cudCardType, $postgradCardTypes)) {
+	$iPlicitGroup = "G";
+  } elseif(in_array($cudCardType, $visitingCardTypes)) {
+	$iPlicitGroup = "V";
+  } elseif(in_array($cudCardType, $staffCardTypes)) {
+	$iPlicitGroup = "Z";
+  } else {
+	$iPlicitGroup = "CU";
+  }
+  
+  return $iPlicitGroup;
 }
 ?>
