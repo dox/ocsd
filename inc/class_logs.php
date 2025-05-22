@@ -100,6 +100,16 @@ class Logs {
 			. '<td>' . htmlspecialchars($log['description']) . '</td>'
 			. '</tr>';
 	}
+	
+	public function purge() {
+		global $db;
+		
+		$logsAge = setting('logs_retention');
+		
+		$sql = "DELETE FROM _logs WHERE date_created < NOW() - INTERVAL " . $logsAge . " DAY";
+		
+		return $db->query($sql);
+	}
 
 }
 

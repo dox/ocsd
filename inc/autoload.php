@@ -25,7 +25,7 @@ include __DIR__ . '/class_user.php';
 include __DIR__ . '/class_person.php';
 include __DIR__ . '/class_Addresses.php';
 include __DIR__ . '/class_Applications.php';
-include __DIR__ . '/class_Enrolment.php';
+include __DIR__ . '/class_Enrolments.php';
 include __DIR__ . '/class_CollegeFees.php';
 include __DIR__ . '/class_CoOwningDepartments.php';
 include __DIR__ . '/class_ExternalIds.php';

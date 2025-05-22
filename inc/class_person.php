@@ -283,8 +283,8 @@ class Person {
 		return new Applications($this->cudid);
 	}
 	
-	public function enrolment(): Enrolment {
-		return new Enrolment($this->cudid);
+	public function enrolments(): Enrolments {
+		return new Enrolments($this->cudid);
 	}
 	
 	public function collegedfees(): CollegeFees {

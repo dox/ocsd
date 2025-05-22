@@ -1,4 +1,5 @@
 <?php
+$log->purge();
 $logsAll = $log->getAll();
 ?>
 

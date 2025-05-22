@@ -114,10 +114,7 @@ $person = new Person(filter_var($_GET['cudid'], FILTER_SANITIZE_STRING));
 						'clean_name' => 'Years of Award Programme'
 					)
 				);
-
 				
-				//$tabsArray = array("Suspensions", "Supervisors", "Applications", "Enrolments", "Addresses", "CollegeFees", "CoOwningDepartments", "ExternalIds", "EnrolAwdProg", "TheResDeg", "Qualifications", "YearsOfAwdProg");
-			
 				foreach ($tabsArray AS $tab) {
 					$active = "";
 			
