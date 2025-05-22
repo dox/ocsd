@@ -4,7 +4,12 @@ $allowedFilters = [
 	'students' => "university_card_type IN ('UG', 'PG')",
 	'underage' => "(dob IS NOT NULL AND dob >= '" . date('Ymd', strtotime('-18 years')) . "')",
 	'cud-no-ldap' => "1=1",
-	'suspended' => " cudid IN (SELECT cudid FROM Suspensions WHERE STR_TO_DATE(SuspendStrDt, '%Y%m%d') <= CURDATE()AND (STR_TO_DATE(SuspendEndDt, '%Y%m%d') >= CURDATE() OR STR_TO_DATE(SuspendExpEndDt, '%Y%m%d') >= CURDATE()))",
+	'suspended' => " cudid IN (
+		SELECT cudid
+		FROM Suspensions
+		WHERE STR_TO_DATE(SuspendStrDt, '%Y%m%d') <= CURDATE()
+		  AND STR_TO_DATE(COALESCE(SuspendEndDt, SuspendExpEndDt), '%Y%m%d') >= CURDATE()
+	)",
 	'test' => 'cudid = \'7EBED3BE-233F-4376-99AC-AAE649686FA8\''
 ];
 
@@ -12,6 +17,7 @@ $filter = $_GET['filter'] ?? null;
 $whereClause = isset($allowedFilters[$filter]) ? "WHERE {$allowedFilters[$filter]}" : "";
 
 $sql = "SELECT cudid FROM Person $whereClause";
+
 $personsAll = $db->get($sql);
 
 if ($filter == "cud-no-ldap") {

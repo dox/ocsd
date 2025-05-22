@@ -8,7 +8,7 @@ class Suspensions implements \IteratorAggregate {
 		
 		$this->cudid = $cudid;
 		
-		$sql = "SELECT * FROM Suspensions WHERE cudid = :cudid ORDER BY SuspendStrDt";
+		$sql = "SELECT * FROM Suspensions WHERE cudid = :cudid ORDER BY SuspendStrDt DESC";
 		$this->records = $db->get($sql, [':cudid' => $cudid]);
 	}
 	
@@ -20,7 +20,7 @@ class Suspensions implements \IteratorAggregate {
 		return $this->records;
 	}
 	
-	public function isCurrentlySuspended(): bool {
+	public function currentSuspension(): ?array {
 		$today = date('Ymd');
 		
 		foreach ($this->all() as $suspension) {
@@ -28,8 +28,28 @@ class Suspensions implements \IteratorAggregate {
 			$end = $suspension['SuspendEndDt'] ?? $suspension['SuspendExpEndDt'] ?? null;
 			
 			if ($start && $end && $today >= $start && $today <= $end) {
-				return true;
+				return $suspension;
 			}
+		}
+		
+		return null;
+	}
+	
+	public function currentSuspensionEndDate() {
+		if ($this->isCurrentlySuspended()) {
+			$effectiveEndDate = !empty($this->currentSuspension()['SuspendEndDt']) ? $this->currentSuspension()['SuspendEndDt'] : $this->currentSuspension()['SuspendExpEndDt'];
+			
+			return date('Y-m-d', strtotime($effectiveEndDate));
+		}
+		
+		return false;
+	}
+	
+	
+	
+	public function isCurrentlySuspended(): bool {
+		if (isset($this->currentSuspension()['cudid'])) {
+			return true;
 		}
 		
 		return false;

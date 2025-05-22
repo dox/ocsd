@@ -203,4 +203,13 @@ function includeHTML() {
   }
 }
 includeHTML();
+
+document.addEventListener("DOMContentLoaded", function () {
+	// Find the first visible nav-link inside #myTab
+	const firstTabButton = document.querySelector('#myTab .nav-link');
+	if (firstTabButton) {
+		const tab = new bootstrap.Tab(firstTabButton);
+		tab.show();
+	}
+});
 </script>
