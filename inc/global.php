@@ -196,7 +196,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-function sendMail($subject, $recipient = NULL, $recipients_bcc = null, $body = NULL) {
+function sendMail($subject, $recipients = NULL, $body = NULL) {
 	global $log, $mail;
 	
 	try {
@@ -210,14 +210,22 @@ function sendMail($subject, $recipient = NULL, $recipients_bcc = null, $body = N
 		$mail->addReplyTo(smtp_sender_address, smtp_sender_name);
 		
 		//Recipients
-		$mail->addAddress($recipient);
-		
-		if (is_array($recipients_bcc)) {
-			foreach ($recipients_bcc AS $recipient_bcc) {
-				$mail->addBCC($recipient_bcc);
+		foreach ($recipients['to'] AS $recipient) {
+			if (isset($recipient)) {
+				$mail->addAddress($recipient);
 			}
-		} else {
-			$recipients_bcc = array();
+		}
+		
+		foreach ($recipients['cc'] AS $recipient) {
+			if (isset($recipient)) {
+				$mail->addCC($recipient);
+			}
+		}
+		
+		foreach ($recipients['bcc'] AS $recipient) {
+			if (isset($recipient)) {
+				$mail->addBCC($recipient);
+			}
 		}
 		
 		//Attachments
@@ -231,17 +239,23 @@ function sendMail($subject, $recipient = NULL, $recipients_bcc = null, $body = N
 	
 		$mail->send();
 		
+		foreach ($recipients as $type => $details) {
+			if (isset($details['email'])) {
+				$emails[] = $details['email'];
+			}
+		}
+		
 		$logData = [
 			'category' => 'email',
 			'result'   => 'success',
-			'description' => 'Email sent to ' . $recipient . ' BCC: ' . implode(", ", $recipients_bcc)
+			'description' => 'Email sent to: ' . implode(', ', $emails)
 		];
 		$log->create($logData);
 	} catch (Exception $e) {
 		$logData = [
 			'category' => 'email',
 			'result'   => 'danger',
-			'description' => 'Email failed to ' . $recipient . ' BCC: ' . implode(", ", $recipients_bcc) . ' Mailer Error: ' . $mail->ErrorInfo
+			'description' => 'Email failed to: ' . implode(', ', $emails) . '. Mailer Error: ' . $mail->ErrorInfo
 		];
 		$log->create($logData);
 	}

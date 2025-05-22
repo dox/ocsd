@@ -73,12 +73,24 @@ if ($ldap->create($newUserArray)) {
 	
 	$finalMessage = renderTemplate($templateMessage, $data);
 	
-	sendMail('SEH IT Credentials', 'andrew.breakspear@seh.ox.ac.uk', null, $finalMessage);
+	$recipients = [
+		'to' => [
+			'email' => $person->oxford_email
+		],
+		'cc' => [
+			'email' => $person->alt_email
+		],
+		'bcc' => [
+			'email' => 'andrew.breakspear@seh.ox.ac.uk'
+		]
+	];
+	
+	sendMail('SEH IT Credentials', $recipients, $finalMessage);
 	
 	$log->create([
 		'type' => 'ldap',
 		'result' => 'success',
-		'description' => "Created LDAP user: {$attributes['samaccountname']}"
+		'description' => "Created LDAP user: " . strtolower($person->sso_username)
 	]);
 	
 	// email
@@ -87,7 +99,7 @@ if ($ldap->create($newUserArray)) {
 	$log->create([
 		'type' => 'ldap',
 		'result' => 'warning',
-		'description' => "Failed to create LDAP user: {$attributes['samaccountname']}"
+		'description' => "Failed to create LDAP user: " . strtolower($person->sso_username)
 	]);
 	echo popover('warning', 'LDAP Result', 'Failed saving user details to LDAP.');
 }
