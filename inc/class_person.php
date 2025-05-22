@@ -128,7 +128,7 @@ class Person {
 	}
 	
 	public function actionsButton() {
-		$output  = "<span class=\"ldap-status\" id=\"status-" . $this->getLDAPUsername() . "\"></span>";
+		$output  = "<span class=\"ldap-status\" id=\"status-" . $this->cudid . "\"></span>";
 		$output .= "<div class=\"btn-group\" role=\"group\">";
 		$output .= "<div class=\"dropdown\">";
 		$output .= "<button type=\"button\" class=\"btn btn-sm btn-outline-info dropdown-toggle\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Actions</button>";
@@ -141,11 +141,15 @@ class Person {
 		}
 		$output .= "<li><a class=\"dropdown-item\" href=\"mailto:" . $mailTo . "\">Email</a></li>";
 		
+		if (empty($this->getLDAPUsername())) {
+			$output .= "<li><a class=\"dropdown-item ldap-provision-link\" data-cudid=\"" . $this->cudid . "\" data-action=\"disable\" href=\"#\">Provision User</a></li>";
+		}
+		
 		if (in_array($this->ldapRecordCache['useraccountcontrol'][0], array('512','66048'))) {
-			$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"disable\" href=\"#\">Disable " . $this->sso_username . " LDAP Account</a></li>";
+			$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"disable\" href=\"#\">Disable " . $this->sso_username . " LDAP Account</a></li>";
 		} else {
-			$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Enable " . $this->sso_username . " LDAP Account</a></li>";
-			$output .= "<li><a class=\"dropdown-item text-danger ldap-delete-link\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Delete LDAP Account</a></li>";
+			$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Enable " . $this->sso_username . " LDAP Account</a></li>";
+			$output .= "<li><a class=\"dropdown-item text-danger ldap-delete-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Delete LDAP Account</a></li>";
 		}
 		
 		$output .= "</ul>";

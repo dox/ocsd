@@ -137,5 +137,41 @@ document.querySelectorAll('.ldap-delete-link').forEach(link => {
 	});
 });
 
+// Provision listener
+document.querySelectorAll('.ldap-provision-link').forEach(link => {
+	link.addEventListener('click', function(e) {
+		e.preventDefault();
+
+		if (!confirm('Are you sure you want to provision this user?  This action will also email the user a copy of their details')) {
+			return;
+		}
+
+		const cudid = this.dataset.cudid;
+		const statusSpan = document.querySelector(`#status-${cudid}`);
+
+		fetch('actions/ldap_provision.php', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: `cudid=${encodeURIComponent(cudid)}`
+		})
+		.then(response => response.text())
+		.then(result => {
+			statusSpan.innerHTML = result;
+			
+			// Initialide the popover
+			const popoverTriggerList = [].slice.call(statusSpan.querySelectorAll('[data-bs-toggle="popover"]'));
+			popoverTriggerList.forEach(function (popoverTriggerEl) {
+				new bootstrap.Popover(popoverTriggerEl);
+			});
+		})
+		.catch(error => {
+			statusSpan.textContent = 'Error';
+			console.error('Error:', error);
+		});
+	});
+});
+
 const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))

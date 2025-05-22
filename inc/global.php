@@ -254,4 +254,26 @@ function renderTemplate(string $template, array $variables): string {
 	}
 	return $template;
 }
+
+function generateSecurePassword($length = 12, $includeSymbols = true): string {
+	$lower = 'abcdefghijklmnopqrstuvwxyz';
+	$upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$numbers = '0123456789';
+	$symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+	
+	$characters = $lower . $upper . $numbers;
+	if ($includeSymbols) {
+		$characters .= $symbols;
+	}
+	
+	$charactersLength = strlen($characters);
+	$password = '';
+	
+	for ($i = 0; $i < $length; $i++) {
+		$index = random_int(0, $charactersLength - 1);
+		$password .= $characters[$index];
+	}
+	
+	return $password;
+}
 ?>

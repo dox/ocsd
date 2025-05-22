@@ -31,6 +31,10 @@ $navbarArray['cud_person'] = array(
 		array(
 			"title" => "Under 18",
 			"link" => "index.php?page=cud_persons&filter=underage"
+		),
+		array(
+			"title" => "Test",
+			"link" => "index.php?page=cud_persons&filter=test"
 		)
 	)
 );

@@ -158,6 +158,38 @@ class Ldap {
 		$log->create($logData);
 	}
 	
+	public function create(array $attributes): bool {
+		global $log;
+	
+		$user = (new LdapUser)->inside(LDAP_BASE_DN);
+		
+		$user->cn = $attributes['cn'];
+		$user->samaccountname = $attributes['samaccountname'];
+		$user->userprincipalname = $attributes['userprincipalname'];
+		$user->displayname = $attributes['displayname'] ?? $attributes['cn'];
+		$user->givenname = $attributes['givenname'] ?? null;
+		$user->sn = $attributes['sn'] ?? null;
+		$user->mail = $attributes['mail'] ?? null;
+		$user->description = $attributes['description'] ?? null;
+		$user->pager = $attributes['pager'] ?? null;
+		$user->unicodePwd = $attributes['password'];
+		
+		$user->save;
+		
+		$user->refresh();
+		
+		// Enable the user.
+		$user->userAccountControl = 512;
+		
+		try {
+			$user->save();
+			return true;
+		} catch (\LdapRecord\LdapRecordException $e) {
+			// Failed saving user.
+		}
+
+	}
+	
 	public function deleteAccount($user) {
 		global $log;
 	
