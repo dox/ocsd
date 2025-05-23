@@ -67,7 +67,13 @@ foreach ($ldapUsers as $ldapUser) {
 			
 			$finalMessage = renderTemplate($templateMessage, $data);
 			
-			sendMail('SEH Password expiry', $ldapUser->getEmail(), null, $finalMessage);
+			$recipients = [
+				'to' => [
+					'email' => $ldapUser->getEmail()
+				]
+			];
+			
+			sendMail('SEH Password expiry', $recipients, $finalMessage);
 		}
 	} else {
 		// Password fine

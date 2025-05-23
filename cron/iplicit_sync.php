@@ -129,7 +129,13 @@ if (count($iplicit->errorLog) > 0) {
 
 
 if (count($iplicit->errorLog) > 0) {
-	sendMail('iPlicit sync errors', 'andrew.breakspear@seh.ox.ac.uk', null, implode(', ', $iPlicit->errorLog));
+	$recipients = [
+		'to' => [
+			'email' => 'andrew.breakspear@seh.ox.ac.uk'
+		]
+	];
+	
+	sendMail('iPlicit sync errors', $recipients, implode(', ', $iPlicit->errorLog));
 }
 
 class iPlicitAPI {
