@@ -98,6 +98,16 @@ class Person {
 		}
 	}
 	
+	public function isStudent() {
+		$studentTypes = array("UG", "PG", "GT", "GR", "VS", "VD", "VV", "VR");
+		
+		if (in_array($this->university_card_type, $studentTypes)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public function photograph() {
 		$imgSrc = "images/person_photos/UAS_UniversityCard-" . $this->university_card_sysis . ".jpg";
 	
