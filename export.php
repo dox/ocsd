@@ -5,20 +5,15 @@ requireLogin(); // Redirects if not logged in
 if ($user->isLoggedIn()) {
 	$requestedPage = isset($_GET['page']) ? $_GET['page'] : 'index';
 } else {
-	die("Not logged in");
+	$requestedPage = 'logon';
 }
 
-$pagePath = __DIR__ . "/pages/export_{$requestedPage}.php";
+$pagePath = __DIR__ . "/pages/{$requestedPage}.php";
 
-header('Content-Type: text/csv');
-header('Content-Disposition: attachment; filename="export.csv"');
-
-// Open output stream
-$output = fopen('php://output', 'w');
+// Fallback if file doesn’t exist
+if (!file_exists($pagePath)) {
+	$pagePath = __DIR__ . "/pages/404.php";
+}
 
 include_once($pagePath);
-
-// Close output stream
-fclose($output);
-exit;
 ?>

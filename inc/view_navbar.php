@@ -56,19 +56,14 @@ $navbarArray['test'] = array(
 	"link" => "./index.php?page=test"
 );
 
-$currentYear = date('Y');
-$yearOutput = $currentYear;
-$totalYears = 6;
-$i = 1;
-do {
+$sql = "SELECT (crs_start_dt DIV 10000) AS crs_start_dt FROM `Person` WHERE crs_start_dt IS NOT NULL GROUP BY (crs_start_dt DIV 10000) ORDER BY crs_start_dt DESC";
+$years = $db->query($sql);
+foreach ($years AS $year) {
 	$navbarArray['photos']['sublinks'][] = array(
-		"title" => " - " . $yearOutput,
-		"link" => "./report.php?n=photo_by_year&cohort=" . $i
+		"title" => " - " . $year['crs_start_dt'],
+		"link" => "export.php?page=export_photos&crs_start_dt=" . $year['crs_start_dt']
 	);
-
-	$yearOutput = $yearOutput - 1;
-	$i++;
-} while ($i <= $totalYears);
+}
 
 $navbarArray['ldap_all'] = array(
 	"title" => "LDAP",
