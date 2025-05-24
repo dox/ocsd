@@ -2,7 +2,7 @@
 $person = new Person(filter_var($_GET['cudid'], FILTER_SANITIZE_STRING));
 ?>
 
-<h1><?php echo icon('person', '1em'); ?> <?php echo $person->FullName . $person->getTypeBadge(); ?> </h1>
+<h1><?php echo icon('person', '1em') . "<span class=\"person-name\">" . $person->FullName . "</span>" . $person->getTypeBadge(); ?> </h1>
 <div class="row">
 	<div class="col-md-4">
 		<div class="profile-img">
