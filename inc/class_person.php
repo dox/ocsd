@@ -253,7 +253,7 @@ class Person {
 		}
 		
 		return sprintf(
-			'<span class="badge float-end %s">%s</span>',
+			'<span class="badge %s">%s</span>',
 			$class,
 			htmlspecialchars($type)
 		);

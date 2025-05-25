@@ -93,9 +93,14 @@ if ($filter == "ldap-no-cud") {
 		echo $user->getCommonName() . "\n";
 	}
 }
-?>
 
-<h1><?php echo icon('person-fill-lock', '1em') . " " . count($ldapUsers); ?> LDAP Users <small>(<?php echo $filter; ?>)</small></h1>
+$data = array(
+		'icon'		=> 'person-fill-lock',
+		'title'		=> count($ldapUsers) . " LDAP Users",
+		'subtitle'	=> 'Filter: ' . $filter
+);
+echo pageTitle($data);
+?>
 
 <table class="table">
 	<thead>

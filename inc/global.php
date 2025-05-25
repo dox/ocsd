@@ -39,6 +39,57 @@ function setting($name) {
 	}
 }
 
+function pageTitle($data) {
+	/* $data = array(
+			'icon'		=> 'question-diamond',
+			'title'		=> 'Page Title',
+			'subtitle'	=> 'Sub-Title'
+			'badge'		=> '<span class="badge text-bg-warning">??</span>',
+			'actions'	=> array(
+				$button1,
+				$button2
+			)
+	); */
+	
+	$output  = "<div class=\"row my-4\">";
+	
+	// Title
+	$output .= "<div class=\"d-flex justify-content-between align-items-start\">";
+	$output .= "<div>";
+	if (isset($data['title'])) {
+		if (isset($data['icon'])) {
+			$icon = "<span class=\"me-2\">" . icon($data['icon'], '1em') . "</span>";
+		}
+		$output .= "<h1 class=\"mb-1\">" . $icon . $data['title'] . "</h1>";
+	}
+	if (isset($data['subtitle'])) {
+		$output .= "<p class=\"lead text-secondary mb-0\">" .  $data['subtitle'] . "</p>";
+	}
+	$output .= "</div>";
+	
+	// Badge
+	$output .= "<div>";
+	if (isset($data['badge'])) {
+		$output .= "<h2>" . $data['badge'] . "</h2>";
+	}
+	$output .= "</div>";
+	$output .= "</div>";
+	
+	// Buttons aligned right under the title
+	if (isset($data['actions'])) {
+		$output .= "<div class=\"d-flex justify-content-end gap-2 mt-2\">";
+		foreach ($data['actions'] AS $action) {
+			$output .= $action;
+			//$output .= "<button class=\"btn btn-sm " . $actionData['class'] . "\">" . $title . "</button>";
+		}
+		$output .= "</div>";
+	}
+	
+	$output .= "</div>";
+	
+	return $output;
+}
+
 function alert($type, $title, $content) {
 	// List of valid Bootstrap alert types
 	$validTypes = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];

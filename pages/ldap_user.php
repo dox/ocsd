@@ -1,10 +1,13 @@
 <?php
 $ldapUser = $ldap->findUser(filter_var($_GET['samaccountname'], FILTER_SANITIZE_STRING));
-?>
 
-<h1><?php echo icon('person-fill-lock', '1em'); ?> <?php echo $ldapUser['cn'][0]; ?></h1>
+$data = array(
+		'icon'		=> 'person-fill-lock',
+		'title'		=> $ldapUser['cn'][0],
+		'subtitle'	=> 'Username: ' . $ldapUser['samaccountname'][0]
+);
+echo pageTitle($data);
 
-<?php
 $lookups = array_filter([
 	'sso_username'		=> $ldapUser['samaccountname'][0] ?? null,
 	'MiFareID'          => $ldapUser['pager'][0] ?? null,

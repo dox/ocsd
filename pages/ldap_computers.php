@@ -47,9 +47,14 @@ $allowedFilters = [
 $filter = $_GET['filter'] ?? null;
 
 $ldapComputers = $ldap->findByFilters($allowedFilters[$filter]);
-?>
 
-<h1><?php echo icon('person-fill-lock', '1em') . " " . count($ldapComputers); ?> LDAP Computers <small>(<?php echo $filter; ?>)</small></h1>
+$data = array(
+		'icon'		=> 'person-fill-lock',
+		'title'		=> count($ldapComputers) . " LDAP Computers",
+		'subtitle'	=> 'Filter: ' . $filter
+);
+echo pageTitle($data);
+?>
 
 <table class="table">
 	<thead>

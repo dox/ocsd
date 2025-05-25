@@ -1,7 +1,6 @@
 <div id="chart"></div>
 <div id="chart-logs"></div>
 
-
 <?php
 $sql = "SELECT 
   s.date_created,

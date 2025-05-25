@@ -36,11 +36,14 @@ if ($filter == "cud-no-ldap") {
 		$i++;
 	}
 }
-?>
 
-<h1><?php echo icon('person', '1em') . " " . count($personsAll); ?> CUD Persons</h1>
+$data = array(
+		'icon'		=> 'person',
+		'title'		=> count($personsAll) . " CUD Persons",
+		'subtitle'	=> 'Filter: ' . $filter
+);
+echo pageTitle($data);
 
-<?php
 if (isset($_GET['view']) && $_GET['view'] == "card") {
 	$viewTitle = "Table View";
 	$viewURL = "index.php?page=cud_persons&filter=" . $filter . "&view=table";

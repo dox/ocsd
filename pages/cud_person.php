@@ -1,8 +1,18 @@
 <?php
 $person = new Person(filter_var($_GET['cudid'], FILTER_SANITIZE_STRING));
+
+$data = array(
+		'icon'		=> 'person',
+		'title'		=> $person->FullName,
+		'subtitle'	=> 'cudid: ' . $person->cudid,
+		'badge'		=> $person->getTypeBadge(),
+		'actions'	=> array (
+			$person->actionsButton()
+		)
+);
+echo pageTitle($data);
 ?>
 
-<h1><?php echo icon('person', '1em') . "<span class=\"person-name\">" . $person->FullName . "</span>" . $person->getTypeBadge(); ?> </h1>
 <div class="row">
 	<div class="col-md-4">
 		<div class="profile-img">
@@ -39,8 +49,6 @@ $person = new Person(filter_var($_GET['cudid'], FILTER_SANITIZE_STRING));
 		Paxon: <strong><?php echo $person->PaxonID; ?></strong><br>
 		SITS: <strong><?php echo $person->sits_student_code; ?></strong><br>
 		SysIS: <strong><?php echo $person->university_card_sysis; ?></strong>
-		<hr />
-		<?php echo $person->actionsButton(); ?>
 	</div>
 	<div class="col-md-8">
 		<div class="profile-head">

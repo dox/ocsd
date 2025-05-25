@@ -17,10 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $settingsAll = $settings->getAll();
-?>
-<h1><?php echo icon('gear', '1em'); ?> Settings</h1>
 
-<?php
+$data = array(
+		'icon'		=> 'gear',
+		'title'		=> 'Settings',
+		'subtitle'	=> 'Site settings, and LDAP behaviours'
+);
+echo pageTitle($data);
+
 echo alert('danger', "Warning!", "Making changes to these settings can disrupt the running of this site.  Proceed with caution.");
 ?>
 

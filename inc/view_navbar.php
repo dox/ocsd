@@ -45,7 +45,7 @@ $navbarArray['photos'] = array(
 	"sublinks" => array(
 		array(
 			"title" => "All",
-			"link" => "./report.php?n=photo_by_year"
+			"link" => "export.php?page=export_photos"
 		)
 	)
 );

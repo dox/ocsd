@@ -1,6 +1,11 @@
-<h1><?php echo icon('list-task', '1em'); ?> Scheduled Tasks</h1>
-
 <?php
+$data = array(
+		'icon'		=> 'list-task',
+		'title'		=> 'Scheduled Tasks',
+		'subtitle'	=> 'These tasks are normally triggered via cron'
+);
+echo pageTitle($data);
+
 $tasks = array(
 	'test' => [
 		'name' => 'Test',

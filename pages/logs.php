@@ -1,9 +1,13 @@
 <?php
 $log->purge();
 $logsAll = $log->getAll();
-?>
 
-<h1><?php echo icon('clock-history', '1em'); ?> Logs</h1>
-<?php
+$data = array(
+		'icon'		=> 'clock-history',
+		'title'		=> 'Logs',
+		'subtitle'	=> 'System logs'
+);
+echo pageTitle($data);
+
 echo $log->table($logsAll);
 ?>
