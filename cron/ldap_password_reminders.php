@@ -17,20 +17,7 @@ cliOutput("Itterating through " . count($ldapUsers) . " LDAP users", "green");
 
 $ldap = new Ldap();
 
-$templateMessage = "
-<p>Dear {{firstname}},</p>
-<p>The password for your St Edmund Hall username <strong>{{username}}</strong> will expire in <strong>{{password_expiry_duration}}</strong>.</p>
-
-<p>This password grants access to IT services such as the College website (<a href=\"https://www.seh.ox.ac.uk\" target=\"_blank\">www.seh.ox.ac.uk</a>), SEH WiFi, printing, EPOS, and more.</p>
-
-<p>To avoid disruption to these services, please change your password before it expires by <a href=\"https://www.seh.ox.ac.uk/it/password/index.php?node=reset_by_password&username={{username}}\" target=\"_blank\">resseting your password here</a></p>
-
-<p>If you need assistance, please contact the IT Office at <a href=\"mailto:help@seh.ox.ac.uk\">help@seh.ox.ac.uk</a>.</p>
-
-<p>Kind regards,<br>
-<strong>IT Office</strong><br>
-St Edmund Hall
-</p>";
+$templateMessage = setting('ldap_password_warn_template');
 
 foreach ($ldapUsers as $ldapUser) {
 	$user = $ldap->findUser($ldapUser['samaccountname'][0]);

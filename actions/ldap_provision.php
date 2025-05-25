@@ -27,43 +27,11 @@ $newUserArray = array(
 );
 
 if ($ldap->create($newUserArray)) {
-	$templateMessage = "<p>Dear {{firstname}}, your College computer account for St Edmund Hall has now been activated, and your details are listed below:</p>
-	
-	<p>Username: {{username}}</p>
-	<p>Password: <code>{{password}}</code> (case sensitive)</p>
-	
-	<p>This College username (but not the password) is the same as your University username (which you use to access www.office.com [the University email system], SOLO [library catalogue], Webauth [for accessing things such as Canvas, the virtual learning environment] etc.). For more information on your University username, please see https://help.it.ox.ac.uk/webauth/oxfordusername</p>
-	
-	<h3>WiFI/Internet</h3>
-	<p>Your College username/password will grant you access to the SEH WiFi (please 'forget' the SEH Guest WiFi network if you have been using it).</p>
-	
-	<p>You can also use this username/password to log on to the protected sections of the www.seh.ox.ac.uk website.</p>
-	
-	<p>Please note that your Internet access is monitored. Downloading of illegal material (such as films or music) is strictly prohibited and, if caught, will be fined &pound;100/offence by the University Information Security team.</p>
-	
-	<h3>Printing</h3>
-	<p>You can either print from any of the onsite computers at St Edmund Hall, or you can log on to http://printing.seh.ox.ac.uk from your own computer.</p>
-	
-	<p>Paper is available from the Lodge</p>
-	
-	<h3>Computers</h3>
-	<p>The above username/password will log you on to any computer at St Edmund Hall.</p>
-	
-	<p>If you wish to change your College password, please <a href=\"https://www.seh.ox.ac.uk/it/password/index.php?action=change&login={{username}}\">click here</a></p>
-	
-	<p>Please note: it is important that you do not share these details with anyone. It is used to track who had access and made changes to specific information. You are responsible for everything done on the system using your username and password.</p>
-	
-	<h3>SCR Access</h3>
-	<p>If you have been granted SCR access you can book meals online by visiting https://scr.seh.ox.ac.uk.</p>
-	
-	<p>Please direct any queries regarding your battels payments, meal charges or dinner bookings to fees@seh.ox.ac.uk.</p>
-	
-	<p>For any College-IT issues, please email help@seh.ox.ac.uk</p>
-	
-	<p>Regards,<br /><br />
-	
-	IT Office<br />
-	St Edmund Hall<br /></p>";
+	if ($person->isStudent()) {
+		$templateMessage = setting('ldap_provision_staff_template');
+	} else {
+		$templateMessage = setting('ldap_provision_student_template');
+	}
 	
 	$data = [
 		'firstname' => $person->firstname,
@@ -79,11 +47,12 @@ if ($ldap->create($newUserArray)) {
 		],
 		'cc' => [
 			'email' => $person->alt_email
-		],
-		'bcc' => [
-			'email' => 'andrew.breakspear@seh.ox.ac.uk'
 		]
 	];
+	
+	foreach (explode(",", setting('ldap_provision_recipients')) AS $recipient) {
+		$recipients['bcc'][] = $recipient;
+	}
 	
 	sendMail('SEH IT Credentials', $recipients, $finalMessage);
 	

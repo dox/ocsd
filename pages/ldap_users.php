@@ -59,9 +59,12 @@ $allowedFilters = [
 		]
 	],
 	'group' => [
+		'memberOf' => [
+			'operator' => '=',
+			'value' => $_GET['ldap_search']
+		]
 	]
 ];
-
 
 $filter = $_GET['filter'] ?? null;
 
@@ -86,17 +89,11 @@ if ($filter == "ldap-no-cud") {
 		
 		$i++;
 	}
-} elseif ($filter == "group") {
-	$members = $ldap->getGroupMembers($_GET['ldap_search']);
-	printArray($members);
-	foreach ($members as $user) {
-		echo $user->getCommonName() . "\n";
-	}
 }
 
 $data = array(
 		'icon'		=> 'person-fill-lock',
-		'title'		=> count($ldapUsers) . " LDAP Users",
+		'title'		=>  count($ldapUsers) . autoPluralise(" User", " Users", count($ldapUsers)),
 		'subtitle'	=> 'Filter: ' . $filter
 );
 echo pageTitle($data);

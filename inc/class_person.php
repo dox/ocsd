@@ -123,7 +123,9 @@ class Person {
 		
 		$output  = "<div class=\"col\">";
 		$output .= "<div class=\"card\">";
-		$output .= "<img src=\"" . $this->photograph() . "\" class=\"card-img-top\" alt=\"...\">";
+		$output .= "<div class=\"ratio ratio-1x1\">";
+		$output .= "<img src=\"" . $this->photograph() . "\" class=\"object-fit-cover card-img-top\" alt=\"...\">";
+		$output .= "</div>";
 		$output .= "<div class=\"card-body\">";
 		$output .= "<h5 class=\"card-title\"><a href=\"" . $personURL . "\">" . $this->FullName . "</a></h5>";
 		$output .= "<p class=\"card-text\">";

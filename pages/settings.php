@@ -66,8 +66,8 @@ echo alert('danger', "Warning!", "Making changes to these settings can disrupt t
 						  </div>";
 			  break;
   
-		  case 'json':
-			  $output .= "<textarea rows=\"10\" class=\"form-control\" id=\"value\" name=\"value\">" . json_encode(json_decode($setting['value']), JSON_PRETTY_PRINT) . "</textarea>
+		  case 'html':
+			  $output .= "<textarea rows=\"10\" class=\"form-control\" id=\"value\" name=\"value\">" . htmlspecialchars($setting['value'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</textarea>
 						  <button class=\"btn btn-primary\" type=\"submit\" id=\"button-addon2\">Update</button>";
 			  break;
   
