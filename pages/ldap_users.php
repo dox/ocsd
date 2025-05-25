@@ -91,6 +91,9 @@ if ($filter == "ldap-no-cud") {
 	}
 }
 
+if (!is_array($ldapUsers)) {
+	$ldapUsers = array();
+}
 $data = array(
 		'icon'		=> 'person-fill-lock',
 		'title'		=>  count($ldapUsers) . autoPluralise(" User", " Users", count($ldapUsers)),
@@ -113,13 +116,15 @@ echo pageTitle($data);
 	<tbody>
 		<?php
 		foreach ($ldapUsers as $ldapUser) {
-			$record = $ldap->findUser($ldapUser['samaccountname'][0]);
+			if (!isset($ldapUser['samaccountname'][0])) {
+				continue;
+			}
 			
+			$record = $ldap->findUser($ldapUser['samaccountname'][0]);
 			if ($record) {
 				$ldapUser = new LdapUserWrapper($record);
 			} else {
-				echo $ldapUser['samaccountname'][0];
-				$ldapUser = null;
+				continue;
 			}
 
 			$lookups = array_filter([
