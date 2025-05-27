@@ -7,7 +7,8 @@ $data = array(
 		'subtitle'	=> 'cudid: ' . $person->cudid,
 		'badge'		=> $person->getTypeBadge(),
 		'actions'	=> array (
-			$person->actionsButton()
+			$person->actionsButton(),
+			'<a href=\'index.php?page=signpass&cudid=' . $person->cudid . '\' class="btn btn-sm btn-outline-info">Signpass</a>'
 		)
 );
 echo pageTitle($data);
