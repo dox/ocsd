@@ -123,10 +123,23 @@ cliOutput(count($iplicit->updateLog) . " students updated of " .  " CUD persons"
 cliOutput(count($iplicit->createLog) . " students created", "green");
 if (count($iplicit->errorLog) > 0) {
 	cliOutput(count($iplicit->errorLog) . " errors encountered", "red");
+	
+	$logData = [
+		'category' => 'cron',
+		'result'   => 'warning',
+		'description' => 'Updated ' . count($iplicit->updateLog) . ' iPlicit records with ' . count($iplicit->errorLog) . 'errors'
+	];
+	$log->create($logData);
 } else {
 	cliOutput(count($iplicit->errorLog) . " errors encountered", "green");
+	
+	$logData = [
+		'category' => 'cron',
+		'result'   => 'success',
+		'description' => 'Updated ' . count($iplicit->updateLog) . ' iPlicit records with ' . count($iplicit->errorLog) . 'errors'
+	];
+	$log->create($logData);
 }
-
 
 if (count($iplicit->errorLog) > 0) {
 	$recipients = [
