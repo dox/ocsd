@@ -179,6 +179,7 @@ foreach ($cudPersons AS $cudPerson) {
 	}
 }
 
+$db->upsertByName('cron_kx_sync', date('c'));
 $logData = [
 	'category' => 'cron',
 	'result'   => 'success',

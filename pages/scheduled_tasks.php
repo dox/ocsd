@@ -11,43 +11,43 @@ $tasks = array(
 		'name' => 'Test',
 		'description' => 'This does nothing - it is purely for testing purposes',
 		'url' => './cron/test.php',
-		'last_run' => '2024-05-01 12:23:34'
+		'last_run' => getStat('cron_test')
 	],
 	'ldap_sync' => [
 		'name' => 'LDAP Sync',
 		'description' => 'Updates fields in matching LDAP/CUD records from the current values in CUD',
 		'url' => './cron/ldap_sync.php',
-		'last_run' => '2024-05-01 12:23:34'
+		'last_run' => getStat('cron_ldap_sync')
 	],
 	'ldap_passwords' => [
 		'name' => 'LDAP Passwords Reminders',
 		'description' => 'Emails LDAP users nearing their password expiry date, and disabled those who exceed it',
 		'url' => './cron/some_url.php',
-		'last_run' => '2024-05-01 12:23:34'
+		'last_run' => getStat('cron_ldap_passwords')
 	],
 	'accurate_sync' => [
 		'name' => 'Accurate/Mercury Sync',
 		'description' => 'Populates the Accurate/Mercury staging table with current CUD data',
 		'url' => './cron/accurate_sync.php',
-		'last_run' => '2024-05-01 12:23:34'
+		'last_run' => getStat('cron_accurate_sync')
 	],
 	'iplicit_syn' => [
 		'name' => 'iPlicit Sync',
 		'description' => 'Compares each iPlicit/CUD record and submits only required updates (via API) to iPlicit',
 		'url' => './cron/iplicit_syng.php',
-		'last_run' => '2024-05-01 12:23:34'
+		'last_run' => getStat('cron_iplicit_sync')
 	],
 	'salto_sync' => [
 		'name' => 'SALTO Sync',
 		'description' => 'Populates the SALTO staging table with current CUD data',
 		'url' => './cron/salto_sync.php',
-		'last_run' => '2024-05-01 12:23:34'
+		'last_run' => getStat('cron_salto_sync')
 	],
 	'kx_sync' => [
 		'name' => 'Kx Sync',
 		'description' => 'Populates the Kx staging table with current CUD data',
 		'url' => './cron/salto_sync.php',
-		'last_run' => '2024-05-01 12:23:34'
+		'last_run' => getStat('cron_kx_sync')
 	]
 );
 

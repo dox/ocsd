@@ -119,6 +119,7 @@ foreach ($cudPersons AS $cudPerson) {
 	
 }
 
+$db->upsertByName('cron_iplicit_sync', date('c'));
 cliOutput(count($iplicit->updateLog) . " students updated of " .  " CUD persons", "green");
 cliOutput(count($iplicit->createLog) . " students created", "green");
 if (count($iplicit->errorLog) > 0) {

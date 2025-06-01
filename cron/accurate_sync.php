@@ -28,6 +28,8 @@ if($conn) {
 		}
 	}
 	
+	$db->upsertByName('cron_accurate_sync', date('c'));
+	
 	$event = "Accurate sync complete for " . count($queries) . " sql statements";
 	$logData = [
 		'category' => 'cron',

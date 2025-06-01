@@ -163,6 +163,32 @@ class Database {
 	
 		return $result;
 	}
+	
+	public function upsertByName(string $name, string $value): void {
+		// Check if any row with that name exists
+		$checkSql = "SELECT uid FROM _stats WHERE name = :name LIMIT 1";
+		$checkStmt = $this->pdo->prepare($checkSql);
+		$checkStmt->execute([':name' => $name]);
+		$existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+	
+		if ($existing) {
+			// Update the existing row
+			$updateSql = "UPDATE _stats SET value = :value WHERE uid = :uid";
+			$updateStmt = $this->pdo->prepare($updateSql);
+			$updateStmt->execute([
+				':value' => $value,
+				':uid'    => $existing['uid'],
+			]);
+		} else {
+			// Insert a new row
+			$insertSql = "INSERT INTO _stats (name, value) VALUES (:name, :value)";
+			$insertStmt = $this->pdo->prepare($insertSql);
+			$insertStmt->execute([
+				':name'  => $name,
+				':value' => $value,
+			]);
+		}
+	}
 }
 
 // Usage

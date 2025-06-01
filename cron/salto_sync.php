@@ -204,6 +204,7 @@ foreach ($cudPersons AS $cudPerson) {
 	
 }
 
+$db->upsertByName('cron_salto_sync', date('c'));
 $event = "SALTO sync complete.  Created: " . $createCount . " / Updated: " . $updateCount;
 $logData = [
 	'category' => 'cron',

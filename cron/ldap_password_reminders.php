@@ -66,4 +66,6 @@ foreach ($ldapUsers as $ldapUser) {
 		// Password fine
 	}
 }
+
+$db->upsertByName('cron_ldap_passwords', date('c'));
 ?>

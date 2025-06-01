@@ -39,6 +39,20 @@ function setting($name) {
 	}
 }
 
+function getStat($name) {
+	global $db;
+	
+	$sql = "SELECT * FROM _stats WHERE name = :name LIMIT 1";
+	
+	$result = $db->query($sql, [':name' => $name]);
+	
+	if (empty($result)) {
+		return false;
+	} else {
+		return $result[0]['value'];
+	}
+}
+
 function pageTitle($data) {
 	/* $data = array(
 			'icon'		=> 'question-diamond',

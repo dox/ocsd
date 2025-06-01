@@ -110,8 +110,12 @@ class Logs {
 		$logsAge = setting('logs_retention');
 		
 		$sql = "DELETE FROM _logs WHERE date_created < NOW() - INTERVAL " . $logsAge . " DAY";
+		$db->query($sql);
 		
-		return $db->query($sql);
+		$sql = "DELETE FROM _stats WHERE date_created < NOW() - INTERVAL " . $logsAge . " DAY";
+		$db->query($sql);
+		
+		return true;
 	}
 
 }

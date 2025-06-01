@@ -44,6 +44,8 @@ foreach ($ldapUsers as $ldapUser) {
 		}
 		
 		if (!empty($updates)) {
+			$db->upsertByName('cron_ldap_sync', date('c'));
+			
 			cliOutput("Updating " . $ldapUser['samaccountname'][0] . ": " . implode(', ', array_keys($updates)) . " to " . implode(', ', $updates), "green");
 			$logData = [
 				'category' => 'cron',
