@@ -173,19 +173,21 @@ class Database {
 	
 		if ($existing) {
 			// Update the existing row
-			$updateSql = "UPDATE _stats SET value = :value WHERE uid = :uid";
+			$updateSql = "UPDATE _stats SET value = :value, date_created = :date_created WHERE uid = :uid";
 			$updateStmt = $this->pdo->prepare($updateSql);
 			$updateStmt->execute([
 				':value' => $value,
+				':date_created' => date('c'),
 				':uid'    => $existing['uid'],
 			]);
 		} else {
 			// Insert a new row
-			$insertSql = "INSERT INTO _stats (name, value) VALUES (:name, :value)";
+			$insertSql = "INSERT INTO _stats (name, value, date_created) VALUES (:name, :value, :date_created)";
 			$insertStmt = $this->pdo->prepare($insertSql);
 			$insertStmt->execute([
 				':name'  => $name,
 				':value' => $value,
+				':date_created' => date('c'),
 			]);
 		}
 	}
