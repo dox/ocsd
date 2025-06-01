@@ -109,6 +109,7 @@ foreach ($cudPersons AS $cudPerson) {
 				$logData = [
 					'category' => 'cron',
 					'result'   => 'success',
+					'cudid'   => $cudPerson['cudid'],
 					'description' => $cudPerson['sso_username'] . ' updated ' . implode(', ', array_keys($updateArray)) . ' on SALTO staging table'
 				];
 				$log->create($logData);
@@ -117,6 +118,7 @@ foreach ($cudPersons AS $cudPerson) {
 					$logData = [
 						'category' => 'cron',
 						'result'   => 'error',
+						'cudid'   => $cudPerson['cudid'],
 						'description' => 'Error updating ' . $cudPerson['sso_username'] . ' on SALTO staging table'
 					];
 					$log->create($logData);
@@ -181,6 +183,7 @@ foreach ($cudPersons AS $cudPerson) {
 			$logData = [
 				'category' => 'cron',
 				'result'   => 'success',
+				'cudid'   => $cudPerson['cudid'],
 				'description' => $cudPerson['sso_username'] . ' created on SALTO staging table'
 			];
 			$log->create($logData);
@@ -190,6 +193,7 @@ foreach ($cudPersons AS $cudPerson) {
 				$logData = [
 					'category' => 'cron',
 					'result'   => 'error',
+					'cudid'   => $cudPerson['cudid'],
 					'description' => 'Error creating ' . $cudPerson['sso_username'] . ' on SALTO staging table'
 				];
 				$log->create($logData);

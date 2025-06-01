@@ -48,6 +48,7 @@ foreach ($ldapUsers as $ldapUser) {
 			$logData = [
 				'category' => 'cron',
 				'result'   => 'success',
+				'ldap'   => $ldapUser['samaccountname'][0],
 				'description' => "Updating " . $ldapUser['samaccountname'][0] . ": " . implode(', ', array_keys($updates)) . " to " . implode(', ', $updates)
 			];
 			$log->create($logData);

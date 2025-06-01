@@ -11,8 +11,8 @@ class Logs {
 		$description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8'); // Better escape special characters
 		
 		// Prepare the SQL query with placeholders
-		$sql = "INSERT INTO " . self::$table_name . " (date_created, type, result, cudid, description, username, ip) 
-				VALUES (:date_created, :type, :result, :cudid, :description, :username, :ip)";
+		$sql = "INSERT INTO " . self::$table_name . " (date_created, type, result, cudid, ldap, description, username, ip) 
+				VALUES (:date_created, :type, :result, :cudid, :ldap, :description, :username, :ip)";
 		
 		// Use the query method from the Database class to execute the query
 		$params = [
@@ -20,6 +20,7 @@ class Logs {
 			':type' => $array['type'],
 			':result' => $array['result'],
 			':cudid' => $array['cudid'],
+			':ldap' => $array['ldap'],
 			':description' => $array['description'],
 			':username' => $_SESSION['username'],
 			':ip' => ip2long($_SERVER['REMOTE_ADDR'])
@@ -57,6 +58,7 @@ class Logs {
 		$table .= "<th scope=\"col\">Type</th>";
 		$table .= "<th scope=\"col\">Result</th>";
 		$table .= "<th scope=\"col\">CUDID</th>";
+		$table .= "<th scope=\"col\">LDAP</th>";
 		$table .= "<th scope=\"col\">Description</th>";
 		$table .= "</tr>";
 		$table .= "</thead>";
@@ -97,6 +99,7 @@ class Logs {
 			. '<td>' . htmlspecialchars($log['type']) . '</td>'
 			. '<td>' . htmlspecialchars($log['result']) . '</td>'
 			. '<td>' . htmlspecialchars($log['cudid']) . '</td>'
+			. '<td>' . htmlspecialchars($log['ldap']) . '</td>'
 			. '<td>' . htmlspecialchars($log['description']) . '</td>'
 			. '</tr>';
 	}

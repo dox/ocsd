@@ -170,6 +170,7 @@ foreach ($cudPersons AS $cudPerson) {
 		$logData = [
 			'category' => 'cron',
 			'result'   => 'error',
+			'cudid'   => $cudPerson->cudid,
 			'description' => 'FAILED to created record for ' . $cudPerson->FullName . ': ' . print_r(sqlsrv_errors(), true)
 		];
 		$log->create($logData);
