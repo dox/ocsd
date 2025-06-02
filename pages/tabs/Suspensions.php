@@ -12,6 +12,6 @@ foreach ($person->suspensions()->all() AS $result) {
   $end = $result['SuspendEndDt'] ?? $result['SuspendExpEndDt'] ?? null;
   $reason = $result['reason'] ?? "Unknown";
   
-  echo "<div class=\"alert alert-info text-center\" role=\"alert\">Suspended " . date('Y-m-d', strtotime($start)) . " to " . date('Y-m-d', strtotime($end)) . " Reason: " . $reason . "</div>";
+  echo "<div class=\"alert alert-dark text-center\" role=\"alert\"><span class=\"badge float-start text-bg-secondary\">Expired</span> Suspended " . date('Y-m-d', strtotime($start)) . " to " . date('Y-m-d', strtotime($end)) . " Reason: " . $reason . "</div>";
 }
 ?>
