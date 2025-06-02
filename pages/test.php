@@ -6,9 +6,13 @@ $data = array(
 );
 echo pageTitle($data);
 
-//sendMail('Test', 'andrew.breakspear@seh.ox.ac.uk', array('abreaky@mac.com'), 'Test body');
+$recipients = [
+	'to' => [
+		'email' => ''
+	]
+];
+sendMail('Test', $recipients, 'Test message');
 
-
-$db->upsertByName('example', '42');
+//$db->upsertByName('example', '42');
 	
 ?>
