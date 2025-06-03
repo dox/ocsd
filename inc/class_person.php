@@ -208,7 +208,8 @@ class Person {
 	}
 	
 	public function ssoButton() {
-		if (!empty($this->cudid)) {
+		if (!empty($this->cudid) && !empty($this->sso_username)) {
+			return "yes";
 			$url = "index.php?page=cud_person&cudid=" . $this->cudid;
 			
 			return sprintf(
@@ -218,6 +219,7 @@ class Person {
 				$this->getSsoButtonBadge()
 			);
 		}
+		return "no";
 		return false;
 	}
 	

@@ -10,7 +10,7 @@ $allowedFilters = [
 		WHERE STR_TO_DATE(SuspendStrDt, '%Y%m%d') <= CURDATE()
 		  AND STR_TO_DATE(COALESCE(SuspendEndDt, SuspendExpEndDt), '%Y%m%d') >= CURDATE()
 	)",
-	'test' => 'cudid = \'7EBED3BE-233F-4376-99AC-AAE649686FA8\''
+	'test' => 'cudid = \'9357283B-B4CF-4DC0-A2A4-4E01310846FE\''
 ];
 
 $filter = $_GET['filter'] ?? null;
@@ -93,7 +93,13 @@ if (isset($_GET['view']) && $_GET['view'] == "card") {
 			$ldapButton = $ldapUser->getLDAPButton();
 		} else {
 			$ldapUser = null;
-			$ldapButton = '<span class="text-muted">Not found</span>'; // or whatever fallback you like
+			$ldapButton = '<span class="text-muted">Not found</span>';
+		}
+		
+		if ($person->ssoButton()) {
+			$ssoButton = $person->ssoButton();
+		} else {
+			$ssoButton = '<span class="text-muted">Not found</span>';
 		}
 		
 		$output .= "<th scope=\"row\">" . $person->ssoButton() . "</th>";
