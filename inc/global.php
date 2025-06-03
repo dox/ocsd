@@ -262,7 +262,9 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 function sendMail($subject, $recipients = NULL, $body = NULL) {
-	global $log, $mail;
+	global $log;
+	
+	$mail = new PHPMailer(true);
 	
 	try {
 		//Server settings
@@ -303,6 +305,8 @@ function sendMail($subject, $recipients = NULL, $body = NULL) {
 		$mail->Body    = $body;
 	
 		$mail->send();
+		
+		$mail->clearAddresses();
 		
 		foreach ($recipients as $type => $details) {
 			if (isset($details['email'])) {

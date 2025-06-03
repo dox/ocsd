@@ -41,10 +41,4 @@ $ldap = new Ldap();
 
 // Currently logged in user
 $user = new User($ldap);
-
-//Import PHPMailer classes into the global namespace
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-$mail = new PHPMailer(true);
 ?>
