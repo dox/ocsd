@@ -300,7 +300,7 @@ class Person {
 		return new Enrolments($this->cudid);
 	}
 	
-	public function collegedfees(): CollegeFees {
+	public function collegefees(): CollegeFees {
 		return new CollegeFees($this->cudid);
 	}
 	

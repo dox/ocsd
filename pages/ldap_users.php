@@ -15,10 +15,10 @@ $allowedFilters = [
 			'operator' => '!=',
 			'value' => 'computer'
 		],
-		'pwdLastSet' => [
-			'operator' => '<=',
-			'value' => convertDateToWinTime($accountExpiredAge)
-		],
+		'useraccountcontrol' => [
+			'operator' => '|',
+			'value' => '512|544'
+		]
 	],
 	'expired' => [
 		'objectClass' => [
@@ -27,11 +27,7 @@ $allowedFilters = [
 		],
 		'pwdLastSet' => [
 			'operator' => '<=',
-			'value' => convertDateToWinTime($pwdDisableAge)
-		],
-		'useraccountcontrol' => [
-			'operator' => '|',
-			'value' => '512|544'
+			'value' => convertDateToWinTime($accountExpiredAge)
 		]
 	],
 	'expiring' => [
