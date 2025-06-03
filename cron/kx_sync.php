@@ -28,7 +28,7 @@ if($conn) {
 
 
 // BUILD ARRAY OF CUD PERSONS
-$sql = "SELECT cudid FROM Person $whereClause";
+$sql = "SELECT cudid FROM Person";
 $cudPersons = $db->get($sql);
 cliOutput("Connection to CUD db established", "green");
 

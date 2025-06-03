@@ -59,4 +59,6 @@ foreach ($ldapUsers as $ldapUser) {
 		}
 	}
 }
+
+$db->upsertByName('cron_ldap_sync', date('c'));
 ?>
