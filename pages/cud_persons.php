@@ -102,7 +102,7 @@ if (isset($_GET['view']) && $_GET['view'] == "card") {
 			$ssoButton = '<span class="text-muted">Not found</span>';
 		}
 		
-		$output .= "<th scope=\"row\">" . $person->ssoButton() . "</th>";
+		$output .= "<th scope=\"row\">" . $ssoButton . "</th>";
 		$output .= "<td>" . $ldapButton . "</td>";
 		$output .= "<td>" . $person->lastname . "</td>";
 		$output .= "<td>" . $person->firstname . "</td>";
