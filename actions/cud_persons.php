@@ -3,7 +3,7 @@ include_once("../inc/autoload.php");
 
 header('Content-Type: application/json');
 
-if ($user->isLoggedIn()) {
+if ($user->isLoggedIn() && isset($_GET['search'])) {
 	$searchColumns = ['cudid', 'sits_student_code', 'firstname', 'lastname', 'sso_username', 'barcode'];
 	$searchTerm = $_GET['search'] ?? null;
 	$whereClause = '';
