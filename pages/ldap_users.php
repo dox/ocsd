@@ -49,9 +49,17 @@ $allowedFilters = [
 			'operator' => '!=',
 			'value' => 'group'
 		],
-		'cn' => [
-			'operator' => '=',
-			'value' => '*' . $_POST['ldap_search'] . '*'
+		'OR' => [
+			[
+				'attribute' => 'cn',
+				'operator'  => '=',
+				'value'     => '*' . $_POST['ldap_search'] . '*'
+			],
+			[
+				'attribute' => 'samaccountname',
+				'operator'  => '=',
+				'value'     => '*' . $_POST['ldap_search'] . '*'
+			]
 		]
 	],
 	'group' => [

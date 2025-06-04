@@ -214,31 +214,67 @@ class Ldap {
 
 	private function buildFilter(array $filters): string {
 		$extraFilters = [];
-
+	
 		foreach ($filters as $attribute => $conditions) {
-			$operator = $conditions['operator'] ?? '=';
-			$value = $conditions['value'];
-
-			if ($operator === '>') {
-				$operator = '>=';
-				if (is_numeric($value)) $value += 1;
-			} elseif ($operator === '<') {
-				$operator = '<=';
-				if (is_numeric($value)) $value -= 1;
-			}
-
-			if ($operator === '|') {
-				$parts = array_map(fn($val) => "($attribute=" . trim($val) . ")", explode('|', $value));
-				$extraFilters[] = '(|' . implode('', $parts) . ')';
-			} elseif ($operator === '!=') {
-				$extraFilters[] = "(!($attribute=$value))";
+			if (strtoupper($attribute) === 'OR' && is_array($conditions)) {
+				$orParts = [];
+				foreach ($conditions as $cond) {
+					$attr = $cond['attribute'];
+					$operator = $cond['operator'] ?? '=';
+					$value = $cond['value'];
+	
+					if ($operator === '>') {
+						$operator = '>=';
+						if (is_numeric($value)) $value += 1;
+					} elseif ($operator === '<') {
+						$operator = '<=';
+						if (is_numeric($value)) $value -= 1;
+					}
+	
+					$orParts[] = $this->formatLdapCondition($attr, $operator, $value);
+				}
+				$extraFilters[] = '(|' . implode('', $orParts) . ')';
 			} else {
-				$extraFilters[] = "($attribute$operator$value)";
+				// Regular single-attribute case
+				$operator = $conditions['operator'] ?? '=';
+				$value = $conditions['value'];
+	
+				if ($operator === '>') {
+					$operator = '>=';
+					if (is_numeric($value)) $value += 1;
+				} elseif ($operator === '<') {
+					$operator = '<=';
+					if (is_numeric($value)) $value -= 1;
+				}
+	
+				if ($operator === '|') {
+					$parts = array_map(fn($val) => "($attribute=" . trim($val) . ")", explode('|', $value));
+					$extraFilters[] = '(|' . implode('', $parts) . ')';
+				} elseif ($operator === '!=') {
+					$extraFilters[] = "(!($attribute=$value))";
+				} else {
+					$extraFilters[] = "($attribute$operator$value)";
+				}
 			}
 		}
-
+	
 		return '(&' . implode('', $extraFilters) . ')';
 	}
+	
+	private function formatLdapCondition(string $attribute, string $operator, $value): string {
+		switch ($operator) {
+			case '=':
+				return "({$attribute}={$value})";
+			case '!=':
+				return "(!({$attribute}={$value}))";
+			case '>=':
+			case '<=':
+				return "({$attribute}{$operator}{$value})";
+			default:
+				throw new \InvalidArgumentException("Unsupported operator: {$operator}");
+		}
+	}
+
 	
 	public function getGroupMembers(string $groupName): array {
 		try {

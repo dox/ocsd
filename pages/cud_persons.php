@@ -37,12 +37,17 @@ if ($filter == "cud-no-ldap") {
 	}
 }
 
-if (isset($_GET['view']) && $_GET['view'] == "card") {
+// table or card view?
+$view = 'table'; // default
+
+if (isset($_GET['view']) && in_array($_GET['view'], ['card', 'table'])) {
+	$view = $_GET['view'];
+}
+setcookie('person_view', $view, time() + (86400 * 365), "/");
+
+if ($view === "card") {
 	$viewTitle = "Table View";
 	$viewURL = "index.php?page=cud_persons&filter=" . $filter . "&view=table";
-} elseif (isset($_GET['view']) && $_GET['view'] == "table") {
-	$viewTitle = "Card View";
-	$viewURL = "index.php?page=cud_persons&filter=" . $filter . "&view=card";
 } else {
 	$viewTitle = "Card View";
 	$viewURL = "index.php?page=cud_persons&filter=" . $filter . "&view=card";
@@ -58,11 +63,7 @@ $data = array(
 );
 echo pageTitle($data);
 
-
-?>
-
-<?php
-if (isset($_GET['view']) && $_GET['view'] == "card") {
+if ($view === "card") {
 	$output  = "<div class=\"row row-cols-1 row-cols-md-4 g-4\">";
 	foreach ($personsAll as $person) {
 		$person = new Person($person['cudid']);
