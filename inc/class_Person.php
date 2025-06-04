@@ -153,15 +153,17 @@ class Person {
 		}
 		$output .= "<li><a class=\"dropdown-item\" href=\"mailto:" . $mailTo . "\">Email</a></li>";
 		
-		if (empty($this->getLDAPUsername())) {
-			$output .= "<li><a class=\"dropdown-item ldap-provision-link\" data-cudid=\"" . $this->cudid . "\" data-action=\"disable\" href=\"#\">Provision User</a></li>";
-		}
-		
-		if (in_array($this->ldapRecordCache['useraccountcontrol'][0], array('512','66048'))) {
-			$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"disable\" href=\"#\">Disable " . $this->sso_username . " LDAP Account</a></li>";
+		if ($this->getLDAPUsername()) {
+			if (in_array($this->ldapRecordCache['useraccountcontrol'][0], array('512','66048'))) {
+				$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"disable\" href=\"#\">Disable " . $this->sso_username . " LDAP Account</a></li>";
+			} else {
+				$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Enable " . $this->sso_username . " LDAP Account</a></li>";
+				$output .= "<li><a class=\"dropdown-item text-danger ldap-delete-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Delete LDAP Account</a></li>";
+			}
 		} else {
-			$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Enable " . $this->sso_username . " LDAP Account</a></li>";
-			$output .= "<li><a class=\"dropdown-item text-danger ldap-delete-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Delete LDAP Account</a></li>";
+			if (isset($this->sso_username)) {
+				$output .= "<li><a class=\"dropdown-item ldap-provision-link\" data-cudid=\"" . $this->cudid . "\" data-action=\"disable\" href=\"#\">Provision User</a></li>";
+			}
 		}
 		
 		$output .= "</ul>";
