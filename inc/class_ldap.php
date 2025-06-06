@@ -57,13 +57,23 @@ class Ldap {
 		$user = $this->findUser($username);
 		
 		if (!$user) {
-			$this->logAttempt($log, $username, 'not found in LDAP.');
+			$log->create([
+				'type' => 'login',
+				'result' => 'warning',
+				'description' => 'Login failed. ' . $username . 'not found in LDAP'
+			]);
+			
 			$this->setError('Username not found or password is incorrect.');
 			return false;
 		}
 
 		if (!$this->connection->auth()->attempt($user['distinguishedname'][0], $password, true)) {
-			$this->logAttempt($log, $username, 'did not match password in LDAP.');
+			$log->create([
+				'type' => 'login',
+				'result' => 'warning',
+				'ldap' => $username,
+				'description' => 'Login failed. ' . $username . ' (' . $user['cn'][0] . ') did not match password in LDAP'
+			]);
 			$this->setError('Username not found or password is incorrect.');
 			return false;
 		}
@@ -72,21 +82,26 @@ class Ldap {
 		if (array_intersect(array_map('strtolower', LDAP_ALLOWED_DN), array_map('strtolower', $groups))) {
 			$_SESSION['logged_in'] = true;
 			$_SESSION['username'] = $username;
-			$this->logAttempt($log, $username, 'authenticated and logged in.', 'success');
+			
+			$log->create([
+				'type' => 'login',
+				'result' => 'success',
+				'ldap' => $username,
+				'description' => 'Login succeeded. ' . $username . ' (' . $user['cn'][0] . ') authenticated and logged in'
+			]);
+			
 			return true;
 		} else {
-			$this->logAttempt($log, $username, 'authenticated but was not in allowed group(s).');
+			$log->create([
+				'type' => 'login',
+				'result' => 'warning',
+				'ldap' => $username,
+				'description' => 'Login failed. ' . $username . ' (' . $user['cn'][0] . ') authenticated but was not in allowed group(s)'
+			]);
+			
 			$this->setError('You do not have access to this service.');
 			return false;
 		}
-	}
-
-	private function logAttempt($log, $username, $desc, $result = 'warning') {
-		$log->create([
-			'type' => 'login',
-			'result' => $result,
-			'description' => "$username $desc"
-		]);
 	}
 
 	public function findUser(string $username) {

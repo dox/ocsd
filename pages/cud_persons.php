@@ -39,11 +39,9 @@ if ($filter == "cud-no-ldap") {
 
 // table or card view?
 $view = 'table'; // default
-
 if (isset($_GET['view']) && in_array($_GET['view'], ['card', 'table'])) {
 	$view = $_GET['view'];
 }
-setcookie('person_view', $view, time() + (86400 * 365), "/");
 
 if ($view === "card") {
 	$viewTitle = "Table View";

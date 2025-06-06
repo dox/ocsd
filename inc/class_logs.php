@@ -37,7 +37,7 @@ class Logs {
 		$maximumLogsAge = date('Y-m-d', strtotime('-' . $settings->value('logs_retention') . ' days'));
 	
 		// Prepare the SQL query
-		$sql  = "SELECT date_created, type, result, cudid, description, username, INET_NTOA(ip) AS ip 
+		$sql  = "SELECT date_created, type, result, cudid, ldap, description, username, INET_NTOA(ip) AS ip 
 				 FROM " . self::$table_name . " 
 				 WHERE DATE(date_created) > :maximumLogsAge 
 				 ORDER BY date_created DESC";

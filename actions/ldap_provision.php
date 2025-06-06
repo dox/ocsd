@@ -59,6 +59,8 @@ if ($ldap->create($newUserArray)) {
 	$log->create([
 		'type' => 'ldap',
 		'result' => 'success',
+		'cudid' => strtolower($person->cudid),
+		'ldap' => strtolower($person->sso_username),
 		'description' => "Created LDAP user: " . strtolower($person->sso_username)
 	]);
 	
@@ -68,6 +70,8 @@ if ($ldap->create($newUserArray)) {
 	$log->create([
 		'type' => 'ldap',
 		'result' => 'warning',
+		'cudid' => strtolower($person->cudid),
+		'ldap' => strtolower($person->sso_username),
 		'description' => "Failed to create LDAP user: " . strtolower($person->sso_username)
 	]);
 	echo popover('warning', 'LDAP Result', 'Failed saving user details to LDAP.');
