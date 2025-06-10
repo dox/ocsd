@@ -3,12 +3,12 @@ include_once("../inc/autoload.php");
 
 $updateCount = 0;
 
-// CONNECT TO SALTO DB
+// CONNECT TO KX DB
 $connectionInfo = array( "Database"=>kx_db_name, "UID"=>kx_db_username, "PWD"=>kx_db_password, "TrustServerCertificate"=>"Yes");
 $conn = sqlsrv_connect(kx_db_host, $connectionInfo);
 
 if($conn) {
-	cliOutput("Connection to SALTO db established", "green");
+	cliOutput("Connection to KX db established", "green");
 	
 	cliOutput("Removing expired records from " . kx_db_table . " staging table", "yellow");
 	$sql = sqlsrv_query($conn, "DELETE FROM " . kx_db_table . ";");
