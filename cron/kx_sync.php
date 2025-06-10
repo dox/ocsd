@@ -173,7 +173,7 @@ foreach ($cudPersons AS $cudPerson) {
 		];
 		$log->create($logData);
 		
-		cliOutput("FAILED to create Kr record for " . $cudPerson->FullName . ": " . print_r(sqlsrv_errors(), true), "red");
+		cliOutput("FAILED to create Kx record for " . $cudPerson->FullName . ": " . print_r(sqlsrv_errors(), true), "red");
 	}
 }
 
