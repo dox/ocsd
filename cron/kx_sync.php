@@ -3,12 +3,12 @@ include_once("../inc/autoload.php");
 
 $updateCount = 0;
 
-// CONNECT TO KX DB
+// CONNECT TO Kx DB
 $connectionInfo = array( "Database"=>kx_db_name, "UID"=>kx_db_username, "PWD"=>kx_db_password, "TrustServerCertificate"=>"Yes");
 $conn = sqlsrv_connect(kx_db_host, $connectionInfo);
 
 if($conn) {
-	cliOutput("Connection to KX db established", "green");
+	cliOutput("Connection to Kx db established", "green");
 	
 	cliOutput("Removing expired records from " . kx_db_table . " staging table", "yellow");
 	$sql = sqlsrv_query($conn, "DELETE FROM " . kx_db_table . ";");
@@ -24,8 +24,6 @@ if($conn) {
 	cliOutput("FAILED to connect to Kx database", "red");
 	die();
 }
-
-
 
 // BUILD ARRAY OF CUD PERSONS
 $sql = "SELECT cudid FROM Person";
@@ -165,17 +163,17 @@ foreach ($cudPersons AS $cudPerson) {
 	
 	if ($create) {
 		$updateCount ++;
-		cliOutput("Created record for " . $cudPerson->FullName, "green");
+		cliOutput("Created Kx record for " . $cudPerson->FullName, "green");
 	} else {
 		$logData = [
 			'category' => 'cron',
 			'result'   => 'error',
 			'cudid'   => $cudPerson->cudid,
-			'description' => 'FAILED to created record for ' . $cudPerson->FullName . ': ' . print_r(sqlsrv_errors(), true)
+			'description' => 'FAILED to create Kx record for ' . $cudPerson->FullName . ': ' . print_r(sqlsrv_errors(), true)
 		];
 		$log->create($logData);
 		
-		cliOutput("FAILED to created record for " . $cudPerson->FullName . ": " . print_r(sqlsrv_errors(), true), "red");
+		cliOutput("FAILED to create Kr record for " . $cudPerson->FullName . ": " . print_r(sqlsrv_errors(), true), "red");
 	}
 }
 
