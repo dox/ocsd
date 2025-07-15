@@ -85,7 +85,8 @@ foreach ($cudPersons AS $cudPerson) {
 				$updateArray['AutoKeyEdit.ROMCode'] = $cudPerson['MiFareID'];
 			}
 			
-			// photograph??
+			// Only include photos if required - it will trigger a key update required
+			//$updateArray['PhotographFile'] = "C:\CUDPhotos\UAS_UniversityCard-" . $cudPerson['university_card_sysis'] . ".jpg";
 			
 			if (count($updateArray) >= 1) {
 				$updateArray['Action'] = "3";
