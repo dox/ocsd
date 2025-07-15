@@ -10,6 +10,14 @@ $allowedFilters = [
 		WHERE STR_TO_DATE(SuspendStrDt, '%Y%m%d') <= CURDATE()
 		  AND STR_TO_DATE(COALESCE(SuspendEndDt, SuspendExpEndDt), '%Y%m%d') >= CURDATE()
 	)",
+	'unsuspended' => " cudid IN (
+		SELECT cudid
+		FROM Suspensions
+		WHERE
+		  -- Calculate effective end date (either real or expected)
+		  STR_TO_DATE(COALESCE(SuspendEndDt, SuspendExpEndDt), '%Y%m%d')
+			BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+	)",
 	'test' => 'cudid = \'9357283B-B4CF-4DC0-A2A4-4E01310846FE\''
 ];
 
@@ -21,8 +29,7 @@ $sql = "SELECT cudid FROM Person $whereClause";
 $personsAll = $db->get($sql);
 
 if ($filter == "cud-no-ldap") {
-	$i = 0;
-	foreach ($personsAll AS $person) {
+	foreach ($personsAll AS $arrayPosition => $person) {
 		$lookups = array_filter([
 			'cudid'		=> $person['cudid'] ?? null
 		]);
@@ -30,10 +37,22 @@ if ($filter == "cud-no-ldap") {
 		$person = new Person($lookups);
 		
 		if (!empty($person->getLdapRecord())) {
-			unset($personsAll[$i]);
+			unset($personsAll[$arrayPosition]);
 		}
+	}
+}
+
+if ($filter == "unsuspended") {
+	foreach ($personsAll AS $arrayPosition => $person) {
+		$lookups = array_filter([
+			'cudid'		=> $person['cudid'] ?? null
+		]);
 		
-		$i++;
+		$person = new Person($lookups);
+		
+		if ($person->suspensions()->isCurrentlySuspended()) {
+			unset($personsAll[$arrayPosition]);
+		}
 	}
 }
 

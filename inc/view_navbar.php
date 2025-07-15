@@ -29,6 +29,10 @@ $navbarArray['cud_person'] = array(
 			"link" => "index.php?page=cud_persons&filter=suspended"
 		),
 		array(
+			"title" => "Recently Un-suspended",
+			"link" => "index.php?page=cud_persons&filter=unsuspended"
+		),
+		array(
 			"title" => "Under 18",
 			"link" => "index.php?page=cud_persons&filter=underage"
 		),
