@@ -342,7 +342,7 @@ function generateSecurePassword($length = 12, $includeSymbols = true): string {
 	$lower = 'abcdefghijklmnopqrstuvwxyz';
 	$upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$numbers = '0123456789';
-	$symbols = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+	$symbols = '!@#$%^&*()-_=+[]{}|;:,.?';
 	
 	$characters = $lower . $upper . $numbers;
 	if ($includeSymbols) {
