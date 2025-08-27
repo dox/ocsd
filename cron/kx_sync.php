@@ -71,7 +71,7 @@ foreach ($cudPersons AS $cudPerson) {
 	$updateArray['ContactPostcode'] = $contactAddress['PostCode']; // Postcode for the contact address
 	$updateArray['ContactTelephone'] = $contactAddress['TelNo']; // Contact telephone number
 	$updateArray['ContactMobile'] = $contactAddress['MobileNo']; // Contact mobile number
-	$updateArray['ContactEmail'] = $contactAddress['AddressEmail']; // Contact email address
+	$updateArray['ContactEmail'] = $cudPerson->oxford_email; // Contact email address
 	//$updateArray['ContactForename'] = ''; // Forename of the contact at the contact address, if not the student.
 	//$updateArray['ContactSurname'] = ''; // Surname of the contact at the contact address, if not the student
 	//$updateArray['ContactRelationship'] = ''; // Relationship of the contact to the student, e.g. Father
