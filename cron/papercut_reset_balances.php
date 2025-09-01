@@ -119,7 +119,13 @@ foreach ($users AS $username) {
 		$adjustmentComment = "Balance transfered to Batels";
 		//$sharedAccounts = callPaperCutApi('api.listSharedAccounts', [0,100]);
 		$setUserBalance = callPaperCutApi('api.setUserAccountBalance', [$username, 0.00, $adjustmentComment]);
-		//print_r($sharedAccounts);
+		
+		$logData = [
+			'category' => 'cron',
+			'result'   => 'success',
+			'description' => 'Printing balance for ' . $username . ' reset from £' . $userBalence . ' to £0'
+		];
+		$log->create($logData);
 		
 		$adjustedUsersCount ++;
 		$adjustedUsersTotal += $userBalence;
