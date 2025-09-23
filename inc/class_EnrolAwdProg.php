@@ -19,6 +19,9 @@ class EnrolAwdProg implements \IteratorAggregate {
 	public function all(): array {
 		return $this->records;
 	}
+	
+	public function mostRecent(): array {
+		return $this->records[0];
+	}
 }
-
 ?>

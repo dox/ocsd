@@ -1,16 +1,15 @@
 <?php
 include __DIR__ . '/../../inc/autoload.php';
 
-$sql  = "SELECT * FROM EnrolAwdProg WHERE cudid = :cudid";
+$person = new Person(filter_var($_GET['cudid'], FILTER_SANITIZE_STRING));
 
-$results = $db->get($sql, ['cudid' => $_GET['cudid']]);
+$results = $person->EnrolAwdProg()->all();
 
 if (!empty($results)) {
       foreach ($results AS $result) {
-              printArray($result);
+            printArray($result);
       }  
 } else {
         echo "No data";
 }
-
 ?>

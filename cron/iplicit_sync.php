@@ -6,6 +6,7 @@ $createLog = []; 	// array of iPlicit creations
 $errorLog  = []; 	// array of iPlicit errors
 
 $sql  = "SELECT cudid FROM Person";
+//$sql  = "SELECT cudid FROM Person WHERE cudid = 'D72C18E9-9597-4784-91C0-433F19FBD552'";
 
 $cudPersons = $db->get($sql);
 
@@ -63,9 +64,9 @@ foreach ($cudPersons AS $cudPerson) {
 				 'Activestatus' => $cudPerson->Enrolments()->all()[0]['SCJStatusName'],
 				 'SSO' => $cudPerson->sso_username,
 				 'Currentyear' => $cudPerson->unit_set_cd,
-				 'AwardProgrammeTitle' => $cudPerson->AwdName,
-				 'AwardProgrammeCode' => $cudPerson->CrsCd,
-				 'ExpectedEndDate' => $cudPerson->CrsExpEndDt
+				 'AwardProgrammeTitle' => $cudPerson->EnrolAwdProg()->mostRecent()['AwdName'],
+				 'AwardProgrammeCode' => $cudPerson->EnrolAwdProg()->mostRecent()['CrsCd'],
+				 'ExpectedEndDate' => $cudPerson->EnrolAwdProg()->mostRecent()['CrsExpEndDt']
 			 ],
 		 ],
 		 'contact' => [
@@ -246,6 +247,8 @@ class iPlicitAPI {
 		curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($contactArray));
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $this->headers());
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		
+		//cliOutput(json_encode($contactArray), "yellow");
 		
 		try {
 			$data = json_decode(curl_exec($curl));
