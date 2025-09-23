@@ -6,7 +6,6 @@ $createLog = []; 	// array of iPlicit creations
 $errorLog  = []; 	// array of iPlicit errors
 
 $sql  = "SELECT cudid FROM Person";
-//$sql  = "SELECT cudid FROM Person WHERE cudid = 'D72C18E9-9597-4784-91C0-433F19FBD552'";
 
 $cudPersons = $db->get($sql);
 
@@ -64,9 +63,9 @@ foreach ($cudPersons AS $cudPerson) {
 				 'Activestatus' => $cudPerson->Enrolments()->all()[0]['SCJStatusName'],
 				 'SSO' => $cudPerson->sso_username,
 				 'Currentyear' => $cudPerson->unit_set_cd,
-				 'AwardProgrammeTitle' => $cudPerson->EnrolAwdProg()->mostRecent()['AwdName'],
-				 'AwardProgrammeCode' => $cudPerson->EnrolAwdProg()->mostRecent()['CrsCd'],
-				 'ExpectedEndDate' => $cudPerson->EnrolAwdProg()->mostRecent()['CrsExpEndDt']
+				 'AwardProgrammeTitle' => $cudPerson->EnrolAwdProg()->mostRecent()['AwdName'] ?? null,
+				 'AwardProgrammeCode' => $cudPerson->EnrolAwdProg()->mostRecent()['CrsCd'] ?? null,
+				 'ExpectedEndDate' => $cudPerson->EnrolAwdProg()->mostRecent()['CrsExpEndDt'] ?? null
 			 ],
 		 ],
 		 'contact' => [

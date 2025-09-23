@@ -21,7 +21,7 @@ class EnrolAwdProg implements \IteratorAggregate {
 	}
 	
 	public function mostRecent(): array {
-		return $this->records[0];
+		return $this->records[0] ?? [];
 	}
 }
 ?>
