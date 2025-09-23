@@ -1,7 +1,7 @@
 <?php
 include_once("../inc/autoload.php");
 
-$sql  = "SELECT cudid FROM Person WHERE university_card_type IN ('PG', 'GT', 'GR')";
+$sql  = "SELECT cudid FROM Person";
 $cudPersons = $db->get($sql);
 
 $i_students = 0;
@@ -18,8 +18,16 @@ foreach ($cudPersons AS $cudPerson) {
 	
 	$cudPerson = new Person($cudPerson['cudid']);
 	
+	if (!$cudPerson->isStudent()) {
+		// Isn't a student, so skip this record
+		
+		cliOutput("Skipping " . $cudPerson->FullName . " as they aren't a student", "white");
+		continue;
+	}
 	if (!isset($cudPerson->sits_student_code)) {
 		// Missing student ID, so skip this record
+		
+		cliOutput("Skipping " . $cudPerson->FullName . " as they don't have a SITS code", "white");
 		continue;
 	}
 	
@@ -103,17 +111,22 @@ foreach ($cudPersons AS $cudPerson) {
 	$iplicitData = $iplicit->getContactAccount($cudPerson->sits_student_code);
 	if (isset($iplicitData->id)) {
 		// account exists, update it
-		
 		if (!isset($cudData['contact']['addresses'][0]['address'])) {
 			unset($cudData['contact']['addresses'][0]);
 		}
 		
 		//printArray($cudData);
-		cliOutput("Updating " . $cudPerson->FullName . " (" . $iplicitData->id . ")", "green");
+		cliOutput("Updating " . $cudPerson->FullName . " (" . $iplicitData->id . ")", "blue");
 		$iplicit->updateContactAccount($iplicitData->id, $cudData);
 			
 	} else {
 		// account needs creating
+		
+		// Student Type mapping to CustomerGroupID in iPlicit
+		$cudData['customer']['ContactGroupCustomerId'] = cudCardTypeToiPlicitGroup($cudPerson->university_card_type);
+
+		
+		cliOutput("Creating " . $cudPerson->FullName . " in iPlicit", "green");
 		$iplicit->createContactAccount($cudData);
 	}
 	
@@ -227,7 +240,7 @@ class iPlicitAPI {
 	public function updateContactAccount($idOrCode, $contactArray) {
 		global $log;
 		
-		$url = "https://api.iplicit.com/api/ContactAccount/" . $idOrCode;
+		$url = "https://api.iplicit.com/api/contactAccount/" . $idOrCode;
 		
 		$curl = curl_init();
 		
@@ -250,19 +263,24 @@ class iPlicitAPI {
 	}
 	
 	public function createContactAccount($contactArray) {
-		$url = "https://api.iplicit.com/api/ContactAccount/";
+		global $log;
+		
+		$url = "https://api.iplicit.com/api/contactAccount/";
 		
 		$curl = curl_init();
 		
 		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_POST, TRUE);
+		curl_setopt($curl, CURLOPT_POST, 'TRUE');
 		curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($contactArray));
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $this->headers());
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		
+		//cliOutput(json_encode($contactArray), "yellow");
+		
 		try {
 			$data = json_decode(curl_exec($curl));
 			$this->createLog[] = "complete";
+			cliOutput(json_encode($data), "yellow");
 		} catch(Exception $e) {
 			$event = "Error creating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data);
 			$this->errorLog[] = $event;
@@ -272,8 +290,6 @@ class iPlicitAPI {
 		curl_close($curl);
 	}
 }
-
-
 
 function cudCountryCodeToiPlicitCountyCode($countryCode) {
 	
@@ -514,6 +530,11 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 		'781' => 'ZM',
 		'732' => 'ZW'
 	);
+	
+	// If null, empty, or not in the array → default to '000'
+	if (empty($countryCode) || !isset($countryArray[$countryCode])) {
+		return $countryArray['000'];
+	}
 	
 	return $countryArray[$countryCode];
 }

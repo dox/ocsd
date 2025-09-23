@@ -99,7 +99,8 @@ class Person {
 	}
 	
 	public function isStudent() {
-		$studentTypes = array("UG", "PG", "GT", "GR", "VS", "VD", "VV", "VR");
+		// Card Types taken from https://help.it.ox.ac.uk/card-and-it-service-entitlements
+		$studentTypes = array("UG", "GT", "GR", "PT", "VC", "VD", "VV", "VR");
 		
 		if (in_array($this->university_card_type, $studentTypes)) {
 			return true;
