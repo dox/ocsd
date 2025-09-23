@@ -63,6 +63,9 @@ foreach ($cudPersons AS $cudPerson) {
 				 'Activestatus' => $cudPerson->Enrolments()->all()[0]['SCJStatusName'],
 				 'SSO' => $cudPerson->sso_username,
 				 'Currentyear' => $cudPerson->unit_set_cd,
+				 'AwardProgrammeTitle' => $cudPerson->AwdName,
+				 'AwardProgrammeCode' => $cudPerson->CrsCd,
+				 'ExpectedEndDate' => $cudPerson->CrsExpEndDt
 			 ],
 		 ],
 		 'contact' => [
