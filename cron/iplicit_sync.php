@@ -154,6 +154,13 @@ if (count($errorLog) > 0) {
 		'description' => 'Updated ' . count($updateLog) . ' iPlicit records with ' . count($errorLog) . 'errors'
 	];
 	$log->create($logData);
+} else {
+	$logData = [
+		'category' => 'cron',
+		'result'   => 'success',
+		'description' => 'Updated ' . count($updateLog) . ' iPlicit records with ' . count($errorLog) . 'errors'
+	];
+	$log->create($logData);
 }
 
 if (count($errorLog) > 0) {
