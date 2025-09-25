@@ -65,7 +65,9 @@ foreach ($cudPersons AS $cudPerson) {
 				 'Currentyear' => $cudPerson->unit_set_cd,
 				 'AwardProgrammeTitle' => $cudPerson->EnrolAwdProg()->mostRecent()['AwdName'] ?? null,
 				 'AwardProgrammeCode' => $cudPerson->EnrolAwdProg()->mostRecent()['CrsCd'] ?? null,
-				 'ExpectedEndDate' => $cudPerson->EnrolAwdProg()->mostRecent()['CrsExpEndDt'] ?? null
+				 'ExpectedEndDate' => !empty($cudPerson->crs_exp_end_dt)
+				 ? DateTime::createFromFormat('Ymd', $cudPerson->crs_exp_end_dt)->format('Y-m-d')
+				 : null
 			 ],
 		 ],
 		 'contact' => [
@@ -151,14 +153,14 @@ if (count($errorLog) > 0) {
 	$logData = [
 		'category' => 'cron',
 		'result'   => 'warning',
-		'description' => 'Updated ' . count($updateLog) . ' iPlicit records with ' . count($errorLog) . 'errors'
+		'description' => 'Updated ' . count($updateLog) . ' iPlicit records with ' . count($errorLog) . ' errors'
 	];
 	$log->create($logData);
 } else {
 	$logData = [
 		'category' => 'cron',
 		'result'   => 'success',
-		'description' => 'Updated ' . count($updateLog) . ' iPlicit records with ' . count($errorLog) . 'errors'
+		'description' => 'Updated ' . count($updateLog) . ' iPlicit records with ' . count($errorLog) . ' errors'
 	];
 	$log->create($logData);
 }
