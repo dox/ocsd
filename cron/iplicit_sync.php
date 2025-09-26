@@ -114,7 +114,7 @@ foreach ($cudPersons AS $cudPerson) {
 			'address' =>  transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $singleLineAddress),
 			'postCode' => $address['PostCode'],
 			'city' => $address['County'],
-			'countryCode' => cudCountryCodeToiPlicitCountyCode($address['AddressCtyCd'])
+			'countryCode' => cudCountryCodeToiPlicitCountyCode($address['AddressCtryCd'])
 		];
 	}
 	
@@ -541,7 +541,7 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 	
 	// If null, empty, or not in the array → default to '000'
 	if (empty($countryCode) || !isset($countryArray[$countryCode])) {
-		return $countryArray['000'];
+		return null;
 	}
 	
 	return $countryArray[$countryCode];
