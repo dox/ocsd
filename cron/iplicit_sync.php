@@ -300,6 +300,9 @@ class iPlicitAPI {
 }
 
 function cudCountryCodeToiPlicitCountyCode($countryCode) {
+	// HESA codes (used in CUD) to ISO 3166-1 alpha-2 country codes (used in iPlicit)
+	// https://www.hesa.ac.uk/collection/C07051/mappingcountrycodes
+	// https://en.wikipedia.org/wiki/ISO_3166-2
 	
 	$countryArray = array(
 		'602' => 'AF',
@@ -484,7 +487,7 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 		'803' => 'ST',
 		'743' => 'SA',
 		'785' => 'SN',
-		'780' => 'RS', //serbia?
+		'780' => 'QN',
 		'744' => 'SC',
 		'745' => 'SL',
 		'746' => 'SG',
@@ -539,7 +542,7 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 		'732' => 'ZW'
 	);
 	
-	// If null, empty, or not in the array → default to '000'
+	// If null, empty, or not in the array → default to null
 	if (empty($countryCode) || !isset($countryArray[$countryCode])) {
 		return null;
 	}
