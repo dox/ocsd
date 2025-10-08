@@ -86,25 +86,35 @@ class LdapUserWrapper {
 	}
 	
 	public function passwordExpiryBadge() {
-		$daysSince = daysSince($this->getPasswordLastSet());
-		$warnDays = setting('ldap_password_warn_age');       // e.g., 365
-		$disableDays = setting('ldap_password_disable_age'); // e.g., 395
-		
-		$content = '';
-		$class = '';
+		// How long ago the password was last changed
+		$daysSinceChange = daysSince($this->getPasswordLastSet());
 	
-		if ($daysSince >= $disableDays) {
-			$class = "text-bg-danger";
-			$content = "Expired " . ($daysSince - $disableDays) . " days ago";
-		} elseif ($daysSince >= $warnDays) {
-			$class = "text-bg-warning";
-			$content = "Expires in " . ($disableDays - $daysSince) . " days";
+		// Policy thresholds
+		$warnAfterDays   = setting('ldap_password_warn_age');       // e.g., 365
+		$expireAfterDays = setting('ldap_password_disable_age');    // e.g., 395
+	
+		// How many days remain before expiry
+		$daysRemaining = $expireAfterDays - $daysSinceChange;
+	
+		// Prepare output
+		$class   = '';
+		$message = '';
+	
+		if ($daysRemaining <= 1) {
+			// Password already expired
+			$class   = 'text-bg-danger';
+			$message = 'Expired ' . abs($daysRemaining) . ' ' . autoPluralise("day", "days", $daysRemaining) . ' ago';
+		} elseif ($daysSinceChange >= $warnAfterDays) {
+			// Within the warning window
+			$class   = 'text-bg-warning';
+			$message = 'Expires in ' . $daysRemaining . ' ' . autoPluralise("day", "days", $daysRemaining);
 		} else {
-			$class = "text-bg-success";
-			$content = ($disableDays - $daysSince) . " days left";
+			// Still valid and well within policy
+			$class   = 'text-bg-success';
+			$message = $daysRemaining . ' ' . autoPluralise("day", "days", $daysRemaining) . ' left';
 		}
-		
-		return "<span class=\"badge {$class}\">{$content}</span>";
+	
+		return "<span class=\"badge {$class}\">{$message}</span>";
 	}
 	
 	public function actionsButton() {
