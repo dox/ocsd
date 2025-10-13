@@ -143,6 +143,8 @@ class Ldap {
 		$disabledValue = $currentValue | 0x2;
 	
 		$user->setAttribute('userAccountControl', $disabledValue);
+		$user->setAttribute('password', generateSecurePassword());
+		
 		$user->save();
 		
 		$logData = [
