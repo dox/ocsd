@@ -228,11 +228,13 @@ class Person {
 	private function getSsoButtonBadge(): string {
 		$type = $this->university_card_type;
 		
-		if (in_array($type, array("UG"))) {
+		$personsClass = new Persons();
+		
+		if (in_array($type, $personsClass->studentUGTypes)) {
 			$class = "bg-success";
-		} elseif (in_array($type, array("PG", "GT", "GR"))) {
+		} elseif (in_array($type, $personsClass->studentPGTypes)) {
 			$class = "bg-primary";
-		} elseif (in_array($type, array("VS", "VD", "VV", "VR"))) {
+		} elseif (in_array($type, $personsClass->studentVSTypes)) {
 			$class = "bg-dark";
 		} else {
 			$class = "bg-warning";
@@ -248,11 +250,13 @@ class Person {
 	public function getTypeBadge(): string {
 		$type = $this->university_card_type;
 		
-		if (in_array($type, array("UG"))) {
+		$personsClass = new Persons();
+		
+		if (in_array($type, $personsClass->studentUGTypes)) {
 			$class = "text-bg-success";
-		} elseif (in_array($type, array("PG", "GT", "GR"))) {
+		} elseif (in_array($type, $personsClass->studentPGTypes)) {
 			$class = "text-bg-primary";
-		} elseif (in_array($type, array("VS", "VD", "VV", "VR"))) {
+		} elseif (in_array($type, $personsClass->studentVSTypes)) {
 			$class = "text-bg-dark";
 		} else {
 			$class = "text-bg-warning";

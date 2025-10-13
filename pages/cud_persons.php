@@ -1,7 +1,9 @@
 <?php
+$personsClass = new Persons();
+
 $allowedFilters = [
-	'staff' => "university_card_type = 'CS'",
-	'students' => "university_card_type IN ('UG', 'PG')",
+	'staff' => "university_card_type = '" . implode("', '", $personsClass->staffTypes) . "'",
+	'students' => "university_card_type IN ('" . implode("', '", $personsClass->studentTypes) . "')",
 	'underage' => "(dob IS NOT NULL AND dob >= '" . date('Ymd', strtotime('-18 years')) . "')",
 	'cud-no-ldap' => "1=1",
 	'suspended' => " cudid IN (
