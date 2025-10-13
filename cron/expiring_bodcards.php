@@ -1,18 +1,14 @@
 <?php
 include_once("../inc/autoload.php");
 
-$sql = "SELECT cudid FROM Person $whereClause";
-$personsAll = $db->get($sql);
+$cudPersons = (new Persons())->all();
 
 $expiryAlertDays = 40;
 $now = new DateTime();
 
 $expiringUsers = array();
 
-foreach ($personsAll as $person) {
-	$person = new Person($person['cudid']);
-	
-	
+foreach ($cudPersons as $person) {
 	// ignore students
 	if ($person->isStudent()) {
 		continue;

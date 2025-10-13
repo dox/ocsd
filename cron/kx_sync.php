@@ -26,12 +26,10 @@ if($conn) {
 }
 
 // BUILD ARRAY OF CUD PERSONS
-$sql = "SELECT cudid FROM Person";
-$cudPersons = $db->get($sql);
+$cudPersons = (new Persons())->all();
 cliOutput("Connection to CUD db established", "green");
 
 foreach ($cudPersons AS $cudPerson) {
-	$cudPerson = new Person($cudPerson['cudid']);
 	$updateArray = array();
 	
 	$updateArray['StudentID'] = $cudPerson->sits_student_code; // Unique identifier to the student. Primary link between Kx and the student records system.

@@ -26,7 +26,7 @@ if($conn) {
 		$logData = [
 			'category' => 'cron',
 			'result'   => 'error',
-			'description' => 'Connection to " . salto_db_table . " could not be established'
+			'description' => 'Connection to SALTO staging table could not be established'
 		];
 		$log->create($logData);
 		die(printArray(sqlsrv_errors(), true));
@@ -49,56 +49,56 @@ if($conn) {
 
 
 // BUILD ARRAY OF CUD PERSONS
-$sql = "SELECT * FROM Person";
-$cudPersons = $db->get($sql);
-cliOutput("Connection to CUD db established", "green");
+$cudPersons = (new Persons())->all();
+
+cliOutput("Connection to CUD db established with " . count($cudPersons) . " persons", "green");
 
 foreach ($cudPersons AS $cudPerson) {
 	$updateArray = array();
 	$columns = array();
 
-	if (!empty($cudPerson['sso_username'])) {
-		if (array_key_exists($cudPerson['sso_username'], $saltoUsers)) {
+	if (!empty($cudPerson->sso_username)) {
+		if (array_key_exists($cudPerson->sso_username, $saltoUsers)) {
 			// CHECK MULTIPLE VALUES TO SEE IF UPDATE NEEDED
 			if (debug) {
-				cliOutput($cudPerson['sso_username'] . " is a CUD Person, and exists in the SALTO staging table", "green");
+				cliOutput($cudPerson->sso_username . " is a CUD Person, and exists in the SALTO staging table", "green");
 			}
 			
-			if ($saltoUsers[$cudPerson['sso_username']]['FirstName'] != utf8_encode(str_replace('\'', '', $cudPerson['firstname']))) {
-				$updateArray['FirstName'] = utf8_encode(str_replace('\'', '', $cudPerson['firstname']));
+			if ($saltoUsers[$cudPerson->sso_username]['FirstName'] != utf8_encode(str_replace('\'', '', $cudPerson->firstname))) {
+				$updateArray['FirstName'] = utf8_encode(str_replace('\'', '', $cudPerson->firstname));
 			}
 			
-			if ($saltoUsers[$cudPerson['sso_username']]['LastName'] != utf8_encode(str_replace('\'', '', $cudPerson['lastname']))) {
+			if ($saltoUsers[$cudPerson->sso_username]['LastName'] != utf8_encode(str_replace('\'', '', $cudPerson->lastname))) {
 				echo "updating last name";
-				$updateArray['LastName'] = utf8_encode(str_replace('\'', '', $cudPerson['lastname']));
+				$updateArray['LastName'] = utf8_encode(str_replace('\'', '', $cudPerson->lastname));
 			}
 			
-			if ($saltoUsers[$cudPerson['sso_username']]['Title'] != $cudPerson['university_card_type']) {
-				$updateArray['Title'] = $cudPerson['university_card_type'];
+			if ($saltoUsers[$cudPerson->sso_username]['Title'] != $cudPerson->university_card_type) {
+				$updateArray['Title'] = $cudPerson->university_card_type;
 			}
 			
-			if ($saltoUsers[$cudPerson['sso_username']]['GPF5'] != $cudPerson['crs_start_dt']) {
-				$updateArray['GPF5'] = $cudPerson['universitycrs_start_dt_card_type'];
+			if ($saltoUsers[$cudPerson->sso_username]['GPF5'] != $cudPerson->crs_start_dt) {
+				$updateArray['GPF5'] = $cudPerson->universitycrs_start_dt_card_type;
 			}
 			
-			if ($saltoUsers[$cudPerson['sso_username']]['AutoKeyEdit.ROMCode'] != $cudPerson['MiFareID']) {
-				$updateArray['AutoKeyEdit.ROMCode'] = $cudPerson['MiFareID'];
+			if ($saltoUsers[$cudPerson->sso_username]['AutoKeyEdit.ROMCode'] != $cudPerson->MiFareID) {
+				$updateArray['AutoKeyEdit.ROMCode'] = $cudPerson->MiFareID;
 			}
 			
 			// Only include photos if required - it will trigger a key update required
-			//$updateArray['PhotographFile'] = "C:\CUDPhotos\UAS_UniversityCard-" . $cudPerson['university_card_sysis'] . ".jpg";
+			//$updateArray['PhotographFile'] = "C:\CUDPhotos\UAS_UniversityCard-" . $cudPerson->university_card_sysis . ".jpg";
 			
 			if (count($updateArray) >= 1) {
 				$updateArray['Action'] = "3";
 				$updateArray['ToBeProcessedBySalto'] = "1";
 
-				cliOutput($cudPerson['sso_username'] . " (" . $cudPerson['FullName'] . ") requires updating on " . implode(", ", array_keys($updateArray)), "magenta");
+				cliOutput($cudPerson->sso_username . " (" . $cudPerson->FullName . ") requires updating on " . implode(", ", array_keys($updateArray)), "magenta");
 				
 				$sql = "UPDATE StagingTable SET ";
 				foreach ($updateArray AS $column => $value) {
 					$columns[] = "[" . $column . "] = '" . $value . "'";
 				}
-				$sql .= implode(", ", $columns) . " WHERE ExtUserId = '" . $cudPerson['sso_username'] . "';";
+				$sql .= implode(", ", $columns) . " WHERE ExtUserId = '" . $cudPerson->sso_username . "';";
 				
 				if (debug) {
 					cliOutput($sql, "white");
@@ -106,12 +106,12 @@ foreach ($cudPersons AS $cudPerson) {
 				
 				$update = sqlsrv_query($conn, $sql);
 				
-				$name = mb_convert_encoding($cudPerson['FullName'], "UTF-8", "ISO-8859-1");
+				$name = mb_convert_encoding($cudPerson->FullName, "UTF-8", "ISO-8859-1");
 				$logData = [
 					'category' => 'cron',
 					'result'   => 'success',
-					'cudid'   => $cudPerson['cudid'],
-					'description' => $cudPerson['sso_username'] . ' updated ' . implode(', ', array_keys($updateArray)) . ' on SALTO staging table'
+					'cudid'   => $cudPerson->cudid,
+					'description' => $cudPerson->sso_username . ' updated ' . implode(', ', array_keys($updateArray)) . ' on SALTO staging table'
 				];
 				$log->create($logData);
 				$updateCount ++;
@@ -119,8 +119,8 @@ foreach ($cudPersons AS $cudPerson) {
 					$logData = [
 						'category' => 'cron',
 						'result'   => 'error',
-						'cudid'   => $cudPerson['cudid'],
-						'description' => 'Error updating ' . $cudPerson['sso_username'] . ' on SALTO staging table'
+						'cudid'   => $cudPerson->cudid,
+						'description' => 'Error updating ' . $cudPerson->sso_username . ' on SALTO staging table'
 					];
 					$log->create($logData);
 					die(printArray(sqlsrv_errors(), true));
@@ -132,18 +132,18 @@ foreach ($cudPersons AS $cudPerson) {
 		} else {
 			// CREATE/IMPORT NEW USER INTO SALTO
 			//printArray($cudPerson);
-			cliOutput($cudPerson['sso_username'] . " (" . $cudPerson['FullName'] . ") requires creating", "cyan");
+			cliOutput($cudPerson->sso_username . " (" . $cudPerson->FullName . ") requires creating", "cyan");
 			
 			$updateArray['Action'] = "3";
 			$updateArray['ToBeProcessedBySalto'] = "1";
-			$updateArray['ExtUserID'] = $cudPerson['sso_username'];
-			$updateArray['FirstName'] = utf8_encode(str_replace('\'', '', $cudPerson['firstname']));
-			$updateArray['LastName'] = utf8_encode(str_replace('\'', '', $cudPerson['lastname']));
-			$updateArray['Title'] = $cudPerson['university_card_type'];
+			$updateArray['ExtUserID'] = $cudPerson->sso_username;
+			$updateArray['FirstName'] = utf8_encode(str_replace('\'', '', $cudPerson->firstname));
+			$updateArray['LastName'] = utf8_encode(str_replace('\'', '', $cudPerson->lastname));
+			$updateArray['Title'] = $cudPerson->university_card_type;
 			
 			// IF STUDENT, SET OFFIEC TO 0
 			$studentArrayTypes = array('GT', 'GR', 'UG', 'VR', 'PT', 'VD', 'VV', 'VC');
-			if (in_array($cudPerson['university_card_type'], $studentArrayTypes)) {
+			if (in_array($cudPerson->university_card_type, $studentArrayTypes)) {
 				$updateArray['Office'] = "0";
 			} else {
 				$updateArray['Office'] = "1";
@@ -157,12 +157,12 @@ foreach ($cudPersons AS $cudPerson) {
 			$updateArray['GPF1'];
 			$updateArray['GPF2'];
 			$updateArray['GPF3'];
-			$updateArray['GPF4'] = $cudPerson['sso_username'];
-			$updateArray['GPF5'] = $cudPerson['crs_start_dt'];
+			$updateArray['GPF4'] = $cudPerson->sso_username;
+			$updateArray['GPF5'] = $cudPerson->crs_start_dt;
 			$updateArray['ExtAccessLevellDList'];
-			$updateArray['AutoKeyEdit.ROMCode'] = $cudPerson['MiFareID'];
+			$updateArray['AutoKeyEdit.ROMCode'] = $cudPerson->MiFareID;
 			$updateArray['UserActivation'] = date("Y/m/d G:i:s");
-			$updateArray['UserExpiration.ExpDate'] = date("Y/m/d", strtotime($cudPerson['University_Card_End_Dt']));
+			$updateArray['UserExpiration.ExpDate'] = date("Y/m/d", strtotime($cudPerson->University_Card_End_Dt));
 			$updateArray['STKE.Period'] = "30";
 			$updateArray['STKE.UnitOfPeriod'] = "0";
 			$updateArray['PIN.Code'];
@@ -180,12 +180,12 @@ foreach ($cudPersons AS $cudPerson) {
 			}
 			
 			$create = sqlsrv_query($conn, $sql);
-			$name = mb_convert_encoding($cudPerson['FullName'], "UTF-8", "ISO-8859-1");
+			$name = mb_convert_encoding($cudPerson->FullName, "UTF-8", "ISO-8859-1");
 			$logData = [
 				'category' => 'cron',
 				'result'   => 'success',
-				'cudid'   => $cudPerson['cudid'],
-				'description' => $cudPerson['sso_username'] . ' created on SALTO staging table'
+				'cudid'   => $cudPerson->cudid,
+				'description' => $cudPerson->sso_username . ' created on SALTO staging table'
 			];
 			$log->create($logData);
 
@@ -194,8 +194,8 @@ foreach ($cudPersons AS $cudPerson) {
 				$logData = [
 					'category' => 'cron',
 					'result'   => 'error',
-					'cudid'   => $cudPerson['cudid'],
-					'description' => 'Error creating ' . $cudPerson['sso_username'] . ' on SALTO staging table'
+					'cudid'   => $cudPerson->cudid,
+					'description' => 'Error creating ' . $cudPerson->sso_username . ' on SALTO staging table'
 				];
 				$log->create($logData);
 				die(printArray(sqlsrv_errors(), true));

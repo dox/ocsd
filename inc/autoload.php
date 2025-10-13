@@ -22,6 +22,7 @@ include __DIR__ . '/class_ldap.php';
 include __DIR__ . '/class_ldap_user.php';
 include __DIR__ . '/class_user.php';
 
+include __DIR__ . '/class_Persons.php';
 include __DIR__ . '/class_Person.php';
 include __DIR__ . '/class_Addresses.php';
 include __DIR__ . '/class_Applications.php';

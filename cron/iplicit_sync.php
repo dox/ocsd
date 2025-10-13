@@ -7,7 +7,7 @@ $errorLog  = []; 	// array of iPlicit errors
 
 $sql  = "SELECT cudid FROM Person";
 
-$cudPersons = $db->get($sql);
+$cudPersons = (new Persons())->all();
 
 $i_students = 0;
 $iplicit = new iPlicitAPI();
@@ -19,9 +19,6 @@ foreach ($cudPersons AS $cudPerson) {
 		cliOutput("Updating token, as it has expired", "green");
 		$iplicit->getSession();
 	}
-	
-	
-	$cudPerson = new Person($cudPerson['cudid']);
 	
 	if (!$cudPerson->isStudent()) {
 		// Isn't a student, so skip this record
