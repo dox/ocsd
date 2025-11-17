@@ -31,6 +31,21 @@ class Persons {
 		return $persons;
 	}
 	
+	public function test($cudid) {
+		global $db;
+		
+		$sql  = "SELECT cudid FROM " . self::$table_name . " WHERE cudid = '" . $cudid . "'";
+		
+		$results = $db->get($sql);
+		
+		$persons = [];
+		foreach ($results as $result) {
+			$persons[] = new Person($result['cudid']);
+		}
+		
+		return $persons;
+	}
+	
 	public function allStudents() {
 		global $db;
 		

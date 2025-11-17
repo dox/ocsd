@@ -5,9 +5,8 @@ $updateLog = []; 	// array of iPlicit updates
 $createLog = []; 	// array of iPlicit creations
 $errorLog  = []; 	// array of iPlicit errors
 
-$sql  = "SELECT cudid FROM Person";
-
 $cudPersons = (new Persons())->all();
+//$cudPersons = (new Persons())->test($cudid);
 
 $i_students = 0;
 $iplicit = new iPlicitAPI();
@@ -503,7 +502,7 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 		'783' => 'AA',
 		'752' => 'SD',
 		'753' => 'SR',
-		'718' => 'SJ',
+		//'718' => 'SJ', 718 = Norway
 		'754' => 'SZ',
 		'755' => 'SE',
 		'756' => 'CH',

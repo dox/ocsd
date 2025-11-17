@@ -7,6 +7,10 @@ $homeAddress = $person->addresses()->getHomeAddress();
 $contactAddress = $person->addresses()->getContactAddress();
 $termAddress = $person->addresses()->getTermAddress();
 
+//printArray($homeAddress);
+//printArray($contactAddress);
+//printArray($termAddress);
+
 echo $person->addresses()->addressCard($homeAddress);
 echo $person->addresses()->addressCard($contactAddress);
 echo $person->addresses()->addressCard($termAddress);
