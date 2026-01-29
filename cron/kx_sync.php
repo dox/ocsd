@@ -97,10 +97,10 @@ foreach ($cudPersons AS $cudPerson) {
 	$updateArray['CourseAttendanceMode'] = $cudPerson->mode_of_attendance; // How the student is attending the course, e.g. ‘FT’, ‘PT’
 	$updateArray['CourseStatus'] = $cudPerson->course_status; // Student Status description, i.e. the status of the application for the specific course which may be different to the Academic Status.
 	//$updateArray['CurrentCourse'] = '';
-	//$updateArray['UDFName1'] = '';
-	//$updateArray['UDFValue1'] = '';
-	//$updateArray['UDFName2'] = '';
-	//$updateArray['UDFValue2'] = '';
+	$updateArray['UDFName1'] = 'card_type';
+	$updateArray['UDFValue1'] = $cudPerson->university_card_type; // UG / PG etc
+	$updateArray['UDFName2'] = 'course_year';
+	$updateArray['UDFValue2'] = $cudPerson->courseYear(); // 0, 1, 2, etc
 	//$updateArray['UDFName3'] = '';
 	//$updateArray['UDFValue3'] = '';
 	//$updateArray['UDFName4'] = '';
