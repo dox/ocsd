@@ -23,6 +23,7 @@ echo pageTitle($data);
 		<h4 class="mb-3">Core Credentials</h4>
 		SSO: <strong><?php echo $person->sso_username; ?></strong><br>
 		Bodcard: <strong><?php echo $person->barcode7; ?></strong> <i><?php echo "Expires " . date('Y-m-d', strtotime($person->University_Card_End_Dt)); ?></i><br>
+		Course Year: <strong><?php echo $person->courseYear(); ?></strong><br>
 		<?php
 		if (!empty($person->dob)) {
 			echo "DOB: <strong>" . date('Y-m-d', strtotime($person->dob)) . "</strong> <i> Age " . ($person->age()) . "</i><br>";

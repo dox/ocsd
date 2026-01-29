@@ -109,6 +109,10 @@ class Person {
 		return false;
 	}
 	
+	public function courseYear() {
+		return !empty($this->unit_set_cd) ? $this->unit_set_cd : 0;
+	}
+	
 	public function photograph() {
 		$imgSrc = "images/person_photos/UAS_UniversityCard-" . $this->university_card_sysis . ".jpg";
 	
