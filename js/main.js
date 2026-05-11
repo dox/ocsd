@@ -21,10 +21,11 @@
 	}
   }
 
-  const showActiveTheme = (theme, focus = false) => {
+	const showActiveTheme = (theme, focus = false) => {
 	const themeSwitcher = document.querySelector('#bd-theme')
 	const activeThemeIcon = document.querySelector('.theme-icon-active')
 	const btnToActivate = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+	if (!themeSwitcher || !activeThemeIcon || !btnToActivate) return
   
 	// Reset button states
 	document.querySelectorAll('[data-bs-theme-value]').forEach(btn => {
@@ -76,7 +77,9 @@ document.querySelectorAll('.ldap-toggle-link').forEach(link => {
 
 		const username = this.dataset.username;
 		const action = this.dataset.action;
-		const statusSpan = document.querySelector(`#status-${CSS.escape(username)}`);
+		const cudid = this.dataset.cudid;
+		const statusSpan = document.querySelector(`#status-${CSS.escape(cudid)}`);
+		if (!statusSpan) return;
 
 		fetch('actions/ldap_toggle.php', {
 			method: 'POST',
@@ -111,7 +114,9 @@ document.querySelectorAll('.ldap-delete-link').forEach(link => {
 		}
 
 		const username = this.dataset.username;
-		const statusSpan = document.querySelector(`#status-${CSS.escape(username)}`);
+		const cudid = this.dataset.cudid;
+		const statusSpan = document.querySelector(`#status-${CSS.escape(cudid)}`);
+		if (!statusSpan) return;
 
 		fetch('actions/ldap_delete.php', {
 			method: 'POST',

@@ -1,5 +1,5 @@
 <?php
-$person = new Person(filter_var($_GET['cudid'], FILTER_SANITIZE_STRING));
+$person = new Person(trim((string)($_GET['cudid'] ?? '')));
 
 $data = array(
 		'icon'		=> 'person',
@@ -125,6 +125,7 @@ echo pageTitle($data);
 					)
 				);
 				
+				$firstVisibleTab = true;
 				foreach ($tabsArray AS $tab) {
 					$active = "";
 			
@@ -138,11 +139,12 @@ echo pageTitle($data);
 			
 					// Only show the tab if there's data
 					if ($dataExists) {
-						if ($tab == "Suspensions") {
+						if ($firstVisibleTab) {
 							$active = "active";
+							$firstVisibleTab = false;
 						}
 						$output  = "<li class=\"nav-item\" role=\"presentation\">";
-						$output .= "<button class=\"nav-link " . $active . "\" id=\"" . $tab['name'] . "-tab\" data-bs-toggle=\"tab\" data-bs-target=\"#" . $tab['name'] . "-tab-pane\" type=\"button\" role=\"tab\" aria-controls=\"" . $tab . "-tab-pane\" aria-selected=\"true\">" . $tab['clean_name'] . "</button>";
+						$output .= "<button class=\"nav-link " . $active . "\" id=\"" . $tab['name'] . "-tab\" data-bs-toggle=\"tab\" data-bs-target=\"#" . $tab['name'] . "-tab-pane\" type=\"button\" role=\"tab\" aria-controls=\"" . $tab['name'] . "-tab-pane\" aria-selected=\"" . ($active ? "true" : "false") . "\">" . $tab['clean_name'] . "</button>";
 						$output .= "</li>";
 						echo $output;
 					}
@@ -152,20 +154,22 @@ echo pageTitle($data);
 			
 			<div class="tab-content" id="myTabContent">
 				<?php
+				$firstVisiblePane = true;
 				foreach ($tabsArray AS $tab) {
 					// Check again for data before displaying content
 					$method = strtolower($tab['name']); // Convert tab name to method name, e.g., "Suspensions" -> "suspensions"
 					$dataExists = false;
 			
 					if (method_exists($person, $method)) {
-						$dataExists = !empty($person->$method()); // Call the method dynamically and check if data is returned
+						$dataExists = !empty($person->$method()->all()); // Call the method dynamically and check if data is returned
 					}
 			
 					// Only show the tab content if there's data
 					if ($dataExists) {
 						$active = "";
-						if ($tab == "Suspensions") {
+						if ($firstVisiblePane) {
 							$active = "show active";
+							$firstVisiblePane = false;
 						}
 			
 						$url = $tab['url'] . "?cudid=" . $person->cudid;

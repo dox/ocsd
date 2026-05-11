@@ -4,14 +4,16 @@ $mpdf = new \Mpdf\Mpdf();
 if (isset($_GET['crs_start_dt'])) {
 	// Get course start year safely
 	$crs_start_dt = (int) $_GET['crs_start_dt'];
-	$sql = "SELECT cudid FROM Person WHERE crs_start_dt DIV 10000 = $crs_start_dt";
+	$sql = "SELECT cudid FROM Person WHERE crs_start_dt DIV 10000 = :crs_start_dt";
+	$params = [':crs_start_dt' => $crs_start_dt];
 } else {
 	$crs_start_dt = "All";
 	$sql = "SELECT cudid FROM Person";
+	$params = [];
 }
 
 
-$personsAll = $db->get($sql);
+$personsAll = $db->get($sql, $params);
 
 // CSS styling
 $style = '<style>

@@ -2,7 +2,7 @@
 function requireLogin() {
 	global $user;
 	if (!$user->isLoggedIn()) {
-		header("Location: login.php");
+		header("Location: /login.php");
 		exit;
 	}
 }
@@ -27,11 +27,11 @@ function printArray($array) {
 
 function setting($name) {
 	global $db;
-	
+
 	$sql = "SELECT * FROM _settings WHERE name = :name LIMIT 1";
-	
+
 	$result = $db->query($sql, [':name' => $name]);
-	
+
 	if (empty($result)) {
 		return false;
 	} else {
@@ -41,11 +41,11 @@ function setting($name) {
 
 function getStat($name) {
 	global $db;
-	
+
 	$sql = "SELECT * FROM _stats WHERE name = :name LIMIT 1";
-	
+
 	$result = $db->query($sql, [':name' => $name]);
-	
+
 	if (empty($result)) {
 		return false;
 	} else {
@@ -64,13 +64,14 @@ function pageTitle($data) {
 				$button2
 			)
 	); */
-	
+
 	$output  = "<div class=\"row my-4\">";
-	
+
 	// Title
 	$output .= "<div class=\"d-flex justify-content-between align-items-start\">";
 	$output .= "<div>";
 	if (isset($data['title'])) {
+		$icon = '';
 		if (isset($data['icon'])) {
 			$icon = "<span class=\"me-2\">" . icon($data['icon'], '1em') . "</span>";
 		}
@@ -80,7 +81,7 @@ function pageTitle($data) {
 		$output .= "<p class=\"lead text-secondary mb-0\">" .  $data['subtitle'] . "</p>";
 	}
 	$output .= "</div>";
-	
+
 	// Badge
 	$output .= "<div>";
 	if (isset($data['badge'])) {
@@ -88,7 +89,7 @@ function pageTitle($data) {
 	}
 	$output .= "</div>";
 	$output .= "</div>";
-	
+
 	// Buttons aligned right under the title
 	if (isset($data['actions'])) {
 		$output .= "<div class=\"d-flex justify-content-end gap-2 mt-2\">";
@@ -98,9 +99,9 @@ function pageTitle($data) {
 		}
 		$output .= "</div>";
 	}
-	
+
 	$output .= "</div>";
-	
+
 	return $output;
 }
 
@@ -119,44 +120,52 @@ function alert($type, $title, $content) {
 	$output .= $content;
 	$output .= "<button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>";
 	$output .= "</div>";
-	
+
 	return $output;
 }
 
 function popover($type = null, $title = null, $text = null) {
 	// List of valid Bootstrap alert types
 	$validTypes = ['success', 'warning', 'info', 'unknown'];
-	
+
 	// Ensure the provided type is valid, default to 'info' if invalid
 	if (!in_array($type, $validTypes)) {
 		$type = 'unknown';  // Default type if the passed type is not valid
 	}
-	
+
 	$iconArray = array(
 		'success' => 'check-circle',
 		'warning' => 'exclamation-circle',
 		'info' => 'info-circle',
 		'unknown' => 'question-diamond'
 	);
-	
-	$output  = "<button type=\"button\" class=\"btn btn-link py-0 px-2\" data-bs-toggle=\"popover\" data-bs-title=\"" . $title . "\" data-bs-content=\"" . $text . "\">";
+
+	$output  = "<button type=\"button\" class=\"btn btn-link py-0 px-2\" data-bs-toggle=\"popover\" data-bs-title=\"" . htmlspecialchars((string)$title, ENT_QUOTES, 'UTF-8') . "\" data-bs-content=\"" . htmlspecialchars((string)$text, ENT_QUOTES, 'UTF-8') . "\">";
 	$output .= icon($iconArray[$type]);
 	$output .= "</button>";
-	
+
 	return $output;
 }
 
 function icon(string $iconName, string $size = '16'): string {
+	if (!preg_match('/^[A-Za-z0-9_-]+$/', $iconName)) {
+		$iconName = 'question-diamond';
+	}
+
+	if (!preg_match('/^\d+(\.\d+)?(em|rem|px|%)?$/', $size)) {
+		$size = '16';
+	}
+
 	$iconPath = $_SERVER["DOCUMENT_ROOT"] . '/icons/' . $iconName . '.svg';
-	
+
 	// Check if the requested SVG file exists
 	if (file_exists($iconPath)) {
 		// Load the SVG content
 		$svgContent = file_get_contents($iconPath);
-		
+
 		// Replace existing width/height
 		$svgContent = preg_replace('/(width|height)="\d+(\.\d+)?"/', '$1="' . $size . '"', $svgContent);
-		
+
 		// If missing, inject width/height into <svg> tag
 		if (!preg_match('/width="\d/', $svgContent)) {
 			$svgContent = preg_replace('/<svg\b([^>]*)>/', '<svg$1 width="' . $size . '"', $svgContent, 1);
@@ -167,13 +176,13 @@ function icon(string $iconName, string $size = '16'): string {
 
 		return $svgContent;
 	}
-	
+
 	// If the file doesn't exist, return a default SVG
 	$defaultIconPath = $_SERVER["DOCUMENT_ROOT"] . '/icons/question-diamond.svg';
-	
+
 	if (file_exists($defaultIconPath)) {
 		$defaultSvgContent = file_get_contents($defaultIconPath);
-		
+
 		// Adjust size of the default SVG
 		$defaultSvgContent = preg_replace('/(width|height)="\d+(\.\d+)?"/', '$1="' . $size . '"', $defaultSvgContent);
 
@@ -185,6 +194,10 @@ function icon(string $iconName, string $size = '16'): string {
 }
 
 function daysSince($oldDate) {
+	if (empty($oldDate)) {
+		return null;
+	}
+
 	$now = new DateTime();  // Current time
 	$oldDate = new DateTime($oldDate);  // Convert the passed date to a DateTime object
 
@@ -196,7 +209,10 @@ function daysSince($oldDate) {
 function convertDateToWinTime($date) {
 	// Convert to Unix timestamp
 	$unixTime = strtotime($date);
-	
+	if ($unixTime === false) {
+		return false;
+	}
+
 	// Epoch difference between Unix and WinTime (1601-01-01)
 	$epochDiff = 11644473600;  // 11644473600 seconds between Unix epoch and WinTime epoch
 
@@ -207,8 +223,11 @@ function convertDateToWinTime($date) {
 }
 
 function timeAgo($timestamp) {
-	$time = time() - $timestamp; // Get the difference between current time and the given timestamp
-	
+	$time = time() - (int)$timestamp; // Get the difference between current time and the given timestamp
+	if ($time < 1) {
+		return 'just now';
+	}
+
 	// Define time units
 	$units = [
 		'year' => 31536000,  // 365 days in seconds
@@ -227,33 +246,25 @@ function timeAgo($timestamp) {
 			break;
 		}
 	}
-	
+
 	return $timeAgo;
 }
 
 function cliOutput($message = null, $colour = null) {
-	if ($colour == "black") {
-		$colour = "30m";
-	} elseif ($colour == "red") {
-		$colour = "31m";
-	} elseif ($colour == "green") {
-		$colour = "32m";
-	} elseif ($colour == "yellow") {
-		$colour = "33m";
-	} elseif ($colour == "blue") {
-		$colour = "34m";
-	} elseif ($colour == "magenta") {
-		$colour = "35m";
-	} elseif ($colour == "cyan") {
-		$colour = "36m";
-	} elseif ($colour == "white") {
-		$colour = "97m";
-	} else {
-		$colour = "39m";
-	}
-	
-	$message = "\033[" . $colour . $message . "\n";
-	
+	$colours = [
+		'black' => '30',
+		'red' => '31',
+		'green' => '32',
+		'yellow' => '33',
+		'blue' => '34',
+		'magenta' => '35',
+		'cyan' => '36',
+		'white' => '97',
+	];
+	$colour = $colours[$colour] ?? '39';
+
+	$message = "\033[" . $colour . "m" . $message . "\033[0m\n";
+
 	echo $message;
 }
 
@@ -263,23 +274,23 @@ use PHPMailer\PHPMailer\Exception;
 
 function sendMail($subject, $recipients = NULL, $body = NULL) {
 	global $log;
-	
+
 	$mail = new PHPMailer(true);
 	$emails = [];
 	$addRecipient = function (string $type, $recipient) use ($mail, &$emails): void {
 		if (is_array($recipient) && isset($recipient['email'])) {
 			$recipient = $recipient['email'];
 		}
-		
+
 		if (!is_string($recipient)) {
 			return;
 		}
-		
+
 		$recipient = trim($recipient);
 		if ($recipient === '' || !filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
 			return;
 		}
-		
+
 		if ($type === 'to') {
 			$mail->addAddress($recipient);
 		} elseif ($type === 'cc') {
@@ -287,50 +298,50 @@ function sendMail($subject, $recipients = NULL, $body = NULL) {
 		} elseif ($type === 'bcc') {
 			$mail->addBCC($recipient);
 		}
-		
+
 		$emails[] = $recipient;
 	};
-	
+
 	try {
 		//Server settings
 		$mail->isSMTP();
 		$mail->Host       = smtp_server;
 		$mail->Port       = smtp_port;
-	
-		
+
+
 		$mail->setFrom(smtp_sender_address, smtp_sender_name);
 		$mail->addReplyTo(smtp_sender_address, smtp_sender_name);
-		
+
 		//Recipients
 		foreach (($recipients['to'] ?? []) AS $recipient) {
 			$addRecipient('to', $recipient);
 		}
-		
+
 		foreach (($recipients['cc'] ?? []) AS $recipient) {
 			$addRecipient('cc', $recipient);
 		}
-		
+
 		foreach (($recipients['bcc'] ?? []) AS $recipient) {
 			$addRecipient('bcc', $recipient);
 		}
-		
+
 		if (count($emails) === 0) {
 			throw new Exception('No valid recipient email addresses were provided.');
 		}
-		
+
 		//Attachments
 		//$mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
 		//$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-	
+
 		//Content
 		$mail->isHTML(true);
 		$mail->Subject = $subject;
 		$mail->Body    = $body;
-	
+
 		$mail->send();
-		
+
 		$mail->clearAddresses();
-		
+
 		$logData = [
 			'category' => 'email',
 			'result'   => 'success',
@@ -350,30 +361,31 @@ function sendMail($subject, $recipients = NULL, $body = NULL) {
 function renderTemplate(string $template, array $variables): string {
 	foreach ($variables as $key => $value) {
 		// Replace {{key}} with value, using str_replace
-		$template = str_replace('{{' . $key . '}}', $value, $template);
+		$template = str_replace('{{' . $key . '}}', (string)$value, $template);
 	}
 	return $template;
 }
 
 function generateSecurePassword($length = 12, $includeSymbols = true): string {
+	$length = max(1, (int)$length);
 	$lower = 'abcdefghijklmnopqrstuvwxyz';
 	$upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$numbers = '0123456789';
 	$symbols = '!@#$%^&*()-_=+[]{}|;:,.?';
-	
+
 	$characters = $lower . $upper . $numbers;
 	if ($includeSymbols) {
 		$characters .= $symbols;
 	}
-	
+
 	$charactersLength = strlen($characters);
 	$password = '';
-	
+
 	for ($i = 0; $i < $length; $i++) {
 		$index = random_int(0, $charactersLength - 1);
 		$password .= $characters[$index];
 	}
-	
+
 	return $password;
 }
 ?>

@@ -1,5 +1,10 @@
 <?php
-$ldapUser = $ldap->findUser(filter_var($_GET['samaccountname'], FILTER_SANITIZE_STRING));
+$ldapUser = $ldap->findUser(trim((string)($_GET['samaccountname'] ?? '')));
+
+if (!$ldapUser) {
+	echo alert('warning', 'LDAP user not found', 'No LDAP account matched the requested username.');
+	return;
+}
 
 $data = array(
 		'icon'		=> 'person-fill-lock',

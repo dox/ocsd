@@ -1,7 +1,8 @@
 <?php
-require_once 'inc/autoload.php';
+require_once __DIR__ . '/../inc/autoload.php';
+requireLogin();
 
-$person = new Person($_GET['cudid']);
+$person = new Person(trim((string)($_GET['cudid'] ?? '')));
 
 $data = array(
     'icon'		=> 'person',

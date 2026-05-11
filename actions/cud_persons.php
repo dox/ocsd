@@ -1,24 +1,27 @@
 <?php
 include_once("../inc/autoload.php");
+requireLogin();
 
 header('Content-Type: application/json');
 
 if ($user->isLoggedIn() && isset($_GET['search'])) {
 	$searchColumns = ['cudid', 'sits_student_code', 'firstname', 'lastname', 'sso_username', 'barcode'];
-	$searchTerm = $_GET['search'] ?? null;
+	$searchTerm = trim($_GET['search'] ?? '');
 	$whereClause = '';
+	$params = [];
 	
 	if (!empty($searchTerm)) {
-		$escapedTerm = addslashes($searchTerm); // or better: use prepared statements
-		$searchConditions = array_map(function($col) use ($escapedTerm) {
-			return "$col LIKE '%$escapedTerm%'";
+		$searchConditions = array_map(function($col) {
+			return "$col LIKE :search";
 		}, $searchColumns);
 	
 		$whereClause = 'WHERE ' . implode(' OR ', $searchConditions);
+		$params[':search'] = '%' . $searchTerm . '%';
 	}
 	
 	$sql = "SELECT * FROM Person $whereClause LIMIT 50";
-	$personsAll = $db->get($sql);
+	$personsAll = $db->get($sql, $params);
+	$data = [];
 	
 	foreach ($personsAll AS $person) {
 		$personArray = array();

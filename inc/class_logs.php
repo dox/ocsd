@@ -5,10 +5,12 @@ class Logs {
 	public function create($array = null) {
 		global $db;  // Assuming $db is the instance of your Database class
 		
-		// Sanitize description to prevent issues like SQL injection
-		$description = $array['description'];
-		$description = str_replace("'", "\'", $description); // Optional, if necessary
-		$description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8'); // Better escape special characters
+		$array = is_array($array) ? $array : [];
+		$remoteAddress = $_SERVER['REMOTE_ADDR'] ?? null;
+		$remoteIp = $remoteAddress ? ip2long($remoteAddress) : null;
+		if ($remoteIp === false) {
+			$remoteIp = null;
+		}
 		
 		// Prepare the SQL query with placeholders
 		$sql = "INSERT INTO " . self::$table_name . " (date_created, type, result, cudid, ldap, description, username, ip) 
@@ -17,13 +19,13 @@ class Logs {
 		// Use the query method from the Database class to execute the query
 		$params = [
 			':date_created' => date('c'),
-			':type' => $array['type'],
-			':result' => $array['result'],
-			':cudid' => $array['cudid'],
-			':ldap' => $array['ldap'],
-			':description' => $array['description'],
-			':username' => $_SESSION['username'],
-			':ip' => ip2long($_SERVER['REMOTE_ADDR'])
+			':type' => $array['type'] ?? $array['category'] ?? 'general',
+			':result' => $array['result'] ?? 'info',
+			':cudid' => $array['cudid'] ?? null,
+			':ldap' => $array['ldap'] ?? null,
+			':description' => $array['description'] ?? '',
+			':username' => $_SESSION['username'] ?? null,
+			':ip' => $remoteIp
 		];
 		
 		// Execute the query and return the result
@@ -43,7 +45,7 @@ class Logs {
 				 ORDER BY date_created DESC";
 		
 		// Execute the query with the bound parameter
-		$results = $db->query($sql, ['maximumLogsAge' => $maximumLogsAge]);
+		$results = $db->query($sql, [':maximumLogsAge' => $maximumLogsAge]);
 		
 		return $results;
 	}
@@ -107,7 +109,7 @@ class Logs {
 	public function purge() {
 		global $db;
 		
-		$logsAge = setting('logs_retention');
+		$logsAge = max(1, (int)setting('logs_retention'));
 		
 		$sql = "DELETE FROM _logs WHERE date_created < NOW() - INTERVAL " . $logsAge . " DAY";
 		$db->query($sql);

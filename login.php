@@ -13,7 +13,7 @@ require_once 'inc/autoload.php';
 				<?php
 				if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					
-					if ($user->authenticate($_POST['username'], $_POST['password'])) {
+					if ($user->authenticate($_POST['username'] ?? '', $_POST['password'] ?? '')) {
 						header('Location: index.php');
 						exit;
 					} else {

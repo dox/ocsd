@@ -46,7 +46,7 @@ $allowedFilters = [
 
 $filter = $_GET['filter'] ?? null;
 
-$ldapComputers = $ldap->findByFilters($allowedFilters[$filter]) ?: [];
+$ldapComputers = isset($allowedFilters[$filter]) ? ($ldap->findByFilters($allowedFilters[$filter]) ?: []) : [];
 
 $data = array(
 		'icon'		=> 'person-fill-lock',

@@ -1,9 +1,10 @@
 <?php
 include __DIR__ . '/../../inc/autoload.php';
+requireLogin();
 
 $sql  = "SELECT * FROM YearsOfAwdProg WHERE cudid = :cudid";
 
-$results = $db->get($sql, ['cudid' => $_GET['cudid']]);
+$results = $db->get($sql, [':cudid' => $_GET['cudid'] ?? '']);
 
 if (!empty($results)) {
     $output = "<table class=\"table card-table table-vcenter\"><tbody>";

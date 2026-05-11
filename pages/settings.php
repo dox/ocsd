@@ -3,11 +3,11 @@
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	// Gather the POST data into an array
 	$data = [
-		'value' => $_POST['value']
+		'value' => $_POST['value'] ?? ''
 	];
 	
 	// Update the shift record in the database
-	$updateSuccess = $db->update('_settings', $data, 'uid', $_POST['uid']);
+	$updateSuccess = isset($_POST['uid']) ? $db->update('_settings', $data, 'uid', $_POST['uid']) : false;
 
 	if ($updateSuccess) {
 		echo alert('success', "Success!", "Setting updated successfully!");

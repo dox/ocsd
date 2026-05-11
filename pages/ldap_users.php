@@ -2,6 +2,7 @@
 $pwdWarnAge = date('Y-m-d', strtotime(setting('ldap_password_warn_age') .  ' days ago'));
 $pwdDisableAge = date('Y-m-d', strtotime(setting('ldap_password_disable_age') .  ' days ago'));
 $accountExpiredAge = date('Y-m-d', strtotime(setting('ldap_expired_age') .  ' days ago'));
+$ldapSearch = trim((string)($_POST['ldap_search'] ?? $_GET['ldap_search'] ?? ''));
 
 $allowedFilters = [
 	'test' => [
@@ -53,26 +54,26 @@ $allowedFilters = [
 			[
 				'attribute' => 'cn',
 				'operator'  => '=',
-				'value'     => '*' . $_POST['ldap_search'] . '*'
+				'value'     => '*' . $ldapSearch . '*'
 			],
 			[
 				'attribute' => 'samaccountname',
 				'operator'  => '=',
-				'value'     => '*' . $_POST['ldap_search'] . '*'
+				'value'     => '*' . $ldapSearch . '*'
 			]
 		]
 	],
 	'group' => [
 		'memberOf' => [
 			'operator' => '=',
-			'value' => $_GET['ldap_search']
+			'value' => $ldapSearch
 		]
 	]
 ];
 
 $filter = $_GET['filter'] ?? null;
 
-$ldapUsers = $ldap->findByFilters($allowedFilters[$filter]);
+$ldapUsers = isset($allowedFilters[$filter]) ? $ldap->findByFilters($allowedFilters[$filter]) : [];
 
 if ($filter == "ldap-no-cud") {
 	$i = 0;

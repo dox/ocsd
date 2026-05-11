@@ -2,9 +2,9 @@
 class Persons {
 	public static $table_name = 'Person';
 	
-	public $studentPGTypes = array("UG");
-    public $studentUGTypes = array("PG", "GT", "GR");
-    public $studentVSTypes = array("VS", "VD", "VV", "VR");
+	public $studentUGTypes = array("UG");
+    public $studentPGTypes = array("PG", "GT", "GR", "PT");
+    public $studentVSTypes = array("VC", "VD", "VV", "VR");
     public $studentTypes;
     public $staffTypes = array("CS");
     
@@ -34,9 +34,9 @@ class Persons {
 	public function test($cudid) {
 		global $db;
 		
-		$sql  = "SELECT cudid FROM " . self::$table_name . " WHERE cudid = '" . $cudid . "'";
+		$sql  = "SELECT cudid FROM " . self::$table_name . " WHERE cudid = :cudid";
 		
-		$results = $db->get($sql);
+		$results = $db->get($sql, [':cudid' => $cudid]);
 		
 		$persons = [];
 		foreach ($results as $result) {

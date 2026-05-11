@@ -1,7 +1,8 @@
 <?php
 include __DIR__ . '/../../inc/autoload.php';
+requireLogin();
 
-$person = new Person(filter_var($_GET['cudid'], FILTER_SANITIZE_STRING));
+$person = new Person(trim((string)($_GET['cudid'] ?? '')));
 
 if ($person->suspensions()->isCurrentlySuspended()) {
   echo "<div class=\"alert alert-danger text-center\" role=\"alert\">CURRENTLY SUSPENDED UNTIL " . $person->suspensions()->currentSuspensionEndDate() . "</div>";

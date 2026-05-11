@@ -1,5 +1,6 @@
 <?php
 include_once("../inc/autoload.php");
+requireLogin();
 
 $username = $_POST['username'] ?? null;
 $action = $_POST['action'] ?? null;

@@ -1,7 +1,8 @@
 <?php
 include __DIR__ . '/../../inc/autoload.php';
+requireLogin();
 
-$person = new Person(filter_var($_GET['cudid'], FILTER_SANITIZE_STRING));
+$person = new Person(trim((string)($_GET['cudid'] ?? '')));
 
 $homeAddress = $person->addresses()->getHomeAddress();
 $contactAddress = $person->addresses()->getContactAddress();

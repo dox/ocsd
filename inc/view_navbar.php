@@ -118,18 +118,19 @@ $navbarArray['ldap_all'] = array(
 		<div class="collapse navbar-collapse" id="navbarsExample09">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<?php
+				$currentNav = $_GET['n'] ?? null;
 				foreach ($navbarArray AS $key => $navBarLink) {
-					if ($key == $_GET['n']) {
+					if ($key == $currentNav) {
 						$active = " active";
 					} else {
-						if (!isset($_GET['n']) && $key == "home") {
+						if ($currentNav === null && $key == "home") {
 							$active = " active";
 						} else {
 							$active = "";
 						}
 					}
 					
-					if (is_array($navBarLink['sublinks'])) {
+					if (isset($navBarLink['sublinks']) && is_array($navBarLink['sublinks'])) {
 						$output  = "<li class=\"nav-item dropdown\">";
 						$output .= "<a class=\"nav-link px-2 dropdown-toggle " . $active . "\" href=\"#navbar-base\" role=\"button\" data-bs-toggle=\"dropdown\" >";
 						$output .= icon($navBarLink['icon']);
@@ -148,7 +149,7 @@ $navbarArray['ldap_all'] = array(
 					} else {
 						$output  = "<li>";
 						$output .= "<a class=\"nav-link px-2 " . $active . "\" href=\"" . $navBarLink['link'] . "\" >";
-						$output .= $icon;
+						$output .= icon($navBarLink['icon']);
 						$output .= $navBarLink['title'];
 						$output .= "</a>";
 						$output .= "</li>";

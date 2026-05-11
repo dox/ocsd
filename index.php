@@ -13,7 +13,10 @@ requireLogin(); // Redirects if not logged in
 	<div class="container my-5">
 		<?php
 		if ($user->isLoggedIn()) {
-			$requestedPage = isset($_GET['page']) ? $_GET['page'] : 'index';
+			$requestedPage = $_GET['page'] ?? 'index';
+			if (!preg_match('/^[A-Za-z0-9_-]+$/', $requestedPage)) {
+				$requestedPage = '404';
+			}
 		} else {
 			$requestedPage = 'logon';
 		}

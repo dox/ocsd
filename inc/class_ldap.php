@@ -8,7 +8,7 @@ use LdapRecord\Models\ActiveDirectory\Computer as LdapComputer;
 use LdapRecord\Models\ActiveDirectory\Group;
 
 class Ldap {
-	private Connection $connection;
+	private ?Connection $connection = null;
 	private string $lastError = '';
 
 	public function __construct() {
@@ -20,7 +20,7 @@ class Ldap {
 			$this->lastError = 'LDAP bind password is empty.';
 			return;
 		}
-		
+
 		try {
 			$this->connection = new Connection([
 				'hosts'            => LDAP_SERVER,
@@ -54,15 +54,25 @@ class Ldap {
 	public function authenticate(string $username, string $password): bool {
 		global $log;
 
+		$username = trim($username);
+		if ($username === '' || $password === '') {
+			$this->setError('Username not found or password is incorrect.');
+			return false;
+		}
+		if ($this->connection === null) {
+			$this->setError($this->lastError ?: 'LDAP connection is not available.');
+			return false;
+		}
+
 		$user = $this->findUser($username);
-		
+
 		if (!$user) {
 			$log->create([
 				'type' => 'login',
 				'result' => 'warning',
-				'description' => 'Login failed. ' . $username . 'not found in LDAP'
+				'description' => 'Login failed. ' . $username . ' not found in LDAP'
 			]);
-			
+
 			$this->setError('Username not found or password is incorrect.');
 			return false;
 		}
@@ -82,14 +92,14 @@ class Ldap {
 		if (array_intersect(array_map('strtolower', LDAP_ALLOWED_DN), array_map('strtolower', $groups))) {
 			$_SESSION['logged_in'] = true;
 			$_SESSION['username'] = $username;
-			
+
 			$log->create([
 				'type' => 'login',
 				'result' => 'success',
 				'ldap' => $username,
 				'description' => 'Login succeeded. ' . $username . ' (' . $user['cn'][0] . ') authenticated and logged in'
 			]);
-			
+
 			return true;
 		} else {
 			$log->create([
@@ -98,21 +108,33 @@ class Ldap {
 				'ldap' => $username,
 				'description' => 'Login failed. ' . $username . ' (' . $user['cn'][0] . ') authenticated but was not in allowed group(s)'
 			]);
-			
+
 			$this->setError('You do not have access to this service.');
 			return false;
 		}
 	}
 
 	public function findUser(string $username) {
+		if ($this->connection === null) {
+			return false;
+		}
+
 		return LdapUser::where('samaccountname', '=', $username)->first() ?: false;
 	}
-	
+
 	public function findComputer(string $username) {
+		if ($this->connection === null) {
+			return false;
+		}
+
 		return LdapComputer::where('samaccountname', '=', $username)->first() ?: false;
 	}
 
 	public function findUserFromLookups(array $lookups) {
+		if ($this->connection === null) {
+			return false;
+		}
+
 		foreach ($lookups as $field => $value) {
 			if ($value) {
 				$record = LdapUser::where($field, '=', $value)->first();
@@ -123,6 +145,11 @@ class Ldap {
 	}
 
 	public function findByFilters(array $filters): ?array {
+		if ($this->connection === null) {
+			$this->setError($this->lastError ?: 'LDAP connection is not available.');
+			return null;
+		}
+
 		try {
 			$query = $this->connection->query();
 			$ldapFilter = $this->buildFilter($filters);
@@ -133,20 +160,20 @@ class Ldap {
 			return null;
 		}
 	}
-	
+
 	public function disableAccount($user) {
 		global $log;
 		// Get current UAC (userAccountControl)
 		$currentValue = (int) $user->getFirstAttribute('userAccountControl');
-	
+
 		// Set the DISABLED flag (bit 2 / 0x2 / value 0x0202 = 514)
 		$disabledValue = $currentValue | 0x2;
-	
+
 		$user->setAttribute('userAccountControl', $disabledValue);
 		$user->setAttribute('password', generateSecurePassword());
-		
+
 		$user->save();
-		
+
 		$logData = [
 			'type' => 'ldap',
 			'result'   => 'success',
@@ -154,19 +181,19 @@ class Ldap {
 		];
 		$log->create($logData);
 	}
-	
+
 	public function enableAccount($user) {
 		global $log;
-		
+
 		// Get current UAC
 		$currentValue = (int) $user->getFirstAttribute('userAccountControl');
-	
+
 		// Unset the DISABLED flag
 		$enabledValue = $currentValue & ~0x2;
-	
+
 		$user->setAttribute('userAccountControl', $enabledValue);
 		$user->save();
-		
+
 		$logData = [
 			'type' => 'ldap',
 			'result'   => 'success',
@@ -174,12 +201,12 @@ class Ldap {
 		];
 		$log->create($logData);
 	}
-	
+
 	public function create(array $attributes): bool {
 		global $log;
-	
+
 		$user = (new LdapUser)->inside(LDAP_BASE_DN);
-		
+
 		$user->cn = $attributes['cn'];
 		$user->samaccountname = $attributes['samaccountname'];
 		$user->userprincipalname = $attributes['userprincipalname'];
@@ -189,30 +216,31 @@ class Ldap {
 		$user->mail = $attributes['mail'] ?? null;
 		$user->description = $attributes['description'] ?? null;
 		$user->pager = $attributes['pager'] ?? null;
-		$user->unicodePwd = $attributes['password'];
-		
-		$user->save;
-		
-		$user->refresh();
-		
-		// Enable the user.
-		$user->userAccountControl = 512;
-		
 		try {
+			$user->unicodePwd = $attributes['password'];
+			$user->save();
+			$user->refresh();
+
+			// Enable the user.
+			$user->userAccountControl = 512;
 			$user->save();
 			return true;
 		} catch (\LdapRecord\LdapRecordException $e) {
-			// Failed saving user.
+			$log->create([
+				'type' => 'ldap',
+				'result' => 'danger',
+				'description' => 'Failed to create LDAP account: ' . ($attributes['samaccountname'] ?? 'unknown') . ': ' . $e->getMessage()
+			]);
+			return false;
 		}
-
 	}
-	
+
 	public function deleteAccount($user) {
 		global $log;
-	
+
 		try {
 			$user->delete();
-	
+
 			$logData = [
 				'type' => 'ldap',
 				'result' => 'warning',
@@ -225,13 +253,13 @@ class Ldap {
 				'description' => 'Failed to delete LDAP account: ' . $user . ': ' . $e->getMessage()
 			];
 		}
-	
+
 		$log->create($logData);
 	}
 
 	private function buildFilter(array $filters): string {
 		$extraFilters = [];
-	
+
 		foreach ($filters as $attribute => $conditions) {
 			if (strtoupper($attribute) === 'OR' && is_array($conditions)) {
 				$orParts = [];
@@ -239,7 +267,7 @@ class Ldap {
 					$attr = $cond['attribute'];
 					$operator = $cond['operator'] ?? '=';
 					$value = $cond['value'];
-	
+
 					if ($operator === '>') {
 						$operator = '>=';
 						if (is_numeric($value)) $value += 1;
@@ -247,7 +275,7 @@ class Ldap {
 						$operator = '<=';
 						if (is_numeric($value)) $value -= 1;
 					}
-	
+
 					$orParts[] = $this->formatLdapCondition($attr, $operator, $value);
 				}
 				$extraFilters[] = '(|' . implode('', $orParts) . ')';
@@ -255,7 +283,7 @@ class Ldap {
 				// Regular single-attribute case
 				$operator = $conditions['operator'] ?? '=';
 				$value = $conditions['value'];
-	
+
 				if ($operator === '>') {
 					$operator = '>=';
 					if (is_numeric($value)) $value += 1;
@@ -263,7 +291,7 @@ class Ldap {
 					$operator = '<=';
 					if (is_numeric($value)) $value -= 1;
 				}
-	
+
 				if ($operator === '|') {
 					$parts = array_map(fn($val) => "($attribute=" . trim($val) . ")", explode('|', $value));
 					$extraFilters[] = '(|' . implode('', $parts) . ')';
@@ -274,10 +302,10 @@ class Ldap {
 				}
 			}
 		}
-	
+
 		return '(&' . implode('', $extraFilters) . ')';
 	}
-	
+
 	private function formatLdapCondition(string $attribute, string $operator, $value): string {
 		switch ($operator) {
 			case '=':
@@ -292,19 +320,19 @@ class Ldap {
 		}
 	}
 
-	
+
 	public function getGroupMembers(string $groupName): array {
 		try {
 			$group = Group::where('cn', '=', $groupName)->first();
-	
+
 			if (!$group) {
 				$this->setError("Group '$groupName' not found.");
 				return [];
 			}
-	
+
 			// Fetch members using relationship
 			$members = $group->members()->get();
-	
+
 			return $members->all(); // return as array
 		} catch (\Exception $e) {
 			$this->setError("Error retrieving group members: " . $e->getMessage());

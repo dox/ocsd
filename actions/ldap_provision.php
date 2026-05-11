@@ -1,5 +1,6 @@
 <?php
 include_once("../inc/autoload.php");
+requireLogin();
 
 $cudid = $_POST['cudid'] ?? null;
 
@@ -9,7 +10,7 @@ if (!$cudid) {
 	exit;
 }
 
-$person = new Person(filter_var($_POST['cudid'], FILTER_SANITIZE_STRING));
+$person = new Person(trim((string)$cudid));
 $randomPassword = generateSecurePassword(6, true);
 
 $newUserArray = array(

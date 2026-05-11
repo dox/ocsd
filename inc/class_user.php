@@ -14,6 +14,7 @@ class User {
 
 	public function authenticate(string $username, string $password): bool {
 		if ($this->ldap->authenticate($username, $password)) {
+			session_regenerate_id(true);
 			$this->username = $username;
 			$_SESSION['username'] = $username;
 			$_SESSION['logged_in'] = true;

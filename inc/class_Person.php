@@ -1,7 +1,7 @@
 <?php
 class Person {
 	public static $table_name = 'Person';
-	
+
 	public $cudid;
 	public $sits_student_code;
 	public $oss_student_number;
@@ -62,21 +62,35 @@ class Person {
 	public $universitycard_isoiec_14443_uid;
 	public $bodleian_mifare_id;
 	public $bodleian_isoiec_14443_uid;
-	
+
 	private ?LdapRecord\Models\ActiveDirectory\User $ldapRecordCache = null;
-	
+
 	public function __construct($lookup = null) {
 		global $db;
-	
+
 		$result = null;
-	
+
 		if (is_array($lookup)) {
+			$allowedLookupFields = [
+				'cudid',
+				'sits_student_code',
+				'oss_student_number',
+				'sso_username',
+				'MiFareID',
+				'oxford_email',
+				'barcode',
+				'barcode7',
+			];
+
 			foreach ($lookup as $field => $value) {
 				if (!is_null($value)) {
+					if (!in_array($field, $allowedLookupFields, true)) {
+						continue;
+					}
 					//echo "Trying lookup on $field for $value\n";
 					$sql = "SELECT * FROM " . self::$table_name . " WHERE $field = :value LIMIT 1";
 					$result = $db->get($sql, [':value' => $value], true);
-	
+
 					if ($result) {
 						break; // Exit loop as soon as a match is found
 					}
@@ -87,7 +101,7 @@ class Person {
 			$sql = "SELECT * FROM " . self::$table_name . " WHERE cudid = :value LIMIT 1";
 			$result = $db->get($sql, [':value' => $lookup], true);
 		}
-	
+
 		// Populate class properties if record found
 		if ($result) {
 			foreach ($result as $key => $value) {
@@ -97,90 +111,91 @@ class Person {
 			}
 		}
 	}
-	
+
 	public function isStudent() {
 		// Card Types taken from https://help.it.ox.ac.uk/card-and-it-service-entitlements
 		$studentTypes = array("UG", "GT", "GR", "PT", "VC", "VD", "VV", "VR");
-		
+
 		if (in_array($this->university_card_type, $studentTypes)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public function courseYear() {
 		return !empty($this->unit_set_cd) ? $this->unit_set_cd : 0;
 	}
-	
+
 	public function photograph() {
 		$imgSrc = "images/person_photos/UAS_UniversityCard-" . $this->university_card_sysis . ".jpg";
-	
+
 		if (!file_exists($imgSrc)) {
 			$imgSrc = "images/blank_avatar.png";
 		}
-	
+
 		return $imgSrc;
 	}
-	
+
 	public function card() {
-		$personURL = "index.php?page=cud_person&cudid=" . $this->cudid;
-		
+		$personURL = "index.php?page=cud_person&cudid=" . rawurlencode((string)$this->cudid);
+
 		$output  = "<div class=\"col\">";
 		$output .= "<div class=\"card\">";
 		$output .= "<div class=\"ratio ratio-1x1\">";
-		$output .= "<img src=\"" . $this->photograph() . "\" class=\"object-fit-cover card-img-top\" alt=\"...\">";
+		$output .= "<img src=\"" . htmlspecialchars($this->photograph(), ENT_QUOTES, 'UTF-8') . "\" class=\"object-fit-cover card-img-top\" alt=\"\">";
 		$output .= "</div>";
 		$output .= "<div class=\"card-body\">";
-		$output .= "<h5 class=\"card-title\"><a href=\"" . $personURL . "\">" . $this->FullName . "</a></h5>";
+		$output .= "<h5 class=\"card-title\"><a href=\"" . htmlspecialchars($personURL, ENT_QUOTES, 'UTF-8') . "\">" . htmlspecialchars((string)$this->FullName) . "</a></h5>";
 		$output .= "<p class=\"card-text\">";
-		$output .= $this->sso_username;
+		$output .= htmlspecialchars((string)$this->sso_username);
 		$output .= $this->actionsButton();
 		$output .= "</p>";
 		$output .= "</div>";
 		$output .= "</div>";
 		$output .= "</div>";
-		
+
 		return $output;
 	}
-	
+
 	public function actionsButton() {
-		$output  = "<span class=\"ldap-status\" id=\"status-" . $this->cudid . "\"></span>";
+		$output  = "<span class=\"ldap-status\" id=\"status-" . htmlspecialchars((string)$this->cudid, ENT_QUOTES, 'UTF-8') . "\"></span>";
 		$output .= "<div class=\"btn-group\" role=\"group\">";
 		$output .= "<div class=\"dropdown\">";
 		$output .= "<button type=\"button\" class=\"btn btn-sm btn-outline-info dropdown-toggle\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Actions</button>";
-		
+
 		$output .= "<ul class=\"dropdown-menu\">";
-		
+
 		$mailTo = $this->oxford_email;
 		if (!empty($this->alt_email)) {
-			$mailTo .= "?cc=" . $this->alt_email;
+			$mailTo .= "?cc=" . rawurlencode((string)$this->alt_email);
 		}
-		$output .= "<li><a class=\"dropdown-item\" href=\"mailto:" . $mailTo . "\">Email</a></li>";
-		
-		if ($this->getLDAPUsername()) {
+		$output .= "<li><a class=\"dropdown-item\" href=\"mailto:" . htmlspecialchars($mailTo, ENT_QUOTES, 'UTF-8') . "\">Email</a></li>";
+
+		$ldapUsername = $this->getLDAPUsername();
+		if ($ldapUsername) {
 			if (in_array($this->ldapRecordCache['useraccountcontrol'][0], array('512','66048'))) {
-				$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"disable\" href=\"#\">Disable " . $this->sso_username . " LDAP Account</a></li>";
+				$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . htmlspecialchars((string)$this->cudid, ENT_QUOTES, 'UTF-8') . "\" data-username=\"" . htmlspecialchars($ldapUsername, ENT_QUOTES, 'UTF-8') . "\" data-action=\"disable\" href=\"#\">Disable " . htmlspecialchars((string)$this->sso_username) . " LDAP Account</a></li>";
 			} else {
-				$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Enable " . $this->sso_username . " LDAP Account</a></li>";
-				$output .= "<li><a class=\"dropdown-item text-danger ldap-delete-link\" data-cudid=\"" . $this->cudid . "\" data-username=\"" . $this->getLDAPUsername() . "\" data-action=\"enable\" href=\"#\">Delete LDAP Account</a></li>";
+				$output .= "<li><a class=\"dropdown-item ldap-toggle-link\" data-cudid=\"" . htmlspecialchars((string)$this->cudid, ENT_QUOTES, 'UTF-8') . "\" data-username=\"" . htmlspecialchars($ldapUsername, ENT_QUOTES, 'UTF-8') . "\" data-action=\"enable\" href=\"#\">Enable " . htmlspecialchars((string)$this->sso_username) . " LDAP Account</a></li>";
+				$output .= "<li><a class=\"dropdown-item text-danger ldap-delete-link\" data-cudid=\"" . htmlspecialchars((string)$this->cudid, ENT_QUOTES, 'UTF-8') . "\" data-username=\"" . htmlspecialchars($ldapUsername, ENT_QUOTES, 'UTF-8') . "\" data-action=\"enable\" href=\"#\">Delete LDAP Account</a></li>";
 			}
 		} else {
 			if (isset($this->sso_username)) {
-				$output .= "<li><a class=\"dropdown-item ldap-provision-link\" data-cudid=\"" . $this->cudid . "\" data-action=\"disable\" href=\"#\">Provision User</a></li>";
+				$output .= "<li><a class=\"dropdown-item ldap-provision-link\" data-cudid=\"" . htmlspecialchars((string)$this->cudid, ENT_QUOTES, 'UTF-8') . "\" data-action=\"disable\" href=\"#\">Provision User</a></li>";
 			}
 		}
-		
+
 		$output .= "</ul>";
 		$output .= "</div>";
 		$output .= "</div>";
-		
+
 		return $output;
 	}
-	
+
 	public function getLdapRecord(): ?LdapRecord\Models\ActiveDirectory\User {
 		global $ldap;
-		
+
 		if ($this->ldapRecordCache !== null) {
 			return $this->ldapRecordCache;
 		}
@@ -190,34 +205,34 @@ class Person {
 			'pager'          => $this->MiFareID ?? null,
 			'mail'           => $this->oxford_email ?? null,
 		]);
-		
+
 		$ldapUser = $ldap->findUserFromLookups($lookups);
-		
+
 		if ($ldapUser) {
 			$this->ldapRecordCache = $ldapUser;
-			
+
 			return $this->ldapRecordCache;
 		}
-	
+
 		// Not found
 		$this->ldapRecordCache = null;
-		return null; 
+		return null;
 	}
-	
-	public function getLDAPUsername(): string {
+
+	public function getLDAPUsername(): ?string {
 		$ldap = $this->getLdapRecord();
-		
+
 		if ($ldap && isset($ldap['samaccountname'][0])) {
 			return $ldap['samaccountname'][0];
 		}
-		
-		return false;
+
+		return null;
 	}
-	
+
 	public function ssoButton() {
 		if (!empty($this->cudid) && !empty($this->sso_username)) {
 			$url = "index.php?page=cud_person&cudid=" . $this->cudid;
-			
+
 			return sprintf(
 				'<a href="%s" class="btn btn-light position-relative">%s%s</a>',
 				$url,
@@ -225,15 +240,15 @@ class Person {
 				$this->getSsoButtonBadge()
 			);
 		}
-		
+
 		return null;
 	}
-	
+
 	private function getSsoButtonBadge(): string {
 		$type = $this->university_card_type;
-		
+
 		$personsClass = new Persons();
-		
+
 		if (in_array($type, $personsClass->studentUGTypes)) {
 			$class = "bg-success";
 		} elseif (in_array($type, $personsClass->studentPGTypes)) {
@@ -243,19 +258,19 @@ class Person {
 		} else {
 			$class = "bg-warning";
 		}
-		
+
 		return sprintf(
 			'<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill %s">%s</span>',
 			$class,
 			htmlspecialchars($type)
 		);
 	}
-	
+
 	public function getTypeBadge(): string {
 		$type = $this->university_card_type;
-		
+
 		$personsClass = new Persons();
-		
+
 		if (in_array($type, $personsClass->studentUGTypes)) {
 			$class = "text-bg-success";
 		} elseif (in_array($type, $personsClass->studentPGTypes)) {
@@ -265,84 +280,84 @@ class Person {
 		} else {
 			$class = "text-bg-warning";
 		}
-		
+
 		return sprintf(
 			'<span class="badge %s">%s</span>',
 			$class,
 			htmlspecialchars($type)
 		);
 	}
-	
+
 	public function age(): ?string {
 		$ymd = $this->dob;
-		
+
 		if ($ymd === null) {
 			return null;
 		}
-		
+
 		if (!preg_match('/^\d{8}$/', $ymd)) {
 			throw new InvalidArgumentException("Date must be in YYYYMMDD format.");
 		}
-		
+
 		$birthdate = DateTime::createFromFormat('Ymd', $ymd);
 		if (!$birthdate) {
 			throw new InvalidArgumentException("Invalid date.");
 		}
-		
+
 		$today = new DateTime();
 		$diff = $today->diff($birthdate);
-		
+
 		if ($diff->y < 18) {
 			return "{$diff->y} years and {$diff->m} months";
 		} else {
 			return "{$diff->y} years";
 		}
 	}
-	
+
 	public function addresses(): Addresses {
 		return new Addresses($this->cudid);
 	}
-	
+
 	public function applications(): Applications {
 		return new Applications($this->cudid);
 	}
-	
+
 	public function enrolments(): Enrolments {
 		return new Enrolments($this->cudid);
 	}
-	
+
 	public function collegefees(): CollegeFees {
 		return new CollegeFees($this->cudid);
 	}
-	
+
 	public function coowningdepartments(): CoOwningDepartments {
 		return new CoOwningDepartments($this->cudid);
 	}
-	
+
 	public function externalids(): ExternalIds {
 		return new ExternalIds($this->cudid);
 	}
-	
+
 	public function enrolawdprog(): EnrolAwdProg {
 		return new EnrolAwdProg($this->cudid);
 	}
-	
+
 	public function theresdeg(): TheResDeg {
 		return new TheResDeg($this->cudid);
 	}
-	
+
 	public function qualifications(): Qualifications {
 		return new Qualifications($this->cudid);
 	}
-	
+
 	public function supervisors(): Supervisors {
 		return new Supervisors($this->cudid);
 	}
-	
+
 	public function suspensions(): Suspensions {
 		return new Suspensions($this->cudid);
 	}
-	
+
 	public function yearsofawdprog(): YearsOfAwdProg {
 		return new YearsOfAwdProg($this->cudid);
 	}

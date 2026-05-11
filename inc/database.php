@@ -8,13 +8,14 @@ class Database {
 
 	public function __construct() {
 		try {
-			$this->pdo = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->username, $this->password);
+			$this->pdo = new PDO("mysql:host=$this->host;dbname=$this->dbname;charset=utf8mb4", $this->username, $this->password);
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Set the error mode
+			$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
 			echo "Connection failed: " . $e->getMessage();
 		}
 	}
-	
+
 	// Expose the PDO prepare method so it can be used directly
 	public function prepare($sql) {
 		return $this->pdo->prepare($sql);
@@ -26,78 +27,72 @@ class Database {
 		$stmt->execute($params);
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
-	
+
 	public function get($sql, $params = [], $single = false) {
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute($params);
-		
+
 		if ($single) {
 			return $stmt->fetch(PDO::FETCH_ASSOC); // return single row
 		} else {
 			return $stmt->fetchAll(PDO::FETCH_ASSOC); // return multiple rows
 		}
 	}
-	
+
 	public function create($table, $data) {
 		global $log;
-		
+		$table = $this->validateIdentifier($table);
+
 		// Dynamically build the columns and placeholders
-		$columns = implode(", ", array_keys($data));
+		$columnNames = array_map([$this, 'validateIdentifier'], array_keys($data));
+		$columns = implode(", ", $columnNames);
 		$placeholders = ":" . implode(", :", array_keys($data));
-	
+
 		// Prepare the SQL query
 		$sql = "INSERT INTO $table ($columns) VALUES ($placeholders)";
 		$stmt = $this->pdo->prepare($sql);
-	
+
 		// Bind the parameters dynamically
 		$updates = [];
 		foreach ($data as $key => $value) {
+			$column = $this->validateIdentifier($key);
 			$stmt->bindValue(":$key", $value);
-			
+
 			$formattedValue = is_scalar($value) ? (string)$value : json_encode($value);
 			$updates[] = "$column = $formattedValue";
 		}
-		
+
 		// Execute the query
 		$result = $stmt->execute();
-		if ($result == 1) {
+		if (isset($log)) {
 			$log->create([
-				'category'    => $table,
-				'result'      => 'success',
+				'type'        => $table,
+				'result'      => $result ? 'success' : 'danger',
 				'description' => sprintf(
-					'Inserted into table %s with values: %s where uid = %s',
+					'%s insert into table %s with values: %s',
+					$result ? 'Inserted' : 'Attempted to insert',
 					$table,
-					implode(", ", $updates),
-					$whereValue
-				),
-			]);
-		} else {
-			$log->create([
-				'category'    => $table,
-				'result'      => 'danger',
-				'description' => sprintf(
-					'Attempted to insert into table %s with values: %s where uid = %s',
-					$table,
-					implode(", ", $updates),
-					$whereValue
+					implode(", ", $updates)
 				),
 			]);
 		}
-		
+
 		// return the result (true/false)
 		return $result;
 	}
-	
+
 	public function update($table, $data, $whereColumn, $whereValue) {
 		global $log;
-	
+		$table = $this->validateIdentifier($table);
+		$whereColumn = $this->validateIdentifier($whereColumn);
+
 		// Fetch current row from database
 		$sqlSelect = "SELECT * FROM $table WHERE $whereColumn = :whereValue";
 		$stmtSelect = $this->pdo->prepare($sqlSelect);
 		$stmtSelect->bindValue(':whereValue', $whereValue);
 		$stmtSelect->execute();
 		$currentRow = $stmtSelect->fetch(PDO::FETCH_ASSOC);
-	
+
 		if (!$currentRow) {
 			$log->create([
 				'category'    => $table,
@@ -106,18 +101,19 @@ class Database {
 			]);
 			return false;
 		}
-	
+
 		// Determine which values have changed
 		$setParts = [];
 		$updates = [];
 		$params = [];
 		foreach ($data as $column => $newValue) {
+			$column = $this->validateIdentifier($column);
 			$currentValue = $currentRow[$column] ?? null;
-	
+
 			// Normalize nulls and string types for fair comparison
 			if ($newValue === null) $newValue = null;
 			if ($currentValue === null) $currentValue = null;
-	
+
 			// Compare using stringified values for general cases
 			if ((string)$currentValue !== (string)$newValue) {
 				$setParts[] = "$column = :$column";
@@ -125,7 +121,7 @@ class Database {
 				$updates[] = "$column = " . (is_scalar($newValue) ? (string)$newValue : json_encode($newValue));
 			}
 		}
-	
+
 		// If nothing has changed, skip the update
 		if (empty($setParts)) {
 			$log->create([
@@ -135,20 +131,20 @@ class Database {
 			]);
 			return true; // nothing to do, but not a failure
 		}
-	
+
 		// Build and run the update query
 		$setClause = implode(", ", $setParts);
 		$sqlUpdate = "UPDATE $table SET $setClause WHERE $whereColumn = :whereValue";
 		$stmtUpdate = $this->pdo->prepare($sqlUpdate);
-	
+
 		// Bind changed values
 		foreach ($params as $param => $value) {
 			$stmtUpdate->bindValue($param, $value, $value === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
 		}
 		$stmtUpdate->bindValue(':whereValue', $whereValue);
-	
+
 		$result = $stmtUpdate->execute();
-	
+
 		$log->create([
 			'category'    => $table,
 			'result'      => $result ? 'success' : 'danger',
@@ -160,17 +156,17 @@ class Database {
 				$whereValue
 			),
 		]);
-	
+
 		return $result;
 	}
-	
+
 	public function upsertByName(string $name, string $value): void {
 		// Check if any row with that name exists
 		$checkSql = "SELECT uid FROM _stats WHERE name = :name LIMIT 1";
 		$checkStmt = $this->pdo->prepare($checkSql);
 		$checkStmt->execute([':name' => $name]);
 		$existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
-	
+
 		if ($existing) {
 			// Update the existing row
 			$updateSql = "UPDATE _stats SET value = :value, date_created = :date_created WHERE uid = :uid";
@@ -190,6 +186,14 @@ class Database {
 				':date_created' => date('c'),
 			]);
 		}
+	}
+
+	private function validateIdentifier(string $identifier): string {
+		if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $identifier)) {
+			throw new InvalidArgumentException("Invalid database identifier: $identifier");
+		}
+
+		return $identifier;
 	}
 }
 
