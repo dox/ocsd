@@ -265,6 +265,31 @@ function sendMail($subject, $recipients = NULL, $body = NULL) {
 	global $log;
 	
 	$mail = new PHPMailer(true);
+	$emails = [];
+	$addRecipient = function (string $type, $recipient) use ($mail, &$emails): void {
+		if (is_array($recipient) && isset($recipient['email'])) {
+			$recipient = $recipient['email'];
+		}
+		
+		if (!is_string($recipient)) {
+			return;
+		}
+		
+		$recipient = trim($recipient);
+		if ($recipient === '' || !filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+			return;
+		}
+		
+		if ($type === 'to') {
+			$mail->addAddress($recipient);
+		} elseif ($type === 'cc') {
+			$mail->addCC($recipient);
+		} elseif ($type === 'bcc') {
+			$mail->addBCC($recipient);
+		}
+		
+		$emails[] = $recipient;
+	};
 	
 	try {
 		//Server settings
@@ -277,22 +302,20 @@ function sendMail($subject, $recipients = NULL, $body = NULL) {
 		$mail->addReplyTo(smtp_sender_address, smtp_sender_name);
 		
 		//Recipients
-		foreach ($recipients['to'] AS $recipient) {
-			if (isset($recipient)) {
-				$mail->addAddress($recipient);
-			}
+		foreach (($recipients['to'] ?? []) AS $recipient) {
+			$addRecipient('to', $recipient);
 		}
 		
-		foreach ($recipients['cc'] AS $recipient) {
-			if (isset($recipient)) {
-				$mail->addCC($recipient);
-			}
+		foreach (($recipients['cc'] ?? []) AS $recipient) {
+			$addRecipient('cc', $recipient);
 		}
 		
-		foreach ($recipients['bcc'] AS $recipient) {
-			if (isset($recipient)) {
-				$mail->addBCC($recipient);
-			}
+		foreach (($recipients['bcc'] ?? []) AS $recipient) {
+			$addRecipient('bcc', $recipient);
+		}
+		
+		if (count($emails) === 0) {
+			throw new Exception('No valid recipient email addresses were provided.');
 		}
 		
 		//Attachments
@@ -308,23 +331,17 @@ function sendMail($subject, $recipients = NULL, $body = NULL) {
 		
 		$mail->clearAddresses();
 		
-		foreach ($recipients as $type => $details) {
-			if (isset($details['email'])) {
-				$emails[] = $details['email'];
-			}
-		}
-		
 		$logData = [
 			'category' => 'email',
 			'result'   => 'success',
-			'description' => 'Email sent to: ' . implode(', ', $emails)
+			'description' => 'Email sent to: ' . implode(', ', array_unique($emails))
 		];
 		$log->create($logData);
 	} catch (Exception $e) {
 		$logData = [
 			'category' => 'email',
 			'result'   => 'danger',
-			'description' => 'Email failed to: ' . implode(', ', $emails) . '. Mailer Error: ' . $mail->ErrorInfo
+			'description' => 'Email failed to: ' . implode(', ', array_unique($emails)) . '. Mailer Error: ' . $mail->ErrorInfo
 		];
 		$log->create($logData);
 	}
