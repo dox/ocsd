@@ -20,6 +20,7 @@ include __DIR__ . '/class_settings.php';
 include __DIR__ . '/class_logs.php';
 include __DIR__ . '/class_ldap.php';
 include __DIR__ . '/class_ldap_user.php';
+include __DIR__ . '/class_ldap_computer.php';
 include __DIR__ . '/class_user.php';
 
 include __DIR__ . '/class_Persons.php';

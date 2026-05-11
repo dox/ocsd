@@ -46,7 +46,7 @@ $allowedFilters = [
 
 $filter = $_GET['filter'] ?? null;
 
-$ldapComputers = $ldap->findByFilters($allowedFilters[$filter]);
+$ldapComputers = $ldap->findByFilters($allowedFilters[$filter]) ?: [];
 
 $data = array(
 		'icon'		=> 'person-fill-lock',
@@ -70,41 +70,29 @@ echo pageTitle($data);
 	<tbody>
 		<?php
 		foreach ($ldapComputers as $ldapComputer) {
+			if (!isset($ldapComputer['samaccountname'][0])) {
+				continue;
+			}
+
 			$record = $ldap->findComputer($ldapComputer['samaccountname'][0]);
-			
-			if ($record) {
-				$ldapComputer = new LdapUserWrapper($record);
-			} else {
-				echo $ldapUser['samaccountname'][0];
-				$ldapComputer = null;
+			if (!$record) {
+				continue;
 			}
-			
-		
-			
-			$pwdLastSet = null;
-			if ($ldapUser->pwdlastset > 0) {
-				$pwdLastSet = $ldapUser->pwdlastset->toDateTimeString();
-			}
-			
-			$output  = "<th scope=\"row\">" . "" . "</a></th>";
-			$output .= "<td>" . $ldapComputer->getLDAPButton() . "</td>";
-			$output .= "<td>" . $ldapComputer->getSN() . "</td>";
-			$output .= "<td>" . $ldapComputer->getGivenname() . "</td>";
-			$output .= "<td>" . $ldapComputer->getEmail() . "</td>";
-			$output .= "<td>" . "" . "<span class=\"float-end\">" . "" . "</span></td>";
+
+			$ldapComputer = new LdapComputerWrapper($record);
+			$pwdLastSet = $ldapComputer->getPasswordLastSet();
+
+			$output  = "<tr>";
+			$output .= "<th scope=\"row\">" . htmlspecialchars($ldapComputer->getSAMAccountName() ?? '') . "</th>";
+			$output .= "<td>" . ($ldapComputer->getLDAPButton() ?? '') . "</td>";
+			$output .= "<td>" . htmlspecialchars($ldapComputer->getSN() ?? '') . "</td>";
+			$output .= "<td>" . htmlspecialchars($ldapComputer->getGivenname() ?? '') . "</td>";
+			$output .= "<td>" . htmlspecialchars($ldapComputer->getEmail() ?? '') . "</td>";
+			$output .= "<td>" . htmlspecialchars($pwdLastSet ?? '') . "<span class=\"float-end\">" . $ldapComputer->actionsButton() . "</span></td>";
 			$output .= "</tr>";
-			
+
 			echo $output;
 		}
 		?>
 	</tbody>
 </table>
-	
-<div class="row row-cols-1 row-cols-md-4 g-4">
-<?php
-foreach ($personsAll as $person) {
-	$person = new Person($person['cudid']);
-	echo $person->card();
-}
-?>
-</div>

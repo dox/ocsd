@@ -76,7 +76,7 @@ document.querySelectorAll('.ldap-toggle-link').forEach(link => {
 
 		const username = this.dataset.username;
 		const action = this.dataset.action;
-		const statusSpan = document.querySelector(`#status-${username}`);
+		const statusSpan = document.querySelector(`#status-${CSS.escape(username)}`);
 
 		fetch('actions/ldap_toggle.php', {
 			method: 'POST',
@@ -111,7 +111,7 @@ document.querySelectorAll('.ldap-delete-link').forEach(link => {
 		}
 
 		const username = this.dataset.username;
-		const statusSpan = document.querySelector(`#status-${username}`);
+		const statusSpan = document.querySelector(`#status-${CSS.escape(username)}`);
 
 		fetch('actions/ldap_delete.php', {
 			method: 'POST',
