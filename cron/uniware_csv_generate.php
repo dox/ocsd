@@ -11,10 +11,8 @@ include_once("../inc/autoload.php");
 $dateStamp   = date('Ymd_His');
 
 $exportDir   = __DIR__ . '/../exports/';
-$archiveDir  = $exportDir . 'archive/';
 
 $currentFile = $exportDir . 'students.csv';
-$archiveFile = $archiveDir . 'students_' . $dateStamp . '.csv';
 
 // --------------------------------------------------
 // ENSURE DIRECTORIES EXIST
@@ -24,30 +22,26 @@ if (!is_dir($exportDir)) {
 	mkdir($exportDir, 0775, true);
 }
 
-if (!is_dir($archiveDir)) {
-	mkdir($archiveDir, 0775, true);
-}
-
 // --------------------------------------------------
-// ARCHIVE EXISTING FILE
+// REMOVE EXISTING FILE
 // --------------------------------------------------
 
 if (file_exists($currentFile)) {
 
-	if (!rename($currentFile, $archiveFile)) {
+	if (!unlink($currentFile)) {
 
-		cliOutput("FAILED to archive existing CSV", "red");
+		cliOutput("FAILED to remove existing CSV", "red");
 
 		$log->create([
 			'category'    => 'cron',
 			'result'      => 'error',
-			'description' => 'Failed to archive previous students.csv'
+			'description' => 'Failed to remove existing students.csv'
 		]);
 
 		die();
 	}
 
-	cliOutput("Archived previous CSV", "yellow");
+	cliOutput("Removed existing CSV", "yellow");
 }
 
 // --------------------------------------------------
@@ -110,7 +104,7 @@ function formatDateField($date)
 // GET STUDENTS
 // --------------------------------------------------
 
-$students = (new Persons())->all();
+$persons = (new Persons())->all();
 
 $headerWritten = false;
 $exportCount   = 0;
@@ -119,39 +113,39 @@ $exportCount   = 0;
 // EXPORT LOOP
 // --------------------------------------------------
 
-foreach ($students as $student) {
+foreach ($persons as $person) {
 
-	$homeAddress = $student->addresses()->getHomeAddress();
+	$homeAddress = $person->addresses()->getHomeAddress();
 
 	$row = [
 
 		// REQUIRED FIELDS
 
-		'Account Number'     => csvField($student->sits_student_code, 10),
-		'Card Number'        => csvField($student->university_card_number ?? '', 25),
+		'Account Number'     => csvField($person->sso_username, 10),
+		'Card Number'        => csvField($person->MiFareID ?? '', 25),
 
-		'Title'              => csvField($student->titl_cd, 10),
-		'Forename'           => csvField($student->firstname, 15),
-		'Initial'            => csvField(substr($student->firstname ?? '', 0, 1), 4),
-		'Surname'            => csvField($student->lastname, 20),
+		'Title'              => csvField($person->titl_cd, 10),
+		'Forename'           => csvField($person->firstname, 15),
+		'Initial'            => csvField(substr($person->middlenames ?? '', 0, 1), 4),
+		'Surname'            => csvField($person->lastname, 20),
 
-		'User Group 1'       => csvField($student->university_card_type ?? '', 6),
+		'User Group 1'       => csvField($person->university_card_type ?? '', 6),
 		'User Group 2'       => '',
 		'User Group 3'       => '',
 		'User Group 4'       => '',
 
 		'Gender'             => csvField(
-			in_array(strtoupper($student->gnd), ['M', 'F'])
-				? strtoupper($student->gnd)
+			in_array(strtoupper($person->gnd), ['M', 'F'])
+				? strtoupper($person->gnd)
 				: '',
 			1
 		),
 
-		'DOB'                => formatDateField($student->dob),
+		'DOB'                => formatDateField($person->dob),
 
-		'Expiry date'        => formatDateField($student->crs_exp_end_dt),
+		'Expiry date'        => formatDateField($person->University_Card_End_Dt),
 
-		'Free token 1'       => csvField($student->courseYear() ?? '', 6),
+		'Free token 1'       => csvField($person->courseYear() ?? '', 6),
 		'Free token 2'       => '',
 		'Free token 3'       => '',
 		'Free token 4'       => '',
@@ -160,14 +154,14 @@ foreach ($students as $student) {
 		'Home telephone'     => csvField($homeAddress['TelNo'] ?? '', 20),
 		'Fax'                => '',
 
-		'Email'              => csvField($student->oxford_email, 256),
+		'Email'              => csvField($person->oxford_email, 256),
 
 		'Mobile'             => csvField($homeAddress['MobileNo'] ?? '', 20),
 
 		'Job title'          => '',
 
 		'Inactive Flag'      => (
-			strtolower($student->course_status ?? '') === 'inactive'
+			strtolower($person->course_status ?? '') === 'inactive'
 				? 'Y'
 				: 'N'
 		),
@@ -190,7 +184,7 @@ foreach ($students as $student) {
 
 		'Credit Limit'       => number_format(0, 2, '.', ''),
 
-		'Start date'         => formatDateField($student->crs_start_dt),
+		'Start date'         => formatDateField($person->University_Card_Start_Dt),
 
 		'Payroll Number'     => '',
 		'Budget Account'     => ''
@@ -214,11 +208,6 @@ foreach ($students as $student) {
 	fputcsv($fp, $row);
 
 	$exportCount++;
-
-	cliOutput(
-		"Exported: " . $student->FullName,
-		"green"
-	);
 }
 
 // --------------------------------------------------
