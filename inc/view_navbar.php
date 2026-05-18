@@ -213,8 +213,30 @@ $navbarArray['ldap_all'] = array(
 </nav>
 
 <script>
-document.getElementById('quick_search').addEventListener('keyup', function() {
-	let query = this.value;
+const quickSearchInput = document.getElementById('quick_search');
+const quickSearchResults = document.getElementById('quick_search_results');
+
+quickSearchInput.addEventListener('keydown', function(event) {
+	if (event.key !== 'Enter') {
+		return;
+	}
+
+	const firstResultLink = quickSearchResults.querySelector('a[href]');
+	if (!firstResultLink) {
+		return;
+	}
+
+	event.preventDefault();
+	window.location.href = firstResultLink.href;
+});
+
+quickSearchInput.addEventListener('keyup', function() {
+	let query = this.value.trim();
+
+	if (query === '') {
+		quickSearchResults.innerHTML = '';
+		return;
+	}
 	
 	// Create a new XMLHttpRequest object
 	let xhr = new XMLHttpRequest();
@@ -229,15 +251,14 @@ document.getElementById('quick_search').addEventListener('keyup', function() {
 			let response = JSON.parse(xhr.responseText);
 			
 			// Display the results
-			let resultsDiv = document.getElementById('quick_search_results');
-			resultsDiv.innerHTML = '';
+			quickSearchResults.innerHTML = '';
 	
 			if (response.data.length === 0) {
 				let listItem = document.createElement('li');
 				listItem.className = "list-group-item";
 				listItem.textContent = 'No results found';
 				
-				resultsDiv.appendChild(listItem);
+				quickSearchResults.appendChild(listItem);
 			} else {
 				response.data.forEach(function(item) {
 					let listItem = document.createElement('li');
@@ -248,7 +269,7 @@ document.getElementById('quick_search').addEventListener('keyup', function() {
 					link.textContent = item.name;
 					listItem.appendChild(link);
 					
-					resultsDiv.appendChild(listItem);
+					quickSearchResults.appendChild(listItem);
 				});
 			}
 		}
