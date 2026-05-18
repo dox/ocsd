@@ -77,8 +77,8 @@ document.querySelectorAll('.ldap-toggle-link').forEach(link => {
 
 		const username = this.dataset.username;
 		const action = this.dataset.action;
-		const cudid = this.dataset.cudid;
-		const statusSpan = document.querySelector(`#status-${CSS.escape(cudid)}`);
+		const statusKey = this.dataset.cudid || username;
+		const statusSpan = document.querySelector(`#status-${CSS.escape(statusKey)}`);
 		if (!statusSpan) return;
 
 		fetch('actions/ldap_toggle.php', {
@@ -114,8 +114,8 @@ document.querySelectorAll('.ldap-delete-link').forEach(link => {
 		}
 
 		const username = this.dataset.username;
-		const cudid = this.dataset.cudid;
-		const statusSpan = document.querySelector(`#status-${CSS.escape(cudid)}`);
+		const statusKey = this.dataset.cudid || username;
+		const statusSpan = document.querySelector(`#status-${CSS.escape(statusKey)}`);
 		if (!statusSpan) return;
 
 		fetch('actions/ldap_delete.php', {
