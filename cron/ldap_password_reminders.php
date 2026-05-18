@@ -8,7 +8,7 @@ $filter = array('objectClass' => [
 'useraccountcontrol' => [
 	'operator' => '|',
 	'value' => '512|544'
-]);
+]) + ldapExcludedUserAccountFilters();
 $ldapUsers = $ldap->findByFilters($filter);
 $warnDays = setting('ldap_password_warn_age');       // e.g., 365
 $disableDays = setting('ldap_password_disable_age'); // e.g., 395

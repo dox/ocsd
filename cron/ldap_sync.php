@@ -8,7 +8,7 @@ $filter = array('objectClass' => [
 'useraccountcontrol' => [
 	'operator' => '|',
 	'value' => '512|544'
-]);
+]) + ldapExcludedUserAccountFilters();
 $ldapUsers = $ldap->findByFilters($filter);
 
 foreach ($ldapUsers as $ldapUser) {

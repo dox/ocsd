@@ -53,6 +53,20 @@ function getStat($name) {
 	}
 }
 
+function ldapExcludedUserAccountFilters(): array {
+	$excludedAccounts = [
+		'krbtgt','Guest'
+	];
+
+	return array_map(function ($accountName) {
+		return [
+			'attribute' => 'samaccountname',
+			'operator' => '!=',
+			'value' => $accountName
+		];
+	}, $excludedAccounts);
+}
+
 function pageTitle($data) {
 	/* $data = array(
 			'icon'		=> 'question-diamond',

@@ -10,7 +10,7 @@ $allowedFilters = [
 			'operator' => '=',
 			'value' => 'breakspear'
 		]
-	],
+	] + ldapExcludedUserAccountFilters(),
 	'ldap-no-cud' => [
 		'objectClass' => [
 			'operator' => '!=',
@@ -20,7 +20,7 @@ $allowedFilters = [
 			'operator' => '|',
 			'value' => '512|544'
 		]
-	],
+	] + ldapExcludedUserAccountFilters(),
 	'expired' => [
 		'objectClass' => [
 			'operator' => '!=',
@@ -30,7 +30,7 @@ $allowedFilters = [
 			'operator' => '<=',
 			'value' => convertDateToWinTime($accountExpiredAge)
 		]
-	],
+	] + ldapExcludedUserAccountFilters(),
 	'expiring' => [
 		'objectClass' => [
 			'operator' => '!=',
@@ -44,7 +44,7 @@ $allowedFilters = [
 			'operator' => '|',
 			'value' => '512|544'
 		]
-	],
+	] + ldapExcludedUserAccountFilters(),
 	'search' => [
 		'objectClass' => [
 			'operator' => '!=',
@@ -62,13 +62,13 @@ $allowedFilters = [
 				'value'     => '*' . $ldapSearch . '*'
 			]
 		]
-	],
+	] + ldapExcludedUserAccountFilters(),
 	'group' => [
 		'memberOf' => [
 			'operator' => '=',
 			'value' => $ldapSearch
 		]
-	]
+	] + ldapExcludedUserAccountFilters()
 ];
 
 $filter = $_GET['filter'] ?? null;

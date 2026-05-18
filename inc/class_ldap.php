@@ -279,6 +279,19 @@ class Ldap {
 					$orParts[] = $this->formatLdapCondition($attr, $operator, $value);
 				}
 				$extraFilters[] = '(|' . implode('', $orParts) . ')';
+			} elseif (is_int($attribute) && is_array($conditions) && isset($conditions['attribute'])) {
+				$operator = $conditions['operator'] ?? '=';
+				$value = $conditions['value'];
+
+				if ($operator === '>') {
+					$operator = '>=';
+					if (is_numeric($value)) $value += 1;
+				} elseif ($operator === '<') {
+					$operator = '<=';
+					if (is_numeric($value)) $value -= 1;
+				}
+
+				$extraFilters[] = $this->formatLdapCondition($conditions['attribute'], $operator, $value);
 			} else {
 				// Regular single-attribute case
 				$operator = $conditions['operator'] ?? '=';
