@@ -1,9 +1,8 @@
 <?php
 /**
- * Nightly student CSV export
+ * Nightly users CSV export for Uniware import
  *
  * Fixed-width validation/truncation included
- * Archives previous file before creating a new one
  */
 
 include_once("../inc/autoload.php");
@@ -12,7 +11,7 @@ $dateStamp   = date('Ymd_His');
 
 $exportDir   = __DIR__ . '/../exports/';
 
-$currentFile = $exportDir . 'students.csv';
+$currentFile = $exportDir . 'users.csv';
 
 // --------------------------------------------------
 // ENSURE DIRECTORIES EXIST
@@ -35,7 +34,7 @@ if (file_exists($currentFile)) {
 		$log->create([
 			'category'    => 'cron',
 			'result'      => 'error',
-			'description' => 'Failed to remove existing students.csv'
+			'description' => 'Failed to remove existing users.csv'
 		]);
 
 		die();
@@ -57,7 +56,7 @@ if (!$fp) {
 	$log->create([
 		'category'    => 'cron',
 		'result'      => 'error',
-		'description' => 'Failed to create students.csv'
+		'description' => 'Failed to create users.csv'
 	]);
 
 	die();
@@ -101,7 +100,7 @@ function formatDateField($date)
 }
 
 // --------------------------------------------------
-// GET STUDENTS
+// GET USERS
 // --------------------------------------------------
 
 $persons = (new Persons())->all();
@@ -114,7 +113,11 @@ $exportCount   = 0;
 // --------------------------------------------------
 
 foreach ($persons as $person) {
-
+	// skip users without a valid MiFareID
+	if (empty($person->MiFareID)) {
+		continue;
+	}
+	
 	$homeAddress = $person->addresses()->getHomeAddress();
 
 	$row = [
@@ -220,16 +223,16 @@ fclose($fp);
 // LOGGING
 // --------------------------------------------------
 
-$db->upsertByName('cron_student_csv_export', date('c'));
+$db->upsertByName('cron_user_csv_export', date('c'));
 
 $log->create([
 	'category'    => 'cron',
 	'result'      => 'success',
-	'description' => 'Exported ' . $exportCount . ' student records'
+	'description' => 'Exported ' . $exportCount . ' user records'
 ]);
 
 cliOutput(
-	"CSV export complete: {$exportCount} students",
+	"CSV export complete: {$exportCount} users",
 	"green"
 );
 
