@@ -11,7 +11,7 @@ $dateStamp   = date('Ymd_His');
 
 $exportDir   = __DIR__ . '/../exports/';
 
-$currentFile = $exportDir . 'users.csv';
+$currentFile = $exportDir . 'uniware_users.csv';
 
 // --------------------------------------------------
 // ENSURE DIRECTORIES EXIST
@@ -34,7 +34,7 @@ if (file_exists($currentFile)) {
 		$log->create([
 			'category'    => 'cron',
 			'result'      => 'error',
-			'description' => 'Failed to remove existing users.csv'
+			'description' => 'Failed to remove existing uniware_users.csv'
 		]);
 
 		die();
@@ -56,7 +56,7 @@ if (!$fp) {
 	$log->create([
 		'category'    => 'cron',
 		'result'      => 'error',
-		'description' => 'Failed to create users.csv'
+		'description' => 'Failed to create uniware_users.csv'
 	]);
 
 	die();
@@ -133,16 +133,16 @@ foreach ($persons as $person) {
 		'Surname'            => csvField($person->lastname, 20),
 
 		'User Group 1'       => csvField($person->university_card_type ?? '', 6),
-		'User Group 2'       => '',
-		'User Group 3'       => '',
-		'User Group 4'       => '',
+		//'User Group 2'       => '',
+		//'User Group 3'       => '',
+		//'User Group 4'       => '',
 
-		'Gender'             => csvField(
+		/*'Gender'             => csvField(
 			in_array(strtoupper($person->gnd), ['M', 'F'])
 				? strtoupper($person->gnd)
 				: '',
 			1
-		),
+		),*/
 
 		'DOB'                => formatDateField($person->dob),
 
@@ -150,18 +150,18 @@ foreach ($persons as $person) {
 
 		'Free token 1'       => csvField($person->courseYear() ?? '', 6),
 		'Free token 2'       => csvField($person->sits_student_code, 10),
-		'Free token 3'       => '',
-		'Free token 4'       => '',
+		//'Free token 3'       => '',
+		//'Free token 4'       => '',
 
-		'Work telephone'     => '',
-		'Home telephone'     => csvField($homeAddress['TelNo'] ?? '', 20),
-		'Fax'                => '',
+		//'Work telephone'     => '',
+		//'Home telephone'     => csvField($homeAddress['TelNo'] ?? '', 20),
+		//'Fax'                => '',
 
 		'Email'              => csvField($person->oxford_email, 256),
 
-		'Mobile'             => csvField($homeAddress['MobileNo'] ?? '', 20),
+		//'Mobile'             => csvField($homeAddress['MobileNo'] ?? '', 20),
 
-		'Job title'          => '',
+		//'Job title'          => '',
 
 		'Inactive Flag'      => (
 			strtolower($person->course_status ?? '') === 'inactive'
@@ -169,19 +169,19 @@ foreach ($persons as $person) {
 				: 'N'
 		),
 
-		'Car reg'            => '',
+		//'Car reg'            => '',
 
-		'Address 1'          => csvField($homeAddress['Line1'] ?? '', 30),
-		'Address 2'          => csvField($homeAddress['Line2'] ?? '', 30),
-		'Address 3'          => csvField($homeAddress['Line3'] ?? '', 30),
-		'Address 4'          => csvField($homeAddress['Line4'] ?? '', 30),
-		'Address 5'          => csvField($homeAddress['Line5'] ?? '', 30),
+		//'Address 1'          => csvField($homeAddress['Line1'] ?? '', 30),
+		//'Address 2'          => csvField($homeAddress['Line2'] ?? '', 30),
+		//'Address 3'          => csvField($homeAddress['Line3'] ?? '', 30),
+		//'Address 4'          => csvField($homeAddress['Line4'] ?? '', 30),
+		//'Address 5'          => csvField($homeAddress['Line5'] ?? '', 30),
 
-		'Postcode'           => csvField($homeAddress['PostCode'] ?? '', 10),
+		//'Postcode'           => csvField($homeAddress['PostCode'] ?? '', 10),
 
-		'Discount group 1'   => '',
-		'Discount group 2'   => '',
-		'Discount group 3'   => '',
+		//'Discount group 1'   => '',
+		//'Discount group 2'   => '',
+		//'Discount group 3'   => '',
 
 		'Price List'         => csvField('STD', 3, true),
 
@@ -189,8 +189,8 @@ foreach ($persons as $person) {
 
 		'Start date'         => formatDateField($person->University_Card_Start_Dt),
 
-		'Payroll Number'     => '',
-		'Budget Account'     => ''
+		//'Payroll Number'     => '',
+		//'Budget Account'     => ''
 	];
 
 	// --------------------------------------------------
