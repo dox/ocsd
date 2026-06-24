@@ -212,8 +212,13 @@ function daysSince($oldDate) {
 		return null;
 	}
 
+	try {
+		$oldDate = $oldDate instanceof DateTimeInterface ? $oldDate : new DateTime((string)$oldDate);
+	} catch (Exception $e) {
+		return null;
+	}
+
 	$now = new DateTime();  // Current time
-	$oldDate = new DateTime($oldDate);  // Convert the passed date to a DateTime object
 
 	$interval = $now->diff($oldDate);  // Get the difference between now and the old date
 

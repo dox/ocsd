@@ -38,7 +38,37 @@ class LdapUserWrapper {
 	}
 
 	public function getPasswordLastSet(): ?\DateTime {
-		return $this->entry->getFirstAttribute('pwdlastset');
+		return $this->normaliseDateTime($this->entry->getFirstAttribute('pwdlastset'));
+	}
+
+	private function normaliseDateTime($value): ?\DateTime {
+		if (empty($value)) {
+			return null;
+		}
+
+		if ($value instanceof \DateTime) {
+			return $value;
+		}
+
+		if ($value instanceof \DateTimeInterface) {
+			return new \DateTime($value->format(\DateTimeInterface::ATOM));
+		}
+
+		if (is_object($value) && method_exists($value, 'toDateTimeString')) {
+			return new \DateTime($value->toDateTimeString());
+		}
+
+		if (is_numeric($value)) {
+			$fileTime = (int)$value;
+
+			if ($fileTime <= 0) {
+				return null;
+			}
+
+			return new \DateTime('@' . (int)(intdiv($fileTime, 10000000) - 11644473600));
+		}
+
+		return new \DateTime((string)$value);
 	}
 	
 	public function getUserAccountControl(): ?string {
@@ -88,10 +118,14 @@ class LdapUserWrapper {
 	public function passwordExpiryBadge() {
 		// How long ago the password was last changed
 		$daysSinceChange = daysSince($this->getPasswordLastSet());
+
+		if ($daysSinceChange === null) {
+			return '<span class="badge text-bg-secondary">Unknown</span>';
+		}
 	
 		// Policy thresholds
-		$warnAfterDays   = setting('ldap_password_warn_age');       // e.g., 365
-		$expireAfterDays = setting('ldap_password_disable_age');    // e.g., 395
+		$warnAfterDays   = (int)setting('ldap_password_warn_age');       // e.g., 365
+		$expireAfterDays = (int)setting('ldap_password_disable_age');    // e.g., 395
 	
 		// How many days remain before expiry
 		$daysRemaining = $expireAfterDays - $daysSinceChange;
