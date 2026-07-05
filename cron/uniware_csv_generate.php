@@ -124,12 +124,11 @@ foreach ($persons as $person) {
 
 		// REQUIRED FIELDS
 
-		'Account Number'     => csvField($person->sso_username, 10),
-		'Card Number'        => csvField($person->MiFareID ?? '', 25),
+		'User ID'            => csvField($person->sso_username, 10),
+		'Card ID'            => csvField($person->MiFareID ?? '', 25),
 
 		'Title'              => csvField($person->titl_cd, 10),
 		'Forename'           => csvField($person->firstname, 15),
-		'Initial'            => csvField(substr($person->middlenames ?? '', 0, 1), 4),
 		'Surname'            => csvField($person->lastname, 20),
 
 		'User Group 1'       => csvField($person->university_card_type ?? '', 6),
@@ -144,12 +143,12 @@ foreach ($persons as $person) {
 			1
 		),*/
 
-		'DOB'                => formatDateField($person->dob),
+		'Date of birth (DOB)' => formatDateField($person->dob),
 
-		'Expiry date'        => formatDateField($person->University_Card_End_Dt),
+		'Expiry Date'        => formatDateField($person->University_Card_End_Dt),
 
-		'Free token 1'       => csvField($person->courseYear() ?? '', 6),
-		'Free token 2'       => csvField($person->sits_student_code, 10),
+		'Free Token 1'       => csvField($person->courseYear() ?? '', 6),
+		'Free Token 2'       => csvField($person->sits_student_code, 10),
 		//'Free token 3'       => '',
 		//'Free token 4'       => '',
 
@@ -163,7 +162,7 @@ foreach ($persons as $person) {
 
 		//'Job title'          => '',
 
-		'Inactive Flag'      => (
+		'Inactive'           => (
 			strtolower($person->course_status ?? '') === 'inactive'
 				? 'Y'
 				: 'N'
@@ -187,7 +186,7 @@ foreach ($persons as $person) {
 
 		'Credit Limit'       => number_format(0, 2, '.', ''),
 
-		'Start date'         => formatDateField($person->University_Card_Start_Dt),
+		'Start Date'         => formatDateField($person->University_Card_Start_Dt),
 
 		//'Payroll Number'     => '',
 		//'Budget Account'     => ''
