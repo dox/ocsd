@@ -147,8 +147,8 @@ foreach ($persons as $person) {
 
 		'Expiry Date'        => formatDateField($person->University_Card_End_Dt),
 
-		'Free Token 1'       => csvField($person->courseYear() ?? '', 6),
-		'Free Token 2'       => csvField($person->sits_student_code, 10),
+		'User Group 2'       => csvField($person->courseYear() ?? '', 6),
+		'User Group 3'       => csvField($person->sits_student_code, 10),
 		//'Free token 3'       => '',
 		//'Free token 4'       => '',
 
