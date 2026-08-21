@@ -32,12 +32,12 @@ cliOutput("Connection to CUD db established", "green");
 foreach ($cudPersons AS $cudPerson) {
 	$updateArray = array();
 	
-	$updateArray['StudentID'] = $cudPerson->sits_student_code; // Unique identifier to the student. Primary link between Kx and the student records system.
+	$updateArray['StudentID'] = $cudPerson->sso_username; // Unique identifier to the student. Primary link between Kx and the student records system.
 	$updateArray['Title'] = $cudPerson->titl_cd; // Title, e.g. Mr, Miss, etc
 	$updateArray['Forename'] = str_replace("'", "''", $cudPerson->firstname); // Forename
 	$updateArray['Midname'] = str_replace("'", "''", $cudPerson->middlenames); // Middle name or names
 	$updateArray['Surname'] = str_replace("'", "''", $cudPerson->lastname); // Family name
-	$updateArray['UCASNumber'] = '12345'; // Application identifier, typically UCAS number, but can often be other identifiers e.g. PG Applications etc
+	$updateArray['UCASNumber'] = $cudPerson->sits_student_code; // Application identifier, typically UCAS number, but can often be other identifiers e.g. PG Applications etc
 	$updateArray['AKAName'] = str_replace("'", "''", $cudPerson->known_as); // The name the student is known as if not their forename.
 	//$updateArray['Nationality'] = ''; // Nationality description
 	//$updateArray['Ethnicity'] = ''; // Language Preference
@@ -161,7 +161,7 @@ foreach ($cudPersons AS $cudPerson) {
 	
 	if ($create) {
 		$updateCount ++;
-		cliOutput("Created Kx record for " . $cudPerson->FullName, "green");
+		cliOutput("Created Kx record for " . $cudPerson->FullName . " (" . $updateArray['StudentID'] . ")", "green");
 	} else {
 		$logData = [
 			'category' => 'cron',
