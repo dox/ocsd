@@ -24,7 +24,10 @@ $newUserArray = array(
 	'givenname' => $person->firstname,
 	'sn' => $person->lastname,
 	'displayname' => $person->FullName,
-	'pager' => $person->MiFareID
+	'pager' => $person->MiFareID,
+	'altsecurityidentities' => [
+		'Kerberos: ' . strtolower($person->sso_username) . '@OX.AC.UK'
+	]
 );
 
 if ($ldap->create($newUserArray)) {
