@@ -26,7 +26,7 @@ $newUserArray = array(
 	'displayname' => $person->FullName,
 	'pager' => $person->MiFareID,
 	'altsecurityidentities' => [
-		'Kerberos: ' . strtolower($person->sso_username) . '@OX.AC.UK'
+		'Kerberos:' . strtolower($person->sso_username) . '@OX.AC.UK'
 	]
 );
 
