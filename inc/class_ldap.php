@@ -216,6 +216,11 @@ class Ldap {
 		$user->mail = $attributes['mail'] ?? null;
 		$user->description = $attributes['description'] ?? null;
 		$user->pager = $attributes['pager'] ?? null;
+		if (!empty($attributes['altsecurityidentities'])) {
+			$user->altSecurityIdentities =
+			$attributes['altsecurityidentities'];
+		}
+		
 		try {
 			$user->unicodePwd = $attributes['password'];
 			$user->save();
