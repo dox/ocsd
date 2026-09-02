@@ -32,9 +32,9 @@ $newUserArray = array(
 
 if ($ldap->create($newUserArray)) {
 	if ($person->isStudent()) {
-		$templateMessage = setting('ldap_provision_staff_template');
-	} else {
 		$templateMessage = setting('ldap_provision_student_template');
+	} else {
+		$templateMessage = setting('ldap_provision_staff_template');
 	}
 	
 	$data = [
