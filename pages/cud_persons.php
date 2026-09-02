@@ -93,9 +93,14 @@ if ($view === "card") {
 	
 	echo $output;
 } else {
+	$output  = "<div class=\"d-flex align-items-center gap-2 mb-2\" id=\"bulk-ldap-toolbar\">";
+	$output .= "<select class=\"form-select form-select-sm w-auto\" id=\"bulk-ldap-action\"><option value=\"\">Bulk LDAP action</option><option value=\"provision\">Provision</option><option value=\"enable\">Enable</option><option value=\"disable\">Disable</option><option value=\"delete\">Delete</option></select>";
+	$output .= "<button type=\"button\" class=\"btn btn-sm btn-primary\" id=\"bulk-ldap-submit\" disabled>Apply</button><span class=\"small text-muted\" id=\"bulk-ldap-status\"></span></div>";
+	echo $output;
 	$output  = "<table class=\"table\">";
 	$output .= "<thead>";
 	$output .= "<tr>";
+	$output .= "<th scope=\"col\"><input type=\"checkbox\" id=\"select-all-persons\" aria-label=\"Select all people\"></th>";
 	$output .= "<th scope=\"col\">SSO</th>";
 	$output .= "<th scope=\"col\">LDAP</th>";
 	$output .= "<th scope=\"col\">Last Name</th>";
@@ -107,6 +112,9 @@ if ($view === "card") {
 	
 	foreach ($personsAll as $person) {
 		$person = new Person($person['cudid']);
+		$output .= "<tr>";
+		$ldapUsername = $person->getLDAPUsername();
+		$output .= "<td><input type=\"checkbox\" class=\"person-select\" value=\"" . htmlspecialchars((string)$person->cudid, ENT_QUOTES, 'UTF-8') . "\" data-username=\"" . htmlspecialchars((string)$ldapUsername, ENT_QUOTES, 'UTF-8') . "\" data-has-ldap=\"" . ($ldapUsername ? '1' : '0') . "\" aria-label=\"Select person\"></td>";
 		
 		if ($person->getLdapRecord()) {
 			$ldapUser = new LdapUserWrapper($person->getLdapRecord());
@@ -136,4 +144,3 @@ if ($view === "card") {
 	echo $output;
 }
 ?>
-

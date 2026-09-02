@@ -180,3 +180,38 @@ document.querySelectorAll('.ldap-provision-link').forEach(link => {
 
 const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+// Bulk LDAP actions on the CUD persons table.
+const bulkSelectAll = document.querySelector('#select-all-persons');
+const bulkAction = document.querySelector('#bulk-ldap-action');
+const bulkSubmit = document.querySelector('#bulk-ldap-submit');
+const bulkStatus = document.querySelector('#bulk-ldap-status');
+if (bulkSelectAll && bulkAction && bulkSubmit) {
+	const selections = () => [...document.querySelectorAll('.person-select:checked')];
+	const updateBulkState = () => {
+		bulkSubmit.disabled = !bulkAction.value || selections().length === 0;
+	};
+	bulkSelectAll.addEventListener('change', () => {
+		document.querySelectorAll('.person-select').forEach(box => { box.checked = bulkSelectAll.checked; });
+		updateBulkState();
+	});
+	document.querySelectorAll('.person-select').forEach(box => box.addEventListener('change', updateBulkState));
+	bulkAction.addEventListener('change', updateBulkState);
+	bulkSubmit.addEventListener('click', async () => {
+		const selected = selections();
+		const action = bulkAction.value;
+		if ((action === 'delete' || action === 'provision') && !confirm(`Are you sure you want to ${action} ${selected.length} user(s)?${action === 'provision' ? ' Provisioning will email each user their details.' : ''}`)) return;
+		bulkSubmit.disabled = true;
+		bulkStatus.textContent = 'Processing…';
+		let succeeded = 0;
+		for (const box of selected) {
+			if (action === 'provision' && box.dataset.hasLdap === '1') continue;
+			const body = action === 'provision' ? `cudid=${encodeURIComponent(box.value)}` : `username=${encodeURIComponent(box.dataset.username)}${action === 'delete' ? '' : `&action=${action}`}`;
+			if (action !== 'provision' && !box.dataset.username) continue;
+			const endpoint = action === 'provision' ? 'actions/ldap_provision.php' : action === 'delete' ? 'actions/ldap_delete.php' : 'actions/ldap_toggle.php';
+			try { const response = await fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body }); if (response.ok) succeeded++; } catch (error) { console.error(error); }
+		}
+		bulkStatus.textContent = `${succeeded}/${selected.length} completed. Reloading…`;
+		setTimeout(() => window.location.reload(), 800);
+	});
+}
