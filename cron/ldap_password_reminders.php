@@ -35,7 +35,18 @@ foreach ($ldapUsers as $ldapUser) {
 		// Password expired
 		cliOutput($ldapUser->getSAMAccountName() . " password expired " . ($daysSince - $disableDays) . " ago", "red");
 		
-		$ldap->disableAccount($user);
+		// Disable the account's status.
+		//$ldap->disableAccount($user);
+		
+		// Randomise the password without changing the account's enabled status.
+		$user->setAttribute('password', generateSecurePassword());
+		$user->save();
+
+		$log->create([
+			'type' => 'ldap',
+			'result' => 'success',
+			'description' => 'Randomised expired LDAP password: ' . $user
+		]);
 
 	} elseif ($daysSince >= $warnDays) {
 		// Password at warning stage

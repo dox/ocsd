@@ -21,7 +21,7 @@ $tasks = array(
 	],
 	'ldap_passwords' => [
 		'name' => 'LDAP Passwords Reminders',
-		'description' => 'Emails LDAP users nearing their password expiry date, and disabled those who exceed it',
+		'description' => 'Emails LDAP users nearing their password expiry date, and randomises passwords that have expired',
 		'url' => './cron/some_url.php',
 		'last_run' => getStat('cron_ldap_passwords')
 	],
