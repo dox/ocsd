@@ -187,7 +187,7 @@ foreach ($persons as $person) {
 		// Set staff to credit limit 999.99, otherwise students get 0.00
 		'Credit Limit' => in_array(
 			$person->university_card_type,
-			['MC', 'US', 'FS', 'FR', 'FB', 'AV', 'DS', 'CS'],
+			['US', 'FS', 'FR', 'FB', 'AV', 'DS', 'CS'],
 			true
 		) ? '999.99' : '0.00',
 
