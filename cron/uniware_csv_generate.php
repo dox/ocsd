@@ -96,7 +96,7 @@ function formatDateField($date)
 		return '';
 	}
 
-	return date('d/m/y', $timestamp);
+	return date('d/m/Y', $timestamp);
 }
 
 // --------------------------------------------------
@@ -183,8 +183,13 @@ foreach ($persons as $person) {
 		//'Discount group 3'   => '',
 
 		'Price List'         => csvField('STD', 3, true),
-
-		'Credit Limit'       => number_format(0, 2, '.', ''),
+		
+		// Set staff to credit limit 999.99, otherwise students get 0.00
+		'Credit Limit' => in_array(
+			$person->university_card_type,
+			['MC', 'US', 'FS', 'FR', 'FB', 'AV', 'DS', 'CS'],
+			true
+		) ? '999.99' : '0.00',
 
 		'Start Date'         => formatDateField($person->University_Card_Start_Dt),
 
