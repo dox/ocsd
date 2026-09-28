@@ -1,0 +1,3 @@
+# One override per line: username,name,credit_limit
+# The first row may optionally be: username,name,credit_limit
+user1,Example User,25.00
