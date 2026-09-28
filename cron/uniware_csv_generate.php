@@ -12,6 +12,40 @@ $dateStamp   = date('Ymd_His');
 $exportDir   = __DIR__ . '/../exports/';
 
 $currentFile = $exportDir . 'uniware_users.csv';
+$overrideFile = __DIR__ . '/../uniware_credit_limit_overrides.csv';
+
+// Optional external overrides. The file is deliberately outside the repository's
+// cron folder so it can be maintained independently of the script deployment.
+// Format: username,name,credit_limit (blank lines and lines beginning with # are ignored)
+$creditLimitOverrides = [];
+
+if (is_readable($overrideFile)) {
+	$overrideHandle = fopen($overrideFile, 'r');
+
+	if ($overrideHandle !== false) {
+		while (($overrideRow = fgetcsv($overrideHandle)) !== false) {
+			if (count($overrideRow) < 2) {
+				continue;
+			}
+
+			$username = trim((string)$overrideRow[0]);
+			// Keep accepting the previous username,credit_limit format. In the new
+			// format, the name column is informational and the limit is column 3.
+			$creditLimit = trim((string)$overrideRow[count($overrideRow) >= 3 ? 2 : 1]);
+
+			if ($username === '' || str_starts_with($username, '#') || strtolower($username) === 'username') {
+				continue;
+			}
+
+			// Uniware expects a non-negative amount, written to two decimal places.
+			if (is_numeric($creditLimit) && (float)$creditLimit >= 0) {
+				$creditLimitOverrides[$username] = number_format((float)$creditLimit, 2, '.', '');
+			}
+		}
+
+		fclose($overrideHandle);
+	}
+}
 
 // --------------------------------------------------
 // ENSURE DIRECTORIES EXIST
@@ -184,12 +218,14 @@ foreach ($persons as $person) {
 
 		'Price List'         => csvField('STD', 3, true),
 		
-		// Set staff to credit limit 999.99, otherwise students get 0.00
-		'Credit Limit' => in_array(
-			$person->university_card_type,
-			['US', 'FS', 'FR', 'FB', 'AV', 'DS', 'CS'],
-			true
-		) ? '999.99' : '0.00',
+		// An explicit username override takes precedence over the staff/student default.
+		'Credit Limit' => $creditLimitOverrides[$person->sso_username] ?? (
+			in_array(
+				$person->university_card_type,
+				['US', 'FS', 'FR', 'FB', 'AV', 'DS', 'CS'],
+				true
+			) ? '999.99' : '0.00'
+		),
 
 		'Start Date'         => formatDateField($person->University_Card_Start_Dt),
 
