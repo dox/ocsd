@@ -16,8 +16,10 @@ $overrideFile = __DIR__ . '/../uniware_credit_limit_overrides.csv';
 
 // Optional external overrides. The file is deliberately outside the repository's
 // cron folder so it can be maintained independently of the script deployment.
-// Format: username,name,credit_limit (blank lines and lines beginning with # are ignored)
+// Format: username,name,credit_limit,user_group_1 (blank lines and lines beginning
+// with # are ignored). The name column is informational.
 $creditLimitOverrides = [];
+$userGroup1Overrides = [];
 
 if (is_readable($overrideFile)) {
 	$overrideHandle = fopen($overrideFile, 'r');
@@ -29,17 +31,24 @@ if (is_readable($overrideFile)) {
 			}
 
 			$username = trim((string)$overrideRow[0]);
+			$isHeader = strtolower($username) === 'username';
 			// Keep accepting the previous username,credit_limit format. In the new
-			// format, the name column is informational and the limit is column 3.
+			// format, the name column is informational, the limit is column 3, and
+			// User Group 1 is column 4.
 			$creditLimit = trim((string)$overrideRow[count($overrideRow) >= 3 ? 2 : 1]);
+			$userGroup1 = trim((string)($overrideRow[3] ?? ''));
 
-			if ($username === '' || str_starts_with($username, '#') || strtolower($username) === 'username') {
+			if ($username === '' || str_starts_with($username, '#') || $isHeader) {
 				continue;
 			}
 
 			// Uniware expects a non-negative amount, written to two decimal places.
 			if (is_numeric($creditLimit) && (float)$creditLimit >= 0) {
 				$creditLimitOverrides[$username] = number_format((float)$creditLimit, 2, '.', '');
+			}
+
+			if ($userGroup1 !== '') {
+				$userGroup1Overrides[$username] = csvField($userGroup1, 6);
 			}
 		}
 
@@ -165,7 +174,7 @@ foreach ($persons as $person) {
 		'Forename'           => csvField($person->firstname, 15),
 		'Surname'            => csvField($person->lastname, 20),
 
-		'User Group 1'       => csvField($person->university_card_type ?? '', 6),
+		'User Group 1'       => $userGroup1Overrides[$person->sso_username] ?? csvField($person->university_card_type ?? '', 6),
 		//'User Group 2'       => '',
 		//'User Group 3'       => '',
 		//'User Group 4'       => '',

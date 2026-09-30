@@ -1,3 +1,4 @@
-# One override per line: username,name,credit_limit
-# The first row may optionally be: username,name,credit_limit
-user1,Example User,25.00
+# One override per line: username,name,credit_limit,user_group_1
+# The name column is informational. User Group 1 is optional.
+# The first row may optionally be: username,name,credit_limit,user_group_1
+user1,Example User,25.00,CS
