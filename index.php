@@ -1,6 +1,24 @@
 <?php
 include_once("inc/autoload.php");
 requireLogin(); // Redirects if not logged in
+
+if (($_GET['page'] ?? null) === 'logs' && isset($_GET['load_more'])) {
+	$logsPerPage = 100;
+	$offset = filter_input(INPUT_GET, 'offset', FILTER_VALIDATE_INT);
+	$offset = max(0, (int)$offset);
+	$log->purge();
+	$logs = $log->getAll($logsPerPage + 1, $offset);
+	$hasMore = count($logs) > $logsPerPage;
+	if ($hasMore) array_pop($logs);
+
+	header('Content-Type: application/json; charset=utf-8');
+	echo json_encode([
+		'rows' => $log->tableRows($logs),
+		'hasMore' => $hasMore,
+		'nextOffset' => $offset + count($logs)
+	]);
+	exit;
+}
 ?>
 <!doctype html>
 <html lang="en">

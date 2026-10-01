@@ -71,6 +71,33 @@
   })
 })()
 
+const loadMoreLogs = document.querySelector('#load-more-logs');
+if (loadMoreLogs) {
+	loadMoreLogs.addEventListener('click', async event => {
+		event.preventDefault();
+		if (loadMoreLogs.dataset.loading === '1') return;
+		loadMoreLogs.dataset.loading = '1';
+		loadMoreLogs.textContent = 'Loading…';
+		try {
+			const response = await fetch(loadMoreLogs.href, { headers: { 'Accept': 'application/json' } });
+			if (!response.ok) throw new Error('Unable to load more logs');
+			const result = await response.json();
+			document.querySelector('#logs-table tbody').insertAdjacentHTML('beforeend', result.rows);
+			if (!result.hasMore) {
+				loadMoreLogs.remove();
+				return;
+			}
+			loadMoreLogs.href = `index.php?page=logs&load_more=1&offset=${result.nextOffset}`;
+			loadMoreLogs.textContent = 'Load more logs';
+		} catch (error) {
+			loadMoreLogs.textContent = 'Could not load logs. Try again';
+			console.error(error);
+		} finally {
+			delete loadMoreLogs.dataset.loading;
+		}
+	});
+}
+
 document.querySelectorAll('.ldap-toggle-link').forEach(link => {
 	link.addEventListener('click', function(e) {
 		e.preventDefault();

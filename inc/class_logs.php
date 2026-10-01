@@ -32,8 +32,10 @@ class Logs {
 		return $db->query($sql, $params);
 	}
 	
-	public function getAll() {
+	public function getAll($limit = 100, $offset = 0) {
 		global $db, $settings;
+		$limit = min(501, max(1, (int)$limit));
+		$offset = min(1000000, max(0, (int)$offset));
 	
 		// Get the maximum log age from settings
 		$maximumLogsAge = date('Y-m-d', strtotime('-' . $settings->value('logs_retention') . ' days'));
@@ -42,7 +44,8 @@ class Logs {
 		$sql  = "SELECT date_created, type, result, cudid, ldap, description, username, INET_NTOA(ip) AS ip 
 				 FROM " . self::$table_name . " 
 				 WHERE DATE(date_created) > :maximumLogsAge 
-				 ORDER BY date_created DESC";
+				 ORDER BY date_created DESC
+				 LIMIT " . $limit . " OFFSET " . $offset;
 		
 		// Execute the query with the bound parameter
 		$results = $db->query($sql, [':maximumLogsAge' => $maximumLogsAge]);
@@ -51,7 +54,7 @@ class Logs {
 	}
 	
 	public function table($logs = null) {
-		$table  = "<table class=\"table\">";
+		$table  = "<table id=\"logs-table\" class=\"table\">";
 		$table .= "<thead>";
 		$table .= "<tr>";
 		$table .= "<th scope=\"col\">Date</th>";
@@ -74,6 +77,14 @@ class Logs {
 		$table .= "</table>";
 		
 		return $table;
+	}
+
+	public function tableRows($logs = []) {
+		$rows = '';
+		foreach ($logs as $log) {
+			$rows .= self::tableRow($log);
+		}
+		return $rows;
 	}
 	
 	private function tableRow($log = null) {
