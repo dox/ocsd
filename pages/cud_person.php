@@ -47,7 +47,8 @@ echo pageTitle($data);
 		?>
 		Email: <strong><?php echo ($person->oxford_email); ?></strong><br>
 		Email2: <strong><?php echo ($person->alt_email); ?></strong><br>
-		MiFare: <strong><?php echo $person->MiFareID; ?></strong><br>
+		MiFare HEX: <strong><?php echo $person->MiFareID; ?></strong><br>
+		MiFare DEC: <strong><?php echo strtoupper(hexdec($person->MiFareID)) ?></strong><br>
 		Paxon: <strong><?php echo $person->PaxonID; ?></strong><br>
 		SITS: <strong><?php echo $person->sits_student_code; ?></strong><br>
 		SysIS: <strong><?php echo $person->university_card_sysis; ?></strong>
