@@ -175,7 +175,7 @@ foreach ($persons as $person) {
 		'Surname'            => csvField($person->lastname, 20),
 
 		'User Group 1'       => $userGroup1Overrides[$person->sso_username] ?? csvField($person->university_card_type ?? '', 6),
-		//'User Group 2'       => '',
+		'User Group 2'       => csvField($person->courseYear() ?? '', 6),
 		//'User Group 3'       => '',
 		//'User Group 4'       => '',
 
@@ -189,11 +189,6 @@ foreach ($persons as $person) {
 		'Date of birth (DOB)' => formatDateField($person->dob),
 
 		'Expiry Date'        => formatDateField($person->University_Card_End_Dt),
-
-		'User Group 2'       => csvField($person->courseYear() ?? '', 6),
-		'User Group 3'       => csvField($person->sits_student_code, 10),
-		//'Free token 3'       => '',
-		//'Free token 4'       => '',
 
 		//'Work telephone'     => '',
 		//'Home telephone'     => csvField($homeAddress['TelNo'] ?? '', 20),
