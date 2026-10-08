@@ -29,7 +29,7 @@ foreach ($ldapUsers as $ldapUser) {
 			'mail'      => 'oxford_email',
 			'givenname' => 'firstname',
 			'sn'        => 'lastname',
-			//'cn' 		=> 'FullName'
+			'displayname' => 'FullName'
 		];
 		
 		foreach ($fieldsToCheck as $ldapField => $cudField) {
