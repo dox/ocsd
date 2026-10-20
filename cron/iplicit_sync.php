@@ -6,7 +6,7 @@ $createLog = []; 	// array of iPlicit creations
 $errorLog  = []; 	// array of iPlicit errors
 
 $cudPersons = (new Persons())->all();
-//$cudPersons = (new Persons())->test($cudid);
+//$cudPersons = (new Persons())->test('123');
 
 $i_students = 0;
 $iplicit = new iPlicitAPI();
@@ -18,24 +18,24 @@ foreach ($cudPersons AS $cudPerson) {
 		cliOutput("Updating token, as it has expired", "green");
 		$iplicit->getSession();
 	}
-	
+
 	if (!$cudPerson->isStudent()) {
 		// Isn't a student, so skip this record
-		
+
 		cliOutput("Skipping " . $cudPerson->FullName . " as they aren't a student", "white");
 		continue;
 	}
 	if (!isset($cudPerson->sits_student_code)) {
 		// Missing student ID, so skip this record
-		
+
 		cliOutput("Skipping " . $cudPerson->FullName . " as they don't have a SITS code", "white");
 		continue;
 	}
-	
+
 	$i_students++; // count how many students we're processing
-	
+
 	$address = $cudPerson->addresses()->getHomeAddress();
-	
+
 	$addressParts = [
 		$address['Line1'] ?? null,
 		$address['Line2'] ?? null,
@@ -46,11 +46,11 @@ foreach ($cudPersons AS $cudPerson) {
 		$address['State'] ?? null,
 		$address['County'] ?? null
 	];
-	
+
 	// Filter out empty/null values & Join into a single line
 	$filtered = array_filter($addressParts, fn($part) => !empty($part));
 	$singleLineAddress = implode(', ', $filtered);
-	
+
 	$cudData = [
 		 'code' => $cudPerson->sits_student_code,
 		 'description' => $cudPerson->FullName,
@@ -74,7 +74,7 @@ foreach ($cudPersons AS $cudPerson) {
 			 'lastName' => $cudPerson->lastname
 		 ]
 	];
-	
+
 	# Phones
 	if (isset($cudPerson->addresses()->getContactAddress()['TelNo'])) {
 		$cudData['contact']['phones'][] = [
@@ -88,7 +88,7 @@ foreach ($cudPersons AS $cudPerson) {
 			'phone' => $cudPerson->addresses()->getContactAddress()['MobileNo'],
 		];
 	}
-	
+
 	#Emails
 	if (isset($cudPerson->oxford_email)) {
 		$cudData['contact']['emails'][] = [
@@ -102,7 +102,7 @@ foreach ($cudPersons AS $cudPerson) {
 			'email' => $cudPerson->alt_email,
 		];
 	}
-	
+
 	#Addressess
 	if (isset($singleLineAddress)) {
 		$cudData['contact']['addresses'][] = [
@@ -113,31 +113,38 @@ foreach ($cudPersons AS $cudPerson) {
 			'countryCode' => cudCountryCodeToiPlicitCountyCode($address['AddressCtryCd'])
 		];
 	}
-	
-	$iplicitData = $iplicit->getContactAccount($cudPerson->sits_student_code);
+
+	$lookup = $iplicit->getContactAccount($cudPerson->sits_student_code);
+	if (!$lookup['success']) {
+		$event = "Error looking up iPlicit record for " . $cudPerson->FullName . " (" . $cudPerson->sits_student_code . ") - " . $lookup['message'];
+		$errorLog[] = $event;
+		cliOutput($event, "red");
+		continue;
+	}
+	$iplicitData = $lookup['data'];
 	if (isset($iplicitData->id)) {
 		// account exists, update it
 		if (!isset($cudData['contact']['addresses'][0]['address'])) {
 			unset($cudData['contact']['addresses'][0]);
 		}
-		
+
 		//printArray($cudData);
 		cliOutput("Updating " . $cudPerson->FullName . " (" . $iplicitData->id . ")", "blue");
 		$iplicit->updateContactAccount($iplicitData->id, $cudData);
-			
+
 	} else {
 		// account needs creating
-		
+
 		// Student Type mapping to CustomerGroupID in iPlicit
 		$cudData['customer']['ContactGroupCustomerId'] = cudCardTypeToiPlicitGroup($cudPerson->university_card_type);
-		
+
 		// Default payment to BACS
 		$cudData['customer']['paymentMethodId'] = "BC";
-		
+
 		cliOutput("Creating " . $cudPerson->FullName . " in iPlicit", "green");
 		$iplicit->createContactAccount($cudData);
 	}
-	
+
 }
 
 $db->upsertByName('cron_iplicit_sync', date('c'));
@@ -145,7 +152,7 @@ cliOutput(count($updateLog) . " students updated of " . count($cudPersons) . " C
 cliOutput(count($createLog) . " students created", "green");
 if (count($errorLog) > 0) {
 	cliOutput(count($errorLog) . " errors encountered", "red");
-	
+
 	$logData = [
 		'category' => 'cron',
 		'result'   => 'warning',
@@ -167,21 +174,21 @@ if (count($errorLog) > 0) {
 			'email' => 'andrew.breakspear@seh.ox.ac.uk'
 		]
 	];
-	
+
 	sendMail('iPlicit sync errors', $recipients, implode(', ', $errorLog));
 }
 
 class iPlicitAPI {
 	public $sessionToken;
 	public $tokenDue;
-	
+
 	function __construct() {
 		$this->getSession();
 	}
-	
+
 	public function getSession() {
 		$url = 'https://api.iplicit.com/api/session/create/api';
-		
+
 		$sessionFields = array(
 		  'username' => iplicit_api_username,
 		  'userApiKey' => iplicit_api_userApiKey
@@ -190,108 +197,142 @@ class iPlicitAPI {
 		  'Content-Type:application/json',
 		  'Domain:' . iplicit_api_domain
 		);
-		
+
 		// open curl to iPlicit API and authenticate
 		$curl_session = curl_init();
-		 
+
 		curl_setopt($curl_session, CURLOPT_URL, $url);
 		curl_setopt($curl_session, CURLOPT_POST, TRUE);
 		curl_setopt($curl_session, CURLOPT_POSTFIELDS, json_encode($sessionFields));
 		curl_setopt($curl_session, CURLOPT_HTTPHEADER, $sessionHeaders);
 		curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, TRUE);
-		
-		$session = json_decode(curl_exec($curl_session));
-		
-		// get a session token (and expiry) to be used in all following API calls
-		$this->sessionToken = $session->sessionToken;
-		$this->tokenDue = $session->tokenDue;
-		
+
+		$body = curl_exec($curl_session);
+		$curlError = curl_error($curl_session);
+		$status = curl_getinfo($curl_session, CURLINFO_HTTP_CODE);
 		curl_close($curl_session);
+		$session = $body !== false ? json_decode($body) : null;
+		if ($body === false || $status < 200 || $status >= 300 || empty($session->sessionToken)) {
+			$message = $body === false ? 'cURL error: ' . $curlError : "HTTP {$status}: " . substr((string)$body, 0, 1000);
+			throw new RuntimeException('Could not create iPlicit API session - ' . $message);
+		}
+
+		// Save the token and expiry for subsequent API calls.
+		$this->sessionToken = $session->sessionToken;
+		$this->tokenDue = $session->tokenDue ?? null;
 	}
-	
+
 	public function headers() {
 		$headers = array(
 		  'Content-Type:application/json',
 		  'Domain:' . iplicit_api_domain,
 		  'Authorization: Bearer ' . $this->sessionToken
 		);
-		
+
 		return $headers;
 	}
-	
+
 	public function getContactAccount($idOrCode) {
 		$url = "https://api.iplicit.com/api/ContactAccount/" . $idOrCode . "?include=customer%2Csupplier%2Ccontact";
-		
 		$curl = curl_init();
-		
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $this->headers());
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		
-		$existingUser = json_decode(curl_exec($curl));
-		
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 15);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 60);
+		$body = curl_exec($curl);
+		$curlError = curl_error($curl);
+		$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		curl_close($curl);
-		
-		if (!empty($existingUser)) {
-			return $existingUser;
-		} else {
-			return false;
+
+		if ($body === false) {
+			return ['success' => false, 'message' => 'cURL error: ' . $curlError];
 		}
+		if ($status === 404) {
+			return ['success' => true, 'data' => false];
+		}
+		if ($status < 200 || $status >= 300) {
+			return ['success' => false, 'message' => "HTTP {$status}: " . substr($body, 0, 1000)];
+		}
+
+		$existingUser = json_decode($body);
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			return ['success' => false, 'message' => 'Invalid JSON response: ' . substr($body, 0, 1000)];
+		}
+		return ['success' => true, 'data' => $existingUser];
 	}
-	
+
 	public function updateContactAccount($idOrCode, $contactArray) {
 		global $log, $updateLog, $createLog, $errorLog;
-		
+
 		$url = "https://api.iplicit.com/api/contactAccount/" . $idOrCode;
-		
-		$curl = curl_init();
-		
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PATCH');
-		curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($contactArray));
-		curl_setopt($curl, CURLOPT_HTTPHEADER, $this->headers());
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		
-		//cliOutput(json_encode($contactArray), "yellow");
-		
-		try {
-			$data = json_decode(curl_exec($curl));
+		$result = $this->sendAccountRequest($url, 'PATCH', $contactArray);
+		if ($result['success']) {
 			$updateLog[] = $idOrCode;
-		} catch(Exception $e) {
-			$event = "Error updating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data);
-			$errorLog[] = $event;
-			cliOutput($event, "red");
+			return true;
 		}
-		
-		curl_close($curl);
+
+		$event = "Error updating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . $result['message'];
+		$errorLog[] = $event;
+		cliOutput($event, "red");
+		return false;
 	}
-	
+
 	public function createContactAccount($contactArray) {
 		global $log, $updateLog, $createLog, $errorLog;
-		
+
 		$url = "https://api.iplicit.com/api/contactAccount/";
-		
+		$result = $this->sendAccountRequest($url, 'POST', $contactArray);
+		if ($result['success']) {
+			$createLog[] = $contactArray['code'];
+			cliOutput("Created iPlicit account for " . $contactArray['description'] . " (" . $contactArray['code'] . ")", "green");
+			return true;
+		}
+
+		$event = "Error creating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . $result['message'];
+		$errorLog[] = $event;
+		cliOutput($event, "red");
+		return false;
+	}
+
+	private function sendAccountRequest($url, $method, $contactArray) {
 		$curl = curl_init();
-		
+		$payload = json_encode($contactArray);
+		if ($payload === false) {
+			return ['success' => false, 'message' => 'Could not encode request JSON: ' . json_last_error_msg()];
+		}
+
 		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_POST, 'TRUE');
-		curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($contactArray));
+		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $this->headers());
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		
-		//cliOutput(json_encode($contactArray), "yellow");
-		
-		try {
-			$data = json_decode(curl_exec($curl));
-			$createLog[] = "complete";
-			cliOutput(json_encode($data), "yellow");
-		} catch(Exception $e) {
-			$event = "Error creating iPlicit record for " . $contactArray['description'] . " (" . $contactArray['code'] . ") - " . json_encode($data);
-			$errorLog[] = $event;
-			cliOutput($event, "red");
-		}
-		
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 15);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 60);
+
+		$body = curl_exec($curl);
+		$curlError = curl_error($curl);
+		$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		curl_close($curl);
+
+		if ($body === false) {
+			return ['success' => false, 'message' => 'cURL error: ' . $curlError];
+		}
+
+		$decoded = null;
+		if ($body !== '') {
+			$decoded = json_decode($body);
+			if (json_last_error() !== JSON_ERROR_NONE) {
+				return ['success' => false, 'message' => "HTTP {$status}; response was not valid JSON: " . substr($body, 0, 1000)];
+			}
+		}
+
+		if ($status < 200 || $status >= 300) {
+			$responseMessage = is_object($decoded) || is_array($decoded) ? json_encode($decoded) : $body;
+			return ['success' => false, 'message' => "HTTP {$status}" . ($responseMessage !== '' ? ': ' . substr($responseMessage, 0, 1000) : '')];
+		}
+
+		return ['success' => true, 'message' => '', 'data' => $decoded, 'status' => $status];
 	}
 }
 
@@ -299,7 +340,7 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 	// HESA codes (used in CUD) to ISO 3166-1 alpha-2 country codes (used in iPlicit)
 	// https://www.hesa.ac.uk/collection/C07051/mappingcountrycodes
 	// https://en.wikipedia.org/wiki/ISO_3166-2
-	
+
 	$countryArray = array(
 		'602' => 'AF',
 		'651' => 'AX',
@@ -537,12 +578,12 @@ function cudCountryCodeToiPlicitCountyCode($countryCode) {
 		'781' => 'ZM',
 		'732' => 'ZW'
 	);
-	
+
 	// If null, empty, or not in the array → default to null
 	if (empty($countryCode) || !isset($countryArray[$countryCode])) {
 		return null;
 	}
-	
+
 	return $countryArray[$countryCode];
 }
 
@@ -550,12 +591,12 @@ function cudCardTypeToiPlicitGroup($cudCardType) {
   // accepts any Oxford University card type code (e.g. 'PT') and converts it to one of
   // 'Undergraduate', 'Postgraduate', 'Visiting' or 'Staff' iPlicit codes
   // defaults to 'Customer' if it fails
-  
+
   $undergradCardTypes = array("UG", "PT", );
   $postgradCardTypes = array("GT", "GR");
   $visitingCardTypes = array("VR", "VD", "VV", "VC");
   $staffCardTypes = array("MC", "US", "FS", "FR", "FB", "AV", "DS", "CS", "CL", "CB", "VA", "VX");
-  
+
   if (in_array($cudCardType, $undergradCardTypes)) {
 	$iPlicitGroup = "U";
   } elseif (in_array($cudCardType, $postgradCardTypes)) {
@@ -567,6 +608,6 @@ function cudCardTypeToiPlicitGroup($cudCardType) {
   } else {
 	$iPlicitGroup = "CU";
   }
-  
+
   return $iPlicitGroup;
 }
